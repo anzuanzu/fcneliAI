@@ -2147,6 +2147,11 @@
                             <option value="put">含 Put 賣權</option>
                         </select>
                     </div>
+                    <div class="filter-section"><label class="filter-label">13F 機構</label>
+                        <select id="core13fManagerFilter" class="filter-search-input" onchange="updateDisplay()">
+                            <option value="all">全部機構</option>
+                        </select>
+                    </div>
                     <div class="filter-section"><label class="filter-label">產業 (Industry) <select id="industryMode"
                                 onchange="updateDisplay()"
                                 style="padding: 0.25rem; border-radius: 0.25rem; font-size: 0.8rem;">
@@ -2595,6 +2600,7 @@
         let jpmOnlyMode = false;
         let uniqueIndustries = new Set();
         let activeIndustries = new Set();
+        let uniqueCore13FManagers = new Set();
 
         // Debounce utility
         function debounce(fn, delay) {
@@ -2606,12 +2612,25 @@
         }
         const debouncedUpdate = debounce(updateDisplay, 300);
 
+        function extractCore13FManagerNames(item) {
+            return String((item && item["Core 13F Managers"]) || '')
+                .split(';')
+                .map(function (entry) {
+                    return entry.trim().replace(/\s*\([^)]*\)\s*$/, '').trim();
+                })
+                .filter(Boolean);
+        }
+
         function initFilters(data) {
             uniqueSectors.clear();
             uniqueIndustries.clear();
+            uniqueCore13FManagers.clear();
             data.forEach(item => {
                 if (item.Sector) uniqueSectors.add(item.Sector);
                 if (item.Industry) uniqueIndustries.add(item.Industry);
+                extractCore13FManagerNames(item).forEach(function (manager) {
+                    uniqueCore13FManagers.add(manager);
+                });
             });
 
             // Populate Sector checkboxes
@@ -2637,6 +2656,19 @@
                     '<label for="' + safeId + '">' + ind + '</label>';
                 indList.appendChild(div);
             });
+
+            const managerSelect = document.getElementById('core13fManagerFilter');
+            if (managerSelect) {
+                const currentValue = managerSelect.value || 'all';
+                managerSelect.innerHTML = '<option value="all">全部機構</option>';
+                Array.from(uniqueCore13FManagers).sort().forEach(function (manager) {
+                    const option = document.createElement('option');
+                    option.value = manager;
+                    option.textContent = manager;
+                    managerSelect.appendChild(option);
+                });
+                managerSelect.value = uniqueCore13FManagers.has(currentValue) ? currentValue : 'all';
+            }
         }
 
         function toggleFilterPanel() {
@@ -2716,6 +2748,7 @@
             document.getElementById('jpmOnly').checked = false;
             document.getElementById('indexFilter').value = 'all';
             document.getElementById('core13fFilter').value = 'all';
+            document.getElementById('core13fManagerFilter').value = 'all';
             setSmaFilterDirect('all');
             updateDisplay();
         }
@@ -2787,6 +2820,7 @@
             const jpmChecked = (document.getElementById('jpmOnly') || {}).checked || false;
             const indexFilter = (document.getElementById('indexFilter') || {}).value || 'all';
             const core13fFilter = (document.getElementById('core13fFilter') || {}).value || 'all';
+            const core13fManagerFilter = (document.getElementById('core13fManagerFilter') || {}).value || 'all';
 
             const debtEqMinVal = document.getElementById('debtEqMin').value;
             const debtEqMaxVal = document.getElementById('debtEqMax').value;
@@ -2862,6 +2896,7 @@
                 if (core13fFilter === 'share' && !holdingType.includes('Share')) return false;
                 if (core13fFilter === 'call' && !holdingType.includes('Call')) return false;
                 if (core13fFilter === 'put' && !holdingType.includes('Put')) return false;
+                if (core13fManagerFilter !== 'all' && !extractCore13FManagerNames(item).includes(core13fManagerFilter)) return false;
 
                 // Debt/Eq Range
                 if (item._debtEq !== null && (item._debtEq < debtEqMin || item._debtEq > debtEqMax)) return false;
@@ -3708,6 +3743,7 @@ ${JSON.stringify(stockData, null, 2)}
             if (document.getElementById('volMin').value || document.getElementById('volMax').value) count++;
             if (((document.getElementById('indexFilter') || {}).value || 'all') !== 'all') count++;
             if (((document.getElementById('core13fFilter') || {}).value || 'all') !== 'all') count++;
+            if (((document.getElementById('core13fManagerFilter') || {}).value || 'all') !== 'all') count++;
             if (activeIndustries.size > 0) count++;
             if ((document.getElementById('jpmOnly') || {}).checked) count++;
             if (isETFExcluded) count++;
@@ -3778,6 +3814,10 @@ ${JSON.stringify(stockData, null, 2)}
             if (core13fFilterValue !== 'all') {
                 const labels = { held: '有持有', 'not-held': '未持有', share: '現股', call: 'Call', put: 'Put' };
                 chips.push(makeChip('核心13F: ' + (labels[core13fFilterValue] || core13fFilterValue), function () { document.getElementById('core13fFilter').value = 'all'; updateDisplay(); }));
+            }
+            const core13fManagerValue = ((document.getElementById('core13fManagerFilter') || {}).value || 'all');
+            if (core13fManagerValue !== 'all') {
+                chips.push(makeChip('13F機構: ' + core13fManagerValue, function () { document.getElementById('core13fManagerFilter').value = 'all'; updateDisplay(); }));
             }
             if (activeIndustries.size > 0) {
                 const iMode = (document.getElementById('industryMode') || {}).value === 'include' ? '包含' : '排除';
@@ -4142,6 +4182,7 @@ ${JSON.stringify(stockData, null, 2)}
             document.getElementById('volMax').value = p.volMax || '';
             document.getElementById('indexFilter').value = p.indexFilter || 'all';
             document.getElementById('core13fFilter').value = p.core13fFilter || 'all';
+            document.getElementById('core13fManagerFilter').value = p.core13fManagerFilter || 'all';
 
             activePresetIdx = idx;
             updatePresetButtons();
@@ -4596,6 +4637,7 @@ ${JSON.stringify(stockData, null, 2)}
                     jpmOnly: (document.getElementById('jpmOnly') || {}).checked || false,
                     indexFilter: ((document.getElementById('indexFilter') || {}).value || 'all'),
                     core13fFilter: ((document.getElementById('core13fFilter') || {}).value || 'all'),
+                    core13fManagerFilter: ((document.getElementById('core13fManagerFilter') || {}).value || 'all'),
                     sortKey: currentSort.key,
                     sortDirection: currentSort.direction,
                     filterPanelOpen: document.getElementById('filterPanel').classList.contains('open'),
@@ -4662,6 +4704,10 @@ ${JSON.stringify(stockData, null, 2)}
                 if (s.core13fFilter) {
                     var core13fFilterEl = document.getElementById('core13fFilter');
                     if (core13fFilterEl) core13fFilterEl.value = s.core13fFilter;
+                }
+                if (s.core13fManagerFilter) {
+                    var core13fManagerFilterEl = document.getElementById('core13fManagerFilter');
+                    if (core13fManagerFilterEl) core13fManagerFilterEl.value = s.core13fManagerFilter;
                 }
 
                 // Sector mode
