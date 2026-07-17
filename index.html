@@ -373,16 +373,8 @@
             width: 110px;
         }
 
-        .col-signal {
-            width: 20%;
-        }
-
-        .col-risk {
-            width: 16%;
-        }
-
         .col-sector {
-            width: 12%;
+            width: 18%;
         }
 
         .col-action {
@@ -2425,10 +2417,6 @@
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-compact" data-key="Market Cap" onclick="handleSort('Market Cap')"><span>市值 <span
                                             class="sort-icon">↕</span></span></th>
-                                <th class="col-signal" data-key="Index" onclick="handleSort('Index')"><span>市場 <span
-                                            class="sort-icon">↕</span></span></th>
-                                <th class="col-risk" data-key="VaR" onclick="handleSort('VaR')"><span>風險 <span
-                                            class="sort-icon">↕</span></span></th>
                                 <th class="col-sector" data-key="Sector" onclick="handleSort('Sector')"><span>板塊/產業 <span
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-action"><span>連結</span></th>
@@ -2436,7 +2424,7 @@
                         </thead>
                         <tbody id="tableBody">
                             <tr>
-                                <td colspan="11" class="loading">載入中...</td>
+                                <td colspan="9" class="loading">載入中...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -3700,7 +3688,7 @@ ${JSON.stringify(stockData, null, 2)}
                 statusEl.innerHTML = '<span style="color: var(--success-color)">TradingView 即時行情已更新</span>';
             } catch (error) {
                 console.error('Error fetching market data:', error);
-                tbody.innerHTML = ` <tr><td colspan="11" class="loading" style="color: var(--danger-color)"><strong>讀取數據失敗</strong><br><span style="font-size: 0.9em; opacity: 0.8">無法取得即時行情。<br>錯誤訊息: ${escapeHtml(error.message)} </span></td></tr>`;
+                tbody.innerHTML = ` <tr><td colspan="9" class="loading" style="color: var(--danger-color)"><strong>讀取數據失敗</strong><br><span style="font-size: 0.9em; opacity: 0.8">無法取得即時行情。<br>錯誤訊息: ${escapeHtml(error.message)} </span></td></tr>`;
                 statusEl.innerHTML = '<span style="color: var(--danger-color)">讀取失敗</span>';
             } finally {
                 clearTimeout(timeoutId);
@@ -3910,7 +3898,7 @@ ${JSON.stringify(stockData, null, 2)}
             const tbody = document.getElementById('tableBody');
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="11" class="loading">沒有找到符合的資料</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="loading">沒有找到符合的資料</td></tr>';
                 return;
             }
 
@@ -3918,10 +3906,6 @@ ${JSON.stringify(stockData, null, 2)}
                 const isBullish = item._sma200 > 0;
                 const compactTrendText = isBullish ? '多' : '空';
                 const isSelected = selectedStocks.has(item.Ticker) ? 'checked' : '';
-
-                const fcfYieldFormatted = item._fcfYield !== null ? item._fcfYield.toFixed(2) + '%' : '-';
-                const varPctNum = item._var ? (item._var / item._price * 100) : 0;
-                const varPctFormatted = varPctNum ? '-' + varPctNum.toFixed(1) + '%' : '-';
 
                 return ` <tr>
                     <td class="checkbox-wrapper" data-label="選取"><input type="checkbox" data-ticker="${item.Ticker}" onchange="toggleSelection('${item.Ticker}')"${isSelected}></td>
@@ -3931,8 +3915,6 @@ ${JSON.stringify(stockData, null, 2)}
                     <td data-label="績效"><div class="cell-stack"><div class="cell-line"><span class="cell-label">週</span><span class="perf-number ${item._perfWeek >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Week"] || '-')}</span></div><div class="cell-line"><span class="cell-label">月</span><span class="perf-number ${item._perfMonth >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Month"] || '-')}</span></div></div></td>
                     <td data-label="波動/趨勢"><div class="cell-stack"><div class="cell-line"><span class="cell-label">波動</span><strong>${escapeHtml(item["Volatility W"] || '-')}</strong></div><span class="trend-text ${isBullish ? 'trend-positive' : 'trend-negative'}">${escapeHtml(item.SMA200 || '-')} (${compactTrendText})</span></div></td>
                     <td data-label="市值">${escapeHtml(item["Market Cap"] || '-')}</td>
-                    <td data-label="市場"><div class="cell-stack">${renderMiniBadges(item.Index, '')}</div></td>
-                    <td data-label="風險"><div class="cell-stack"><div class="cell-line"><span class="cell-label">VaR</span><strong style="color:#f59e0b">${item._var ? '$' + item._var.toFixed(2) + ' (' + varPctFormatted + ')' : '-'}</strong></div><div class="cell-line"><span class="cell-label">ATR</span><span>${escapeHtml(item.ATR || '-')}</span><span class="cell-label">Beta</span><span>${escapeHtml(item.Beta || '-')}</span></div></div></td>
                     <td data-label="板塊/產業"><div class="cell-stack"><strong>${escapeHtml(item.Sector || '-')}</strong><span class="muted-text truncate-2">${escapeHtml(item.Industry || '-')}</span></div></td>
                     <td data-label="財報與評等"><a href="https://finviz.com/quote.ashx?t=${item.Ticker}&p=d&b=1&ty=ea" target="_blank" rel="noopener" style="color: var(--accent-color); text-decoration: none; font-weight: 600; font-size: 0.85rem;">查看</a></td>
                 </tr> `;
