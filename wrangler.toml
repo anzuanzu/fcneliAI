@@ -1,0 +1,6 @@
+name = "fcneli-api"
+main = "worker/src/index.js"
+compatibility_date = "2026-07-17"
+
+[vars]
+ALLOWED_ORIGIN = "https://anzuanzu.github.io"

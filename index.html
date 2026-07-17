@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finviz SMA200 篩選器</title>
+    <title>FCN 標的雷達</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -73,8 +73,8 @@
         }
 
         header {
-            margin-bottom: 3rem;
-            text-align: center;
+            margin-bottom: 1.25rem;
+            text-align: left;
         }
 
         h1 {
@@ -85,6 +85,25 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
+        }
+
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 1rem;
+            max-width: 1280px;
+            margin: 0 auto 1.25rem;
+            padding: 1.25rem 0 0;
+        }
+
+        .eyebrow {
+            margin-bottom: 0.3rem;
+            color: var(--accent-color);
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
         }
 
         .subtitle {
@@ -157,9 +176,67 @@
             align-items: center;
             gap: 0.5rem;
             width: 100%;
-            margin-bottom: 1rem;
-            padding: 0 1rem;
+            margin-top: 0.8rem;
+            padding: 0;
         }
+
+        .ai-search-disclosure {
+            max-width: 1280px;
+            margin: 0 auto 0.75rem;
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.8rem;
+            background: rgba(56, 189, 248, 0.04);
+        }
+
+        .ai-search-disclosure summary {
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .ai-search-disclosure summary span {
+            margin-left: 0.4rem;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .primary-toolbar {
+            padding: 1rem 1.25rem;
+        }
+
+        .primary-actions,
+        .fcn-inputs,
+        .fcn-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .fcn-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.85rem 1.25rem;
+            padding: 0.85rem 1.25rem;
+            border-top: 1px solid var(--border-color);
+            background: rgba(56, 189, 248, 0.045);
+        }
+
+        .fcn-bar-title {
+            display: flex;
+            flex-direction: column;
+            min-width: 130px;
+        }
+
+        .fcn-bar-title strong { font-size: 0.95rem; }
+        .fcn-bar-title span { color: var(--text-secondary); font-size: 0.78rem; }
+
+        .fcn-bar .input-group { font-size: 0.82rem; }
+        .fcn-bar .input-group input[type="number"] { width: 64px; padding: 0.38rem 0.45rem; }
 
         .ai-search-input {
             width: 100%;
@@ -1569,12 +1646,47 @@
 
         /* ===== Quick Filter Presets ===== */
         .preset-bar {
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1.25rem;
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
             align-items: center;
             border-bottom: 1px solid var(--border-color);
+        }
+
+        .enrichment-filter,
+        .daily-focus-btn { display: none !important; }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.9rem 1rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .pagination button {
+            min-width: 2.25rem;
+            padding: 0.35rem 0.65rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.45rem;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .pagination button:disabled { cursor: not-allowed; opacity: 0.45; }
+
+        @media (max-width: 768px) {
+            .app-header { padding-top: 0.75rem; }
+            .app-header h1 { font-size: 2rem; }
+            .primary-toolbar, .fcn-bar { padding: 0.85rem; }
+            .search-box { width: 100%; }
+            .search-wrapper, .search-input { width: 100%; }
+            .primary-actions, .fcn-inputs, .fcn-actions { width: 100%; }
         }
 
         .preset-bar-label {
@@ -2034,20 +2146,26 @@
     </div>
 
     <div class="container">
-        <header>
-            <h1>Finviz SMA200 篩選器</h1>
-            <p class="subtitle">快速篩選並計算股票的關鍵價格點</p>
+        <header class="app-header">
+            <div>
+                <p class="eyebrow">US equity-linked notes</p>
+                <h1>FCN 標的雷達</h1>
+                <p class="subtitle">即時行情、快速篩選與關鍵價位試算</p>
+            </div>
         </header>
         <main id="mainView">
-            <div class="ai-search-box">
-                <span class="ai-search-icon">✨</span>
-                <input type="text" id="aiSearchInput" class="ai-search-input"
-                    placeholder="讓 AI 幫您自動填寫篩選器... (例如：市值大於100B且本周跌幅超過5%的科技股)"
-                    onkeypress="if(event.key === 'Enter') handleAISearch()">
-                <button class="ai-search-btn" id="aiSearchBtn" onclick="handleAISearch()">AI 智慧篩選</button>
-            </div>
+            <details class="ai-search-disclosure">
+                <summary>✨ 用一句話設定篩選條件 <span>選填</span></summary>
+                <div class="ai-search-box">
+                    <span class="ai-search-icon">✨</span>
+                    <input type="text" id="aiSearchInput" class="ai-search-input"
+                        placeholder="例如：市值大於 100B、本週跌超過 5% 的科技股"
+                        onkeypress="if(event.key === 'Enter') handleAISearch()">
+                    <button class="ai-search-btn" id="aiSearchBtn" onclick="handleAISearch()">套用</button>
+                </div>
+            </details>
             <div class="glass-panel">
-                <div class="controls">
+                <div class="controls primary-toolbar">
                     <div class="search-box"><svg class="search-icon" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -2055,12 +2173,21 @@
                         </svg>
                         <div class="search-wrapper"><input type="text" id="searchInput" class="search-input"
                                 placeholder="搜尋代碼或公司名稱..."><button class="search-clear" id="searchClear"
-                                onclick="clearSearch()" title="清除搜尋">✕</button></div><button class="button secondary"
-                            onclick="clearAllSelections()"
-                            style="padding: 0.4rem 0.75rem; font-size: 0.8rem; white-space: nowrap;" title="清除所有勾選">✕
-                            清除勾選</button>
+                                onclick="clearSearch()" title="清除搜尋">✕</button></div>
                     </div>
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div class="primary-actions">
+                        <button class="button secondary" id="filterToggle" onclick="toggleFilterPanel()">🔍 進階篩選<span id="filterBadge"
+                                class="filter-badge hidden">0</span></button>
+                        <button class="button secondary" id="etfToggle" onclick="toggleETFExclusion()">排除 ETF</button>
+                        <button class="button secondary" onclick="openWatchlistModal()">📋 觀察名單</button>
+                        <button class="button secondary" id="themeToggle" onclick="toggleTheme()">☀️ 一般模式</button>
+                        <button class="button secondary" onclick="openSettingsModal()"
+                            style="border-color: #a855f7; color: #a855f7;">⚙️ AI 設定</button>
+                    </div>
+                </div>
+                <div class="fcn-bar">
+                    <div class="fcn-bar-title"><strong>FCN 試算</strong><span>已選 <b id="selectedCount">0</b> / 5 檔</span></div>
+                    <div class="fcn-inputs">
                         <div class="input-group">
                             <label for="fcnTenor">天期 (Tenor)</label>
                             <select id="fcnTenor"
@@ -2081,19 +2208,15 @@
                             <label for="inputKI">KI%</label>
                             <input type="number" id="inputKI" value="65" style="width: 80px;">
                         </div>
-                        <button class="button" onclick="calculateSelected()">計算已選 (<span
-                                id="selectedCount">0</span>)</button><button class="button secondary" id="filterToggle"
-                            onclick="toggleFilterPanel()">🔍 進階篩選<span id="filterBadge"
-                                class="filter-badge hidden">0</span></button><button class="button secondary"
-                            id="etfToggle" onclick="toggleETFExclusion()">排除 ETF</button><button
-                            class="button secondary" id="themeToggle" onclick="toggleTheme()">☀️ 一般模式</button><button
-                            class="button secondary" onclick="openWatchlistModal()">📋 觀察名單</button>
+                    </div>
+                    <div class="fcn-actions">
+                        <button class="button" onclick="calculateSelected()">開始試算</button>
+                        <button class="button secondary" onclick="clearAllSelections()"
+                            style="padding: 0.4rem 0.75rem; font-size: 0.8rem;" title="清除所有勾選">清除勾選</button>
                         <div class="watchlist-dropdown" id="watchlistDropdown"><button class="button secondary"
                                 onclick="toggleWatchlistDropdown()" id="addToWatchlistBtn" disabled>➕ 加入觀察名單</button>
                             <div class="watchlist-dropdown-menu" id="watchlistDropdownMenu"></div>
                         </div>
-                        <button class="button secondary" onclick="openSettingsModal()"
-                            style="border-color: #a855f7; color: #a855f7;">⚙️ AI 設定</button>
                     </div>
                 </div>
                 <div id="filterPanel" class="filter-panel">
@@ -2127,7 +2250,7 @@
                         <label class="filter-toggle-label"><input type="checkbox" id="jpmOnly"
                                 onchange="updateDisplay()"> 僅顯示 JPM 精選</label>
                     </div>
-                    <div class="filter-section"><label class="filter-label">指數成分股</label>
+                    <div class="filter-section enrichment-filter"><label class="filter-label">指數成分股</label>
                         <select id="indexFilter" class="filter-search-input" onchange="updateDisplay()">
                             <option value="all">全部</option>
                             <option value="any">任一主要指數</option>
@@ -2137,7 +2260,7 @@
                             <option value="none">非主要指數</option>
                         </select>
                     </div>
-                    <div class="filter-section"><label class="filter-label">核心 13F 持股</label>
+                    <div class="filter-section enrichment-filter"><label class="filter-label">核心 13F 持股</label>
                         <select id="core13fFilter" class="filter-search-input" onchange="updateDisplay()">
                             <option value="all">全部</option>
                             <option value="held">有核心13F持有</option>
@@ -2147,7 +2270,7 @@
                             <option value="put">含 Put 賣權</option>
                         </select>
                     </div>
-                    <div class="filter-section"><label class="filter-label">13F 機構</label>
+                    <div class="filter-section enrichment-filter"><label class="filter-label">13F 機構</label>
                         <select id="core13fManagerFilter" class="filter-search-input" onchange="updateDisplay()">
                             <option value="all">全部機構</option>
                         </select>
@@ -2182,7 +2305,7 @@
                                 type="number" id="volMax" class="range-input" placeholder="Max %" step="0.1"
                                 oninput="debouncedUpdate()"></div>
                     </div>
-                    <div class="filter-section"><label class="filter-label">負債比 (Debt/Eq)</label>
+                    <div class="filter-section enrichment-filter"><label class="filter-label">負債比 (Debt/Eq)</label>
                         <div class="range-inputs"><input type="number" id="debtEqMin" class="range-input"
                                 placeholder="Min" step="0.1" oninput="debouncedUpdate()"><span>-</span><input
                                 type="number" id="debtEqMax" class="range-input" placeholder="Max" step="0.1"
@@ -2199,7 +2322,7 @@
                                 step="0.1" oninput="debouncedUpdate()"><span>-</span><input type="number" id="atrMax"
                                 class="range-input" placeholder="Max" step="0.1" oninput="debouncedUpdate()"></div>
                     </div>
-                    <div class="filter-section"><label class="filter-label">FCF Yield (%)</label>
+                    <div class="filter-section enrichment-filter"><label class="filter-label">FCF Yield (%)</label>
                         <div class="range-inputs"><input type="number" id="fcfYieldMin" class="range-input"
                                 placeholder="Min %" step="0.1" oninput="debouncedUpdate()"><span>-</span><input
                                 type="number" id="fcfYieldMax" class="range-input" placeholder="Max %" step="0.1"
@@ -2211,21 +2334,12 @@
                 </div>
                 <div id="filterStatus" class="filter-status empty"></div>
                 <div class="preset-bar">
-                    <span class="preset-bar-label">⚡ 一鍵篩選:</span>
-                    <button class="preset-btn neutral" onclick="applyPreset(0)">高波動率</button>
-                    <button class="preset-btn bullish" onclick="applyPreset(1)">多頭本周大跌</button>
-                    <button class="preset-btn bullish" onclick="applyPreset(2)">多頭本周大漲</button>
-                    <button class="preset-btn bullish" onclick="applyPreset(3)">多頭本月大跌</button>
-                    <button class="preset-btn bullish" onclick="applyPreset(4)">多頭本月大漲</button>
-                    <button class="preset-btn bearish" onclick="applyPreset(5)">空頭本周大跌</button>
-                    <button class="preset-btn bearish" onclick="applyPreset(6)">空頭本周大漲</button>
-                    <button class="preset-btn bearish" onclick="applyPreset(7)">空頭本月大跌</button>
-                    <button class="preset-btn bearish" onclick="applyPreset(8)">空頭本月大漲</button>
-                    <button class="preset-btn neutral" onclick="applyPreset(9)">指數成分股</button>
-                    <button class="preset-btn neutral" onclick="applyPreset(10)">核心13F持股</button>
+                    <span class="preset-bar-label">常用情境</span>
+                    <button class="preset-btn neutral" data-preset-index="0" onclick="applyPreset(0)">高波動率</button>
+                    <button class="preset-btn bullish" data-preset-index="1" onclick="applyPreset(1)">多頭本周大跌</button>
+                    <button class="preset-btn bullish" data-preset-index="3" onclick="applyPreset(3)">多頭本月大跌</button>
+                    <button class="preset-btn bearish" data-preset-index="6" onclick="applyPreset(6)">空頭本周大漲</button>
                     <button class="preset-edit-btn" onclick="openPresetEditor()">⚙️ 自訂</button>
-                    <span class="preset-spacer"></span>
-                    <button class="preset-btn daily-focus-btn" onclick="openDailyFocusModal()">當日注意股</button>
                 </div>
                 <div class="preset-result-bar" id="presetResultBar">
                     <span id="presetResultLabel"></span>
@@ -2251,9 +2365,9 @@
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-compact" data-key="Market Cap" onclick="handleSort('Market Cap')"><span>市值 <span
                                             class="sort-icon">↕</span></span></th>
-                                <th class="col-signal" data-key="Core 13F Held" onclick="handleSort('Core 13F Held')"><span>指數 / 核心13F <span
+                                <th class="col-signal" data-key="Index" onclick="handleSort('Index')"><span>市場 <span
                                             class="sort-icon">↕</span></span></th>
-                                <th class="col-risk" data-key="VaR" onclick="handleSort('VaR')"><span>風險/品質 <span
+                                <th class="col-risk" data-key="VaR" onclick="handleSort('VaR')"><span>風險 <span
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-sector" data-key="Sector" onclick="handleSort('Sector')"><span>板塊/產業 <span
                                             class="sort-icon">↕</span></span></th>
@@ -2267,6 +2381,7 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="pagination" id="pagination"></div>
                 <div class="controls"
                     style="justify-content: center; border-top: 1px solid var(--border-color); border-bottom: none;">
                     <span id="statusCount" style="color: var(--text-secondary); font-size: 0.9rem;"></span>
@@ -2293,14 +2408,9 @@
             </div>
         </div>
     </div>
-    <script>const TARGET_URL = 'https://pub-1434d512b03145d98095bbff4adf4b4a.r2.dev/finviz_data.json';
-        const TARGET_SCRIPT_URL = 'https://pub-1434d512b03145d98095bbff4adf4b4a.r2.dev/finviz_data.js';
+    <script>const SCAN_API_URL = window.FCNELI_SCAN_API_URL || 'https://scanner.tradingview.com/america/scan';
+        const SCAN_COLUMNS = ['name', 'description', 'close', 'Perf.W', 'Perf.1M', 'Volatility.W', 'SMA200', 'market_cap_basic', 'sector', 'industry', 'type', 'beta_1_year', 'ATR'];
         const DAILY_FOCUS_SEEN_KEY = 'sp500_daily_focus_seen_date';
-        const PROXIES = [
-            { url: 'https://api.codetabs.com/v1/proxy?quest=', encode: false },
-            { url: 'https://corsproxy.io/?', encode: false },
-            { url: 'https://api.allorigins.win/raw?url=', encode: true }
-        ];
 
         const JPM_BEST_IDEAS_2026 = {
 
@@ -2586,6 +2696,9 @@
         };
 
         let rawData = [];
+        let filteredData = [];
+        let currentPage = 1;
+        const PAGE_SIZE = 100;
 
         let currentSort = {
             key: 'Ticker', direction: 'asc'
@@ -2724,6 +2837,14 @@
 
         function resetFilters() {
             toggleAllSectors(false);
+            isETFExcluded = false;
+            const etfBtn = document.getElementById('etfToggle');
+            if (etfBtn) {
+                etfBtn.classList.remove('active');
+                etfBtn.style.backgroundColor = '';
+                etfBtn.style.color = '';
+                etfBtn.textContent = '排除 ETF';
+            }
             document.getElementById('priceMin').value = '';
             document.getElementById('priceMax').value = '';
             document.getElementById('capMin').value = '';
@@ -2790,7 +2911,7 @@
             updateDisplay();
         }
 
-        function updateDisplay() {
+        function updateDisplay(resetPage = true) {
             // 1. Gather Filter Values
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const priceMinVal = document.getElementById('priceMin').value;
@@ -2963,8 +3084,14 @@
                 return 0;
             });
 
-            // 3. Render
-            renderTable(processedData);
+            // 3. Render the current page while keeping the full filtered set in memory.
+            filteredData = processedData;
+            if (resetPage) currentPage = 1;
+            const totalPages = Math.max(1, Math.ceil(processedData.length / PAGE_SIZE));
+            currentPage = Math.min(currentPage, totalPages);
+            const pageStart = (currentPage - 1) * PAGE_SIZE;
+            renderTable(processedData.slice(pageStart, pageStart + PAGE_SIZE));
+            renderPagination(processedData.length, totalPages);
             updateStats(processedData);
             updateFilterBadge();
             updateFilterStatus();
@@ -2998,7 +3125,6 @@
             loadWatchlists();
             restoreSettings();
             updateDisplay();
-            maybeShowDailyFocusModal();
         }
 
         // Recalculate VaR for all items when tenor changes
@@ -3055,17 +3181,6 @@
 
         function renderStockFocus(item) {
             const indexText = item.Index || '';
-            const coreHeld = item["Core 13F Held"] === 'Yes';
-            const coreManagers = item["Core 13F Managers"] || '';
-            const coreCount = coreManagers ? coreManagers.split(';').filter(Boolean).length : 0;
-            const coreType = item["Core 13F Holding Type"] || '-';
-            const coreDate = item["Core 13F Report Date"] || '-';
-            const hasClearedCore13F = /(^|[^0-9])0(?:\.00)?%/.test(coreManagers);
-            const coreText = coreHeld
-                ? `${coreCount || 1} 位核心13F持有｜${coreType}｜${coreDate}${hasClearedCore13F ? '｜含出清持股' : ''}`
-                : '未被核心13F名單持有';
-            const fcfYield = item._fcfYield !== null ? item._fcfYield.toFixed(2) + '%' : '-';
-            const debtEq = item["Debt/Eq"] || '-';
             const beta = item.Beta || '-';
             const atr = item.ATR || '-';
             const sectorIndustry = `${item.Sector || '-'} / ${item.Industry || '-'}`;
@@ -3073,10 +3188,8 @@
             return `<div class="stock-focus">
                 <div class="stock-focus-title">個股重點資訊</div>
                 <div class="stock-focus-grid">
-                    <div class="stock-focus-item"><span class="stock-focus-label">指數成分</span><div class="stock-focus-value">${escapeHtml(indexText)}</div></div>
-                    <div class="stock-focus-item"><span class="stock-focus-label">核心13F</span><div class="stock-focus-value" title="${escapeHtml(coreManagers)}">${escapeHtml(coreText)}</div></div>
+                    <div class="stock-focus-item"><span class="stock-focus-label">市場</span><div class="stock-focus-value">${escapeHtml(indexText)}</div></div>
                     <div class="stock-focus-item"><span class="stock-focus-label">市值</span><div class="stock-focus-value">${escapeHtml(item["Market Cap"] || '-')}</div></div>
-                    <div class="stock-focus-item"><span class="stock-focus-label">財務/估值</span><div class="stock-focus-value">Debt/Eq ${escapeHtml(debtEq)}｜FCF Yield ${escapeHtml(fcfYield)}</div></div>
                     <div class="stock-focus-item"><span class="stock-focus-label">波動風險</span><div class="stock-focus-value">Beta ${escapeHtml(beta)}｜ATR ${escapeHtml(atr)}｜週波動 ${escapeHtml(item["Volatility W"] || '-')}</div></div>
                     <div class="stock-focus-item"><span class="stock-focus-label">趨勢/績效</span><div class="stock-focus-value">SMA200 ${escapeHtml(item.SMA200 || '-')}｜週 ${escapeHtml(item["Perf Week"] || '-')}｜月 ${escapeHtml(item["Perf Month"] || '-')}</div></div>
                     <div class="stock-focus-item stock-focus-wide"><span class="stock-focus-label">板塊 / 產業</span><div class="stock-focus-value">${escapeHtml(sectorIndustry)}</div></div>
@@ -3326,100 +3439,94 @@ ${JSON.stringify(stockData, null, 2)}
             }
         }
 
+        function scannerPayload() {
+            return {
+                filter: [{ left: 'type', operation: 'equal', right: 'stock' }],
+                options: { lang: 'en' },
+                range: [0, 15000],
+                sort: { sortBy: 'name', sortOrder: 'asc' },
+                columns: SCAN_COLUMNS
+            };
+        }
+
+        function formatNumber(value, digits = 2) {
+            const number = Number(value);
+            return Number.isFinite(number) ? number.toFixed(digits) : '-';
+        }
+
+        function formatPercent(value) {
+            const number = Number(value);
+            return Number.isFinite(number) ? `${number.toFixed(2)}%` : '-';
+        }
+
+        function formatMarketCap(value) {
+            const number = Number(value);
+            if (!Number.isFinite(number)) return '-';
+            if (number >= 1e12) return `${(number / 1e12).toFixed(2)}T`;
+            if (number >= 1e9) return `${(number / 1e9).toFixed(2)}B`;
+            return `${(number / 1e6).toFixed(2)}M`;
+        }
+
+        function normaliseScannerRows(payload) {
+            if (!payload || !Array.isArray(payload.data)) {
+                throw new Error('即時行情資料格式不正確');
+            }
+
+            return payload.data.map(row => {
+                if (!row || typeof row.s !== 'string' || !Array.isArray(row.d)) return null;
+                const [exchange = '', ticker = row.s] = row.s.split(':');
+                const [name, description, close, perfWeek, perfMonth, volatility, sma200, marketCap, sector, industry, type, beta, atr] = row.d;
+                if (type !== 'stock' || !ticker || !Number.isFinite(Number(close))) return null;
+
+                const smaDistance = Number(sma200) ? ((Number(close) / Number(sma200)) - 1) * 100 : null;
+                return {
+                    Ticker: ticker,
+                    Company: description || name || ticker,
+                    Price: formatNumber(close),
+                    'Perf Week': formatPercent(perfWeek),
+                    'Perf Month': formatPercent(perfMonth),
+                    'Volatility W': formatPercent(volatility),
+                    SMA200: formatPercent(smaDistance),
+                    'Market Cap': formatMarketCap(marketCap),
+                    Sector: sector || '-',
+                    Industry: industry || '-',
+                    Beta: formatNumber(beta),
+                    ATR: formatNumber(atr),
+                    'Debt/Eq': '-',
+                    'P/FCF': '-',
+                    Index: exchange,
+                    'Core 13F Held': 'No',
+                    'Core 13F Managers': '',
+                    'Core 13F Report Date': '',
+                    'Core 13F Holding %': '',
+                    'Core 13F Holding Type': ''
+                };
+            }).filter(Boolean);
+        }
+
         async function fetchData() {
             const statusEl = document.getElementById('statusCount');
             const tbody = document.getElementById('tableBody');
-
-            const tryFetch = async (url) => {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-                try {
-                    const response = await fetch(url, {
-                        signal: controller.signal
-                    });
-                    clearTimeout(timeoutId);
-
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status} `);
-                    return await response.json();
-                }
-
-                catch (error) {
-                    clearTimeout(timeoutId);
-                    throw error;
-                }
-            };
-
-            const tryRemoteScript = () => new Promise((resolve, reject) => {
-                delete window.FINVIZ_REMOTE_DATA;
-                const script = document.createElement('script');
-                const timeoutId = setTimeout(() => {
-                    script.remove();
-                    reject(new Error('遠端 JS 載入逾時'));
-                }, 8000);
-                script.src = TARGET_SCRIPT_URL + '?t=' + Date.now();
-                script.async = true;
-                script.onload = function () {
-                    clearTimeout(timeoutId);
-                    script.remove();
-                    if (Array.isArray(window.FINVIZ_REMOTE_DATA)) {
-                        resolve(window.FINVIZ_REMOTE_DATA);
-                    } else {
-                        reject(new Error('遠端 JS 資料格式不正確'));
-                    }
-                };
-                script.onerror = function () {
-                    clearTimeout(timeoutId);
-                    script.remove();
-                    reject(new Error('遠端 JS 資料載入失敗'));
-                };
-                document.head.appendChild(script);
-            });
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
 
             try {
-                const isLocalFilePage = window.location.protocol === 'file:';
+                statusEl.textContent = '正在更新即時行情…';
+                const response = await fetch(SCAN_API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(scannerPayload()),
+                    signal: controller.signal
+                });
+                if (!response.ok) throw new Error(`資料請求失敗 (${response.status})`);
 
-                statusEl.innerHTML = '正在載入遠端資料...';
-                if (isLocalFilePage) {
-                    const data = await tryRemoteScript();
-                    processData(data);
-                    statusEl.innerHTML = '<span style="color: var(--success-color)">已載入遠端資料</span>';
-                    return;
-                }
-
-                try {
-                    const data = await tryFetch(TARGET_URL);
-                    processData(data);
-                    statusEl.innerHTML = '<span style="color: var(--success-color)">已載入遠端資料</span>';
-                    return;
-                }
-
-                catch (e) {
-                    console.warn('Direct remote JSON fetch failed, trying remote JS fallback...', e);
-                }
-
-                statusEl.innerHTML = '正在改用遠端備援資料...';
-
-                try {
-                    const data = await tryRemoteScript();
-                    processData(data);
-                    statusEl.innerHTML = '<span style="color: var(--success-color)">已載入遠端資料</span>';
-                    return;
-                }
-
-                catch (e) {
-                    console.warn('Remote script fallback failed:', e);
-                }
-
-                throw new Error('遠端 JSON 與遠端 JS 備援皆失敗');
-
-            }
-
-            catch (error) {
-                console.error('Error fetching data:', error);
-
-                tbody.innerHTML = ` <tr><td colspan="11" class="loading" style="color: var(--danger-color)"><strong>讀取數據失敗</strong><br><span style="font-size: 0.9em; opacity: 0.8">無法取得遠端資料。<br>錯誤訊息: ${error.message} </span></td></tr>`;
+                processData(normaliseScannerRows(await response.json()));
+                statusEl.innerHTML = '<span style="color: var(--success-color)">TradingView 即時行情已更新</span>';
+            } catch (error) {
+                console.error('Error fetching market data:', error);
+                tbody.innerHTML = ` <tr><td colspan="11" class="loading" style="color: var(--danger-color)"><strong>讀取數據失敗</strong><br><span style="font-size: 0.9em; opacity: 0.8">無法取得即時行情。<br>錯誤訊息: ${escapeHtml(error.message)} </span></td></tr>`;
                 statusEl.innerHTML = '<span style="color: var(--danger-color)">讀取失敗</span>';
+            } finally {
+                clearTimeout(timeoutId);
             }
         }
 
@@ -3592,6 +3699,36 @@ ${JSON.stringify(stockData, null, 2)}
             }, 250);
         }
 
+        function renderPagination(total, totalPages) {
+            const pagination = document.getElementById('pagination');
+            if (!pagination) return;
+            pagination.innerHTML = '';
+            if (!total) return;
+
+            const previous = document.createElement('button');
+            previous.textContent = '上一頁';
+            previous.disabled = currentPage === 1;
+            previous.addEventListener('click', () => goToPage(currentPage - 1));
+
+            const next = document.createElement('button');
+            next.textContent = '下一頁';
+            next.disabled = currentPage === totalPages;
+            next.addEventListener('click', () => goToPage(currentPage + 1));
+
+            const status = document.createElement('span');
+            const from = (currentPage - 1) * PAGE_SIZE + 1;
+            const to = Math.min(currentPage * PAGE_SIZE, total);
+            status.textContent = `${from}–${to} / ${total.toLocaleString('en-US')} 檔`;
+
+            pagination.append(previous, status, next);
+        }
+
+        function goToPage(page) {
+            currentPage = Math.max(1, page);
+            updateDisplay(false);
+            document.querySelector('.table-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
 
@@ -3617,8 +3754,8 @@ ${JSON.stringify(stockData, null, 2)}
                     <td data-label="績效"><div class="cell-stack"><div class="cell-line"><span class="cell-label">週</span><span class="perf-number ${item._perfWeek >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Week"] || '-')}</span></div><div class="cell-line"><span class="cell-label">月</span><span class="perf-number ${item._perfMonth >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Month"] || '-')}</span></div></div></td>
                     <td data-label="波動/趨勢"><div class="cell-stack"><div class="cell-line"><span class="cell-label">波動</span><strong>${escapeHtml(item["Volatility W"] || '-')}</strong></div><span class="trend-text ${isBullish ? 'trend-positive' : 'trend-negative'}">${escapeHtml(item.SMA200 || '-')} (${compactTrendText})</span></div></td>
                     <td data-label="市值">${escapeHtml(item["Market Cap"] || '-')}</td>
-                    <td data-label="指數 / 核心13F"><div class="cell-stack">${renderMiniBadges(item.Index, '')}${summarizeCore13F(item)}</div></td>
-                    <td data-label="風險/品質"><div class="cell-stack"><div class="cell-line"><span class="cell-label">VaR</span><strong style="color:#f59e0b">${item._var ? '$' + item._var.toFixed(2) + ' (' + varPctFormatted + ')' : '-'}</strong></div><div class="cell-line"><span class="cell-label">ATR</span><span>${escapeHtml(item.ATR || '-')}</span><span class="cell-label">Beta</span><span>${escapeHtml(item.Beta || '-')}</span></div><div class="cell-line"><span class="cell-label">D/E</span><span>${escapeHtml(item["Debt/Eq"] || '-')}</span><span class="cell-label">FCF</span><span>${escapeHtml(fcfYieldFormatted)}</span></div></div></td>
+                    <td data-label="市場"><div class="cell-stack">${renderMiniBadges(item.Index, '')}</div></td>
+                    <td data-label="風險"><div class="cell-stack"><div class="cell-line"><span class="cell-label">VaR</span><strong style="color:#f59e0b">${item._var ? '$' + item._var.toFixed(2) + ' (' + varPctFormatted + ')' : '-'}</strong></div><div class="cell-line"><span class="cell-label">ATR</span><span>${escapeHtml(item.ATR || '-')}</span><span class="cell-label">Beta</span><span>${escapeHtml(item.Beta || '-')}</span></div></div></td>
                     <td data-label="板塊/產業"><div class="cell-stack"><strong>${escapeHtml(item.Sector || '-')}</strong><span class="muted-text truncate-2">${escapeHtml(item.Industry || '-')}</span></div></td>
                     <td data-label="財報與評等"><a href="https://finviz.com/quote.ashx?t=${item.Ticker}&p=d&b=1&ty=ea" target="_blank" rel="noopener" style="color: var(--accent-color); text-decoration: none; font-weight: 600; font-size: 0.85rem;">查看</a></td>
                 </tr> `;
@@ -4201,8 +4338,8 @@ ${JSON.stringify(stockData, null, 2)}
 
         function updatePresetButtons() {
             var buttons = document.querySelectorAll('.preset-btn');
-            buttons.forEach(function (btn, i) {
-                btn.classList.toggle('active', i === activePresetIdx);
+            buttons.forEach(function (btn) {
+                btn.classList.toggle('active', Number(btn.dataset.presetIndex) === activePresetIdx);
             });
         }
 
@@ -4210,21 +4347,27 @@ ${JSON.stringify(stockData, null, 2)}
             var bar = document.getElementById('presetResultBar');
             if (!bar) return;
             if (activePresetIdx < 0) { bar.classList.remove('visible'); return; }
-            var tbody = document.getElementById('tableBody');
-            var count = tbody ? tbody.querySelectorAll('tr').length : 0;
             var label = document.getElementById('presetResultLabel');
-            if (label) label.textContent = '「' + filterPresets[activePresetIdx].name + '」篩選結果: ' + count + ' 檔';
+            if (label) label.textContent = '「' + filterPresets[activePresetIdx].name + '」篩選結果: ' + filteredData.length.toLocaleString('en-US') + ' 檔';
             bar.classList.add('visible');
         }
 
         function selectAllFiltered() {
             var checkboxes = document.querySelectorAll('#tableBody input[data-ticker]');
             checkboxes.forEach(function (cb) {
-                cb.checked = true;
-                selectedStocks.add(cb.getAttribute('data-ticker'));
+                var ticker = cb.getAttribute('data-ticker');
+                if (selectedStocks.has(ticker)) {
+                    cb.checked = true;
+                } else if (selectedStocks.size < 5) {
+                    cb.checked = true;
+                    selectedStocks.add(ticker);
+                } else {
+                    cb.checked = false;
+                }
             });
             updateSelectedCount();
             saveSettings();
+            if (checkboxes.length > selectedStocks.size) showToast('最多選擇 5 檔個股');
         }
 
         // ---- Preset Editor ----
@@ -4264,8 +4407,6 @@ ${JSON.stringify(stockData, null, 2)}
                 html += '<div style="font-size:0.8rem;color:var(--text-secondary);">' + desc.join(' | ') + '</div>';
                 html += '</div>';
             });
-            html += '<div class="preset-field"><label>指數成分股</label><select id="pe_indexFilter"><option value="all"' + ((p.indexFilter || 'all') === 'all' ? ' selected' : '') + '>全部</option><option value="any"' + (p.indexFilter === 'any' ? ' selected' : '') + '>任一主要指數</option><option value="sp500"' + (p.indexFilter === 'sp500' ? ' selected' : '') + '>S&P 500</option><option value="nasdaq100"' + (p.indexFilter === 'nasdaq100' ? ' selected' : '') + '>NASDAQ 100</option><option value="djia"' + (p.indexFilter === 'djia' ? ' selected' : '') + '>DJIA</option><option value="none"' + (p.indexFilter === 'none' ? ' selected' : '') + '>非主要指數</option></select></div>';
-            html += '<div class="preset-field"><label>核心13F持股</label><select id="pe_core13fFilter"><option value="all"' + ((p.core13fFilter || 'all') === 'all' ? ' selected' : '') + '>全部</option><option value="held"' + (p.core13fFilter === 'held' ? ' selected' : '') + '>有核心13F持有</option><option value="not-held"' + (p.core13fFilter === 'not-held' ? ' selected' : '') + '>未被核心13F持有</option><option value="share"' + (p.core13fFilter === 'share' ? ' selected' : '') + '>現股持有</option><option value="call"' + (p.core13fFilter === 'call' ? ' selected' : '') + '>含 Call 買權</option><option value="put"' + (p.core13fFilter === 'put' ? ' selected' : '') + '>含 Put 賣權</option></select></div>';
             body.innerHTML = html;
             document.getElementById('presetEditorTitle').textContent = '自訂篩選條件';
         }
@@ -4283,6 +4424,7 @@ ${JSON.stringify(stockData, null, 2)}
             html += '<div class="preset-field"><label>周績效 (%)</label><div class="range-row"><input type="number" id="pe_pwMin" placeholder="Min" step="0.1" value="' + (p.perfWeekMin || '') + '"><span>~</span><input type="number" id="pe_pwMax" placeholder="Max" step="0.1" value="' + (p.perfWeekMax || '') + '"></div></div>';
             html += '<div class="preset-field"><label>月績效 (%)</label><div class="range-row"><input type="number" id="pe_pmMin" placeholder="Min" step="0.1" value="' + (p.perfMonthMin || '') + '"><span>~</span><input type="number" id="pe_pmMax" placeholder="Max" step="0.1" value="' + (p.perfMonthMax || '') + '"></div></div>';
             html += '<div class="preset-field"><label>周波動率 (%)</label><div class="range-row"><input type="number" id="pe_volMin" placeholder="Min" step="0.1" value="' + (p.volMin || '') + '"><span>~</span><input type="number" id="pe_volMax" placeholder="Max" step="0.1" value="' + (p.volMax || '') + '"></div></div>';
+            html += '<div class="preset-field"><label>市場</label><select id="pe_indexFilter"><option value="all"' + ((p.indexFilter || 'all') === 'all' ? ' selected' : '') + '>全部</option><option value="any"' + (p.indexFilter === 'any' ? ' selected' : '') + '>任一主要指數</option><option value="sp500"' + (p.indexFilter === 'sp500' ? ' selected' : '') + '>S&P 500</option><option value="nasdaq100"' + (p.indexFilter === 'nasdaq100' ? ' selected' : '') + '>NASDAQ 100</option><option value="djia"' + (p.indexFilter === 'djia' ? ' selected' : '') + '>DJIA</option><option value="none"' + (p.indexFilter === 'none' ? ' selected' : '') + '>非主要指數</option></select></div>';
             body.innerHTML = html;
         }
 
@@ -4321,8 +4463,9 @@ ${JSON.stringify(stockData, null, 2)}
 
         function updatePresetButtonLabels() {
             var buttons = document.querySelectorAll('.preset-btn');
-            buttons.forEach(function (btn, i) {
-                if (filterPresets[i]) btn.textContent = filterPresets[i].name;
+            buttons.forEach(function (btn) {
+                var presetIndex = Number(btn.dataset.presetIndex);
+                if (filterPresets[presetIndex]) btn.textContent = filterPresets[presetIndex].name;
             });
         }
 
@@ -4743,10 +4886,7 @@ ${JSON.stringify(stockData, null, 2)}
                 if (s.sortKey) currentSort.key = s.sortKey;
                 if (s.sortDirection) currentSort.direction = s.sortDirection;
 
-                // Filter panel
-                if (s.filterPanelOpen) {
-                    document.getElementById('filterPanel').classList.add('open');
-                }
+                // The advanced panel always starts collapsed so the primary workflow stays focused.
 
                 // Selected stocks
                 if (s.selectedStocks && s.selectedStocks.length > 0) {
