@@ -1744,7 +1744,29 @@
             border-radius: 0.42rem;
             font-weight: 800;
             letter-spacing: 0.01em;
-            cursor: help;
+            cursor: pointer;
+        }
+
+        .ticker-link {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .ticker-link:hover .ticker-pattern,
+        .ticker-link:focus-visible .ticker-pattern {
+            filter: brightness(0.94);
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        .ticker-link:not(.ticker-pattern) {
+            color: var(--accent-color);
+            font-weight: 800;
+        }
+
+        .ticker-link:hover,
+        .ticker-link:focus-visible {
+            text-decoration: underline;
         }
 
         .ticker-pattern-1 {
@@ -2834,10 +2856,18 @@
         function renderTickerWithPatternHighlight(item) {
             const matches = item._patternMatches || [];
             const ticker = escapeHtml(item.Ticker);
-            if (!matches.length) return ticker;
-
+            const exchange = String(item.Index || '').split(',')[0].trim();
+            const symbol = exchange ? `${exchange}:${item.Ticker}` : item.Ticker;
+            const chartUrl = `https://www.tradingview.com/chart/?symbol=${encodeURIComponent(symbol)}`;
             const labels = matches.map(function (pattern) { return pattern.label; }).join('、');
-            return `<span class="ticker-pattern ticker-pattern-${matches.length}" title="符合 ${matches.length} 種型態：${escapeHtml(labels)}">${ticker}</span>`;
+            const tooltip = matches.length
+                ? `符合 ${matches.length} 種型態：${labels}；點擊在 TradingView 查看 K 線`
+                : `點擊在 TradingView 查看 ${symbol} K 線`;
+            const content = matches.length
+                ? `<span class="ticker-pattern ticker-pattern-${matches.length}">${ticker}</span>`
+                : ticker;
+
+            return `<a class="ticker-link" href="${chartUrl}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(tooltip)}">${content}</a>`;
         }
 
         function extractCore13FManagerNames(item) {
