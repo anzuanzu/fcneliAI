@@ -3,7 +3,9 @@ const TRADINGVIEW_SCAN_URL = 'https://scanner.tradingview.com/america/scan';
 const COLUMNS = [
   'name', 'description', 'close', 'Perf.W', 'Perf.1M', 'Volatility.W',
   'SMA200', 'market_cap_basic', 'sector', 'industry', 'type',
-  'beta_1_year', 'ATR'
+  'beta_1_year', 'ATR', 'SMA20', 'SMA50', 'SMA150', 'Perf.D', 'Perf.3M',
+  'Perf.6M', 'price_52_week_high', 'price_52_week_low', 'RSI',
+  'relative_volume_10d_calc', 'Recommend.All'
 ];
 
 function scannerPayload() {
@@ -44,7 +46,9 @@ export default {
     if (request.method !== 'POST') return jsonResponse({ error: 'Method not allowed' }, 405, headers);
 
     const cache = caches.default;
-    const cacheKey = new Request(url.toString(), { method: 'GET' });
+    const cacheUrl = new URL(url);
+    cacheUrl.searchParams.set('schema', 'scenario-filters-v1');
+    const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
     const cached = await cache.match(cacheKey);
     if (cached) {
       const cachedHeaders = new Headers(cached.headers);

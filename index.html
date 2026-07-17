@@ -2335,10 +2335,14 @@
                 <div id="filterStatus" class="filter-status empty"></div>
                 <div class="preset-bar">
                     <span class="preset-bar-label">常用情境</span>
-                    <button class="preset-btn neutral" data-preset-index="0" onclick="applyPreset(0)">高波動率</button>
-                    <button class="preset-btn bullish" data-preset-index="1" onclick="applyPreset(1)">多頭本周大跌</button>
-                    <button class="preset-btn bullish" data-preset-index="3" onclick="applyPreset(3)">多頭本月大跌</button>
-                    <button class="preset-btn bearish" data-preset-index="6" onclick="applyPreset(6)">空頭本周大漲</button>
+                    <button class="preset-btn bullish" data-preset-index="0" onclick="applyPreset(0)" title="收盤價大於 SMA200、周績效小於等於 -5%">多頭本周大跌</button>
+                    <button class="preset-btn bullish" data-preset-index="1" onclick="applyPreset(1)" title="收盤價大於 SMA200、月績效小於等於 -10%">多頭本月大跌</button>
+                    <button class="preset-btn bearish" data-preset-index="2" onclick="applyPreset(2)" title="收盤價小於 SMA200、周績效大於等於 5%">空頭本周大漲</button>
+                    <button class="preset-btn bearish" data-preset-index="3" onclick="applyPreset(3)" title="收盤價小於 SMA200、月績效大於等於 10%">空頭本月大漲</button>
+                    <button class="preset-btn neutral" data-preset-index="4" onclick="applyPreset(4)" title="MA50、MA150、MA200 多頭排列；距 52 週高點小於 20%；6 個月漲幅大於 0%；RSI 50–70">杯柄型態</button>
+                    <button class="preset-btn neutral" data-preset-index="5" onclick="applyPreset(5)" title="強勢均線排列、距高點小於 20%、6 個月漲幅大於 10%、RSI 50–70、相對成交量小於 1.2">強勢杯柄 / VCP</button>
+                    <button class="preset-btn bullish" data-preset-index="6" onclick="applyPreset(6)" title="收盤價大於 SMA20、SMA50；單日漲幅大於 2%；相對成交量大於 1.5；RSI 60–75；距高點小於 10%">突破確認</button>
+                    <button class="preset-btn neutral" data-preset-index="7" onclick="applyPreset(7)" title="收盤價大於 SMA50；1 月、3 月漲幅轉強；距 52 週低點大於 30%；RSI 50–70；技術評等中性以上">圓弧底 / 深杯轉強</button>
                     <button class="preset-edit-btn" onclick="openPresetEditor()">⚙️ 自訂</button>
                 </div>
                 <div class="preset-result-bar" id="presetResultBar">
@@ -2408,9 +2412,9 @@
             </div>
         </div>
     </div>
-    <script>window.FCNELI_SCAN_API_URL = 'https://fcneli-api.jamesyang14.workers.dev/api/scan';</script>
+    <script>window.FCNELI_SCAN_API_URL = 'https://fcneli-api.jamesyang14.workers.dev/api/scan?schema=scenario-filters-v1';</script>
     <script>const SCAN_API_URL = window.FCNELI_SCAN_API_URL || 'https://scanner.tradingview.com/america/scan';
-        const SCAN_COLUMNS = ['name', 'description', 'close', 'Perf.W', 'Perf.1M', 'Volatility.W', 'SMA200', 'market_cap_basic', 'sector', 'industry', 'type', 'beta_1_year', 'ATR'];
+        const SCAN_COLUMNS = ['name', 'description', 'close', 'Perf.W', 'Perf.1M', 'Volatility.W', 'SMA200', 'market_cap_basic', 'sector', 'industry', 'type', 'beta_1_year', 'ATR', 'SMA20', 'SMA50', 'SMA150', 'Perf.D', 'Perf.3M', 'Perf.6M', 'price_52_week_high', 'price_52_week_low', 'RSI', 'relative_volume_10d_calc', 'Recommend.All'];
         const DAILY_FOCUS_SEEN_KEY = 'sp500_daily_focus_seen_date';
 
         const JPM_BEST_IDEAS_2026 = {
@@ -2715,6 +2719,7 @@
         let uniqueIndustries = new Set();
         let activeIndustries = new Set();
         let uniqueCore13FManagers = new Set();
+        let activeScenario = null;
 
         // Debounce utility
         function debounce(fn, delay) {
@@ -2725,6 +2730,59 @@
             };
         }
         const debouncedUpdate = debounce(updateDisplay, 300);
+
+        function isFiniteMetric(value) {
+            return Number.isFinite(value);
+        }
+
+        function isAboveMovingAverage(item, key) {
+            return isFiniteMetric(item[key]) && item._price > item[key];
+        }
+
+        function isWithin52WeekHigh(item, maxDistance) {
+            return isFiniteMetric(item._high52Week) && item._high52Week > 0 &&
+                ((item._high52Week - item._price) / item._high52Week) * 100 < maxDistance;
+        }
+
+        function isAbove52WeekLow(item, minDistance) {
+            return isFiniteMetric(item._low52Week) && item._low52Week > 0 &&
+                ((item._price - item._low52Week) / item._low52Week) * 100 > minDistance;
+        }
+
+        function matchesScenario(item, scenario) {
+            if (!scenario) return true;
+
+            switch (scenario) {
+                case 'bull-weekly-drop':
+                    return isAboveMovingAverage(item, '_sma200Value') && item._perfWeek <= -5;
+                case 'bull-monthly-drop':
+                    return isAboveMovingAverage(item, '_sma200Value') && item._perfMonth <= -10;
+                case 'bear-weekly-rise':
+                    return isFiniteMetric(item._sma200Value) && item._price < item._sma200Value && item._perfWeek >= 5;
+                case 'bear-monthly-rise':
+                    return isFiniteMetric(item._sma200Value) && item._price < item._sma200Value && item._perfMonth >= 10;
+                case 'cup-handle':
+                    return isAboveMovingAverage(item, '_sma50') && isAboveMovingAverage(item, '_sma150') &&
+                        isAboveMovingAverage(item, '_sma200Value') && isWithin52WeekHigh(item, 20) &&
+                        item._perf6Month > 0 && item._rsi >= 50 && item._rsi <= 70;
+                case 'vcp':
+                    return isAboveMovingAverage(item, '_sma50') && isAboveMovingAverage(item, '_sma150') &&
+                        isAboveMovingAverage(item, '_sma200Value') && item._sma50 > item._sma150 &&
+                        isWithin52WeekHigh(item, 20) && item._perf6Month > 10 &&
+                        item._rsi >= 50 && item._rsi <= 70 && item._relativeVolume < 1.2;
+                case 'breakout':
+                    return isAboveMovingAverage(item, '_sma20') && isAboveMovingAverage(item, '_sma50') &&
+                        item._perfDay > 2 && item._relativeVolume > 1.5 &&
+                        item._rsi >= 60 && item._rsi <= 75 && isWithin52WeekHigh(item, 10);
+                case 'rounding-bottom':
+                    return isAboveMovingAverage(item, '_sma50') && item._perfMonth > 0 &&
+                        item._perf3Month > 5 && isAbove52WeekLow(item, 30) &&
+                        item._rsi >= 50 && item._rsi <= 70 && item._relativeVolume > 1 &&
+                        item._technicalRating >= 0;
+                default:
+                    return true;
+            }
+        }
 
         function extractCore13FManagerNames(item) {
             return String((item && item["Core 13F Managers"]) || '')
@@ -2837,6 +2895,8 @@
         }
 
         function resetFilters() {
+            activeScenario = null;
+            activePresetIdx = -1;
             toggleAllSectors(false);
             isETFExcluded = false;
             const etfBtn = document.getElementById('etfToggle');
@@ -2872,6 +2932,7 @@
             document.getElementById('core13fFilter').value = 'all';
             document.getElementById('core13fManagerFilter').value = 'all';
             setSmaFilterDirect('all');
+            updatePresetButtons();
             updateDisplay();
         }
 
@@ -3059,6 +3120,9 @@
                 // JPM Only
                 if (jpmChecked && !item._isJpmBest) return false;
 
+                // One-click scenario conditions
+                if (!matchesScenario(item, activeScenario)) return false;
+
                 return true;
             });
 
@@ -3117,6 +3181,18 @@
                     _pfcf: parseFloat(item["P/FCF"]) || null,
                     _fcfYield: (parseFloat(item["P/FCF"]) ? (100 / parseFloat(item["P/FCF"])) : null),
                     _var: (() => { const vol = parseFloat(item["Volatility W"]?.replace('%', '')) || 0; const p = parseFloat(item.Price) || 0; const tenorEl = document.getElementById('fcnTenor'); const weeks = tenorEl && parseInt(tenorEl.value) === 6 ? 26 : 13; return vol && p ? p * 2.326 * (vol / 100) * Math.sqrt(weeks) : 0; })(),
+                    _sma20: item.SMA20Raw,
+                    _sma50: item.SMA50Raw,
+                    _sma150: item.SMA150Raw,
+                    _sma200Value: item.SMA200Raw,
+                    _perfDay: item.PerfDayRaw,
+                    _perf3Month: item.Perf3MonthRaw,
+                    _perf6Month: item.Perf6MonthRaw,
+                    _high52Week: item.High52WeekRaw,
+                    _low52Week: item.Low52WeekRaw,
+                    _rsi: item.RSIRaw,
+                    _relativeVolume: item.RelativeVolumeRaw,
+                    _technicalRating: item.TechnicalRatingRaw,
                     _isJpmBest: !!jpmInfo.name,
                     _jpmSector: jpmInfo.sector || ''
                 };
@@ -3476,7 +3552,7 @@ ${JSON.stringify(stockData, null, 2)}
             return payload.data.map(row => {
                 if (!row || typeof row.s !== 'string' || !Array.isArray(row.d)) return null;
                 const [exchange = '', ticker = row.s] = row.s.split(':');
-                const [name, description, close, perfWeek, perfMonth, volatility, sma200, marketCap, sector, industry, type, beta, atr] = row.d;
+                const [name, description, close, perfWeek, perfMonth, volatility, sma200, marketCap, sector, industry, type, beta, atr, sma20, sma50, sma150, perfDay, perf3Month, perf6Month, high52Week, low52Week, rsi, relativeVolume, technicalRating] = row.d;
                 if (type !== 'stock' || !ticker || !Number.isFinite(Number(close))) return null;
 
                 const smaDistance = Number(sma200) ? ((Number(close) / Number(sma200)) - 1) * 100 : null;
@@ -3500,7 +3576,19 @@ ${JSON.stringify(stockData, null, 2)}
                     'Core 13F Managers': '',
                     'Core 13F Report Date': '',
                     'Core 13F Holding %': '',
-                    'Core 13F Holding Type': ''
+                    'Core 13F Holding Type': '',
+                    SMA20Raw: Number.isFinite(Number(sma20)) ? Number(sma20) : null,
+                    SMA50Raw: Number.isFinite(Number(sma50)) ? Number(sma50) : null,
+                    SMA150Raw: Number.isFinite(Number(sma150)) ? Number(sma150) : null,
+                    SMA200Raw: Number.isFinite(Number(sma200)) ? Number(sma200) : null,
+                    PerfDayRaw: Number.isFinite(Number(perfDay)) ? Number(perfDay) : null,
+                    Perf3MonthRaw: Number.isFinite(Number(perf3Month)) ? Number(perf3Month) : null,
+                    Perf6MonthRaw: Number.isFinite(Number(perf6Month)) ? Number(perf6Month) : null,
+                    High52WeekRaw: Number.isFinite(Number(high52Week)) ? Number(high52Week) : null,
+                    Low52WeekRaw: Number.isFinite(Number(low52Week)) ? Number(low52Week) : null,
+                    RSIRaw: Number.isFinite(Number(rsi)) ? Number(rsi) : null,
+                    RelativeVolumeRaw: Number.isFinite(Number(relativeVolume)) ? Number(relativeVolume) : null,
+                    TechnicalRatingRaw: Number.isFinite(Number(technicalRating)) ? Number(technicalRating) : null
                 };
             }).filter(Boolean);
         }
@@ -3816,7 +3904,7 @@ ${JSON.stringify(stockData, null, 2)}
         }
 
         function handleSort(key) {
-            if (openAdvancedFilterForColumn(key)) {
+            if (key !== 'Market Cap' && openAdvancedFilterForColumn(key)) {
                 return;
             }
 
@@ -3886,6 +3974,7 @@ ${JSON.stringify(stockData, null, 2)}
             if ((document.getElementById('jpmOnly') || {}).checked) count++;
             if (isETFExcluded) count++;
             if (activeWatchlistFilter) count++;
+            if (activeScenario) count++;
 
             const badge = document.getElementById('filterBadge');
             if (badge) {
@@ -3906,6 +3995,9 @@ ${JSON.stringify(stockData, null, 2)}
             if (activeWatchlistFilter) {
                 var awl = watchlists.find(function (w) { return w.id === activeWatchlistFilter; });
                 if (awl) chips.push(makeChip('觀察: ' + awl.name, function () { activeWatchlistFilter = null; updateDisplay(); }));
+            }
+            if (activeScenario && activePresetIdx >= 0 && filterPresets[activePresetIdx]) {
+                chips.push(makeChip('情境: ' + filterPresets[activePresetIdx].name, function () { clearPreset(); }));
             }
             if (isETFExcluded) chips.push(makeChip('排除 ETF', function () { toggleETFExclusion(); }));
             if (activeSectors.size > 0) {
@@ -4249,33 +4341,25 @@ ${JSON.stringify(stockData, null, 2)}
         let activePresetIdx = -1;
 
         var DEFAULT_PRESETS = [
-            { name: '高波動率', etf: true, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '5', volMax: '' },
-            { name: '多頭本周大跌', etf: true, sma: 'bullish', perfWeekMin: '', perfWeekMax: '-5', perfMonthMin: '', perfMonthMax: '', volMin: '3', volMax: '' },
-            { name: '多頭本周大漲', etf: true, sma: 'bullish', perfWeekMin: '5', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '3', volMax: '' },
-            { name: '多頭本月大跌', etf: true, sma: 'bullish', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '-10', volMin: '3', volMax: '' },
-            { name: '多頭本月大漲', etf: true, sma: 'bullish', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '10', perfMonthMax: '', volMin: '3', volMax: '' },
-            { name: '空頭本周大跌', etf: true, sma: 'bearish', perfWeekMin: '', perfWeekMax: '-5', perfMonthMin: '', perfMonthMax: '', volMin: '3', volMax: '' },
-            { name: '空頭本周大漲', etf: true, sma: 'bearish', perfWeekMin: '5', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '3', volMax: '' },
-            { name: '空頭本月大跌', etf: true, sma: 'bearish', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '-10', volMin: '3', volMax: '' },
-            { name: '空頭本月大漲', etf: true, sma: 'bearish', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '10', perfMonthMax: '', volMin: '3', volMax: '' }
+            { name: '多頭本周大跌', scenario: 'bull-weekly-drop', scenarioDescription: '收盤價 > SMA200、周績效 ≤ -5%', etf: false, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '', volMax: '' },
+            { name: '多頭本月大跌', scenario: 'bull-monthly-drop', scenarioDescription: '收盤價 > SMA200、月績效 ≤ -10%', etf: false, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '', volMax: '' },
+            { name: '空頭本周大漲', scenario: 'bear-weekly-rise', scenarioDescription: '收盤價 < SMA200、周績效 ≥ 5%', etf: false, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '', volMax: '' },
+            { name: '空頭本月大漲', scenario: 'bear-monthly-rise', scenarioDescription: '收盤價 < SMA200、月績效 ≥ 10%', etf: false, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '', volMax: '' },
+            { name: '杯柄型態', scenario: 'cup-handle', scenarioDescription: '價格 > MA50、MA150、MA200；距 52 週高點 <20%；6 個月漲幅 >0%；RSI 50–70', etf: false, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '', volMax: '' },
+            { name: '強勢杯柄 / VCP', scenario: 'vcp', scenarioDescription: '強勢均線排列、距高點 <20%、6 個月漲幅 >10%、RSI 50–70、相對成交量 <1.2', etf: false, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '', volMax: '' },
+            { name: '突破確認', scenario: 'breakout', scenarioDescription: '價格 > SMA20、SMA50；單日漲幅 >2%；相對成交量 >1.5；RSI 60–75；距高點 <10%', etf: false, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '', volMax: '' },
+            { name: '圓弧底 / 深杯轉強', scenario: 'rounding-bottom', scenarioDescription: '價格 > SMA50；1 月、3 月漲幅轉強；距 52 週低點 >30%；RSI 50–70；技術評等中性以上', etf: false, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '', volMax: '' }
         ];
-
-        DEFAULT_PRESETS.push(
-            { name: '指數成分股', etf: true, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '', volMax: '', indexFilter: 'any', core13fFilter: 'all' },
-            { name: '核心13F持股', etf: true, sma: 'all', perfWeekMin: '', perfWeekMax: '', perfMonthMin: '', perfMonthMax: '', volMin: '', volMax: '', indexFilter: 'all', core13fFilter: 'held' }
-        );
 
         var filterPresets = [];
 
         function loadPresets() {
             try {
                 var json = localStorage.getItem(PRESET_STORAGE_KEY);
-                filterPresets = json ? JSON.parse(json) : JSON.parse(JSON.stringify(DEFAULT_PRESETS));
-                DEFAULT_PRESETS.forEach(function (preset) {
-                    if (!filterPresets.some(function (p) { return p.name === preset.name; })) {
-                        filterPresets.push(JSON.parse(JSON.stringify(preset)));
-                    }
-                });
+                var savedPresets = json ? JSON.parse(json) : [];
+                var builtInNames = new Set(DEFAULT_PRESETS.map(function (preset) { return preset.name; }));
+                var customPresets = savedPresets.filter(function (preset) { return !builtInNames.has(preset.name); });
+                filterPresets = JSON.parse(JSON.stringify(DEFAULT_PRESETS)).concat(customPresets);
             } catch (e) {
                 filterPresets = JSON.parse(JSON.stringify(DEFAULT_PRESETS));
             }
@@ -4289,14 +4373,9 @@ ${JSON.stringify(stockData, null, 2)}
             var p = filterPresets[idx];
             if (!p) return;
 
-            // Reset filters first
+            // Reset filters first so one scenario never inherits a previous condition.
+            resetFilters();
             document.getElementById('searchInput').value = '';
-            document.getElementById('priceMin').value = '';
-            document.getElementById('priceMax').value = '';
-            document.getElementById('capMin').value = '';
-            document.getElementById('capMax').value = '';
-            toggleAllSectors(false);
-            toggleAllIndustries(false);
             activeWatchlistFilter = null;
 
             // Apply preset values
@@ -4321,6 +4400,7 @@ ${JSON.stringify(stockData, null, 2)}
             document.getElementById('indexFilter').value = p.indexFilter || 'all';
             document.getElementById('core13fFilter').value = p.core13fFilter || 'all';
             document.getElementById('core13fManagerFilter').value = p.core13fManagerFilter || 'all';
+            activeScenario = p.scenario || null;
 
             activePresetIdx = idx;
             updatePresetButtons();
@@ -4403,6 +4483,7 @@ ${JSON.stringify(stockData, null, 2)}
                 if (p.perfMonthMax) desc.push('月績效<=' + p.perfMonthMax + '%');
                 if (p.volMin) desc.push('波動率>=' + p.volMin + '%');
                 if (p.volMax) desc.push('波動率<=' + p.volMax + '%');
+                if (p.scenarioDescription) desc.push(p.scenarioDescription);
                 if (p.indexFilter && p.indexFilter !== 'all') desc.push('指數=' + p.indexFilter);
                 if (p.core13fFilter && p.core13fFilter !== 'all') desc.push('核心13F=' + p.core13fFilter);
                 html += '<div style="font-size:0.8rem;color:var(--text-secondary);">' + desc.join(' | ') + '</div>';
