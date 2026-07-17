@@ -1737,6 +1737,40 @@
             border-left: 3px solid #eab308;
         }
 
+        .ticker-pattern {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.18rem 0.42rem;
+            border-radius: 0.42rem;
+            font-weight: 800;
+            letter-spacing: 0.01em;
+            cursor: help;
+        }
+
+        .ticker-pattern-1 {
+            color: #b91c1c;
+            background: rgba(239, 68, 68, 0.14);
+            box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.16);
+        }
+
+        .ticker-pattern-2 {
+            color: #991b1b;
+            background: rgba(239, 68, 68, 0.26);
+            box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.28);
+        }
+
+        .ticker-pattern-3 {
+            color: #fff;
+            background: rgba(220, 38, 38, 0.62);
+            box-shadow: inset 0 0 0 1px rgba(185, 28, 28, 0.6);
+        }
+
+        .ticker-pattern-4 {
+            color: #fff;
+            background: #991b1b;
+            box-shadow: 0 2px 8px rgba(153, 27, 27, 0.35);
+        }
+
         .preset-edit-btn {
             padding: 0.3rem 0.5rem;
             border: 1px dashed var(--border-color);
@@ -2784,6 +2818,28 @@
             }
         }
 
+        const HIGHLIGHT_PATTERNS = [
+            { scenario: 'cup-handle', label: '杯柄型態' },
+            { scenario: 'vcp', label: '強勢杯柄 / VCP' },
+            { scenario: 'breakout', label: '突破確認' },
+            { scenario: 'rounding-bottom', label: '圓弧底 / 深杯轉強' }
+        ];
+
+        function getPatternMatches(item) {
+            return HIGHLIGHT_PATTERNS.filter(function (pattern) {
+                return matchesScenario(item, pattern.scenario);
+            });
+        }
+
+        function renderTickerWithPatternHighlight(item) {
+            const matches = item._patternMatches || [];
+            const ticker = escapeHtml(item.Ticker);
+            if (!matches.length) return ticker;
+
+            const labels = matches.map(function (pattern) { return pattern.label; }).join('、');
+            return `<span class="ticker-pattern ticker-pattern-${matches.length}" title="符合 ${matches.length} 種型態：${escapeHtml(labels)}">${ticker}</span>`;
+        }
+
         function extractCore13FManagerNames(item) {
             return String((item && item["Core 13F Managers"]) || '')
                 .split(';')
@@ -3167,7 +3223,7 @@
             // Transform data to ensure numbers are numbers
             rawData = data.map(item => {
                 const jpmInfo = JPM_BEST_IDEAS_2026[item.Ticker] || {};
-                return {
+                const normalizedItem = {
                     ...item,
                     _price: parseFloat(item.Price) || 0,
                     _sma200: parseFloat(item.SMA200.replace('%', '')) || 0,
@@ -3196,6 +3252,8 @@
                     _isJpmBest: !!jpmInfo.name,
                     _jpmSector: jpmInfo.sector || ''
                 };
+                normalizedItem._patternMatches = getPatternMatches(normalizedItem);
+                return normalizedItem;
             });
 
             initFilters(rawData);
@@ -3837,7 +3895,7 @@ ${JSON.stringify(stockData, null, 2)}
 
                 return ` <tr>
                     <td class="checkbox-wrapper" data-label="選取"><input type="checkbox" data-ticker="${item.Ticker}" onchange="toggleSelection('${item.Ticker}')"${isSelected}></td>
-                    <td class="ticker" data-label="代碼">${escapeHtml(item.Ticker)}</td>
+                    <td class="ticker" data-label="代碼">${renderTickerWithPatternHighlight(item)}</td>
                     <td data-label="公司名稱"><div class="cell-stack"><strong class="truncate-2">${escapeHtml(item.Company || '-')}</strong><span class="muted-text truncate-2">${escapeHtml(item.Industry || '-')}</span></div></td>
                     <td class="price" data-label="價格">$${escapeHtml(item.Price || '-')}</td>
                     <td data-label="績效"><div class="cell-stack"><div class="cell-line"><span class="cell-label">週</span><span class="perf-number ${item._perfWeek >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Week"] || '-')}</span></div><div class="cell-line"><span class="cell-label">月</span><span class="perf-number ${item._perfMonth >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Month"] || '-')}</span></div></div></td>
