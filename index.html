@@ -235,6 +235,32 @@
         .fcn-bar-title strong { font-size: 0.95rem; }
         .fcn-bar-title span { color: var(--text-secondary); font-size: 0.78rem; }
 
+        .selected-tickers {
+            display: flex;
+            flex: 1 1 260px;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.35rem;
+            max-height: 4.9rem;
+            overflow-y: auto;
+            padding: 0.42rem 0.55rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: var(--card-bg);
+            font-size: 0.78rem;
+        }
+
+        .selected-ticker-chip {
+            padding: 0.2rem 0.45rem;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.14);
+            color: var(--accent-color);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .selected-tickers-empty { color: var(--text-secondary); }
+
         .fcn-bar .input-group { font-size: 0.82rem; }
         .fcn-bar .input-group input[type="number"] { width: 64px; padding: 0.38rem 0.45rem; }
 
@@ -2234,7 +2260,7 @@
                     </div>
                 </div>
                 <div class="fcn-bar">
-                    <div class="fcn-bar-title"><strong>FCN 試算</strong><span>已選 <b id="selectedCount">0</b> / 5 檔</span></div>
+                    <div class="fcn-bar-title"><strong>FCN 試算</strong><span>已選 <b id="selectedCount">0</b> 檔</span></div>
                     <div class="fcn-inputs">
                         <div class="input-group">
                             <label for="fcnTenor">天期 (Tenor)</label>
@@ -2261,11 +2287,14 @@
                         <button class="button" onclick="calculateSelected()">開始試算</button>
                         <button class="button secondary" id="quoteSystemBtn" onclick="openQuoteSystem()" disabled>🧾 送詢價系統</button>
                         <button class="button secondary" onclick="clearAllSelections()"
-                            style="padding: 0.4rem 0.75rem; font-size: 0.8rem;" title="清除所有勾選">清除勾選</button>
+                            style="padding: 0.4rem 0.75rem; font-size: 0.8rem;" title="取消所有已勾選個股">取消全部勾選</button>
                         <div class="watchlist-dropdown" id="watchlistDropdown"><button class="button secondary"
                                 onclick="toggleWatchlistDropdown()" id="addToWatchlistBtn" disabled>➕ 加入觀察名單</button>
                             <div class="watchlist-dropdown-menu" id="watchlistDropdownMenu"></div>
                         </div>
+                    </div>
+                    <div class="selected-tickers" id="selectedTickers" aria-label="已勾選個股" aria-live="polite">
+                        <span class="selected-tickers-empty">尚未勾選個股</span>
                     </div>
                 </div>
                 <div id="filterPanel" class="filter-panel">
@@ -3306,17 +3335,7 @@
         function toggleSelection(ticker) {
             if (selectedStocks.has(ticker)) {
                 selectedStocks.delete(ticker);
-            }
-
-            else {
-                if (selectedStocks.size >= 5) {
-                    alert('最多只能選擇 5 檔個股');
-                    // Uncheck the box that was just clicked
-                    const checkbox = document.querySelector(`input[data-ticker="${ticker}"]`);
-                    if (checkbox) checkbox.checked = false;
-                    return;
-                }
-
+            } else {
                 selectedStocks.add(ticker);
             }
 
@@ -3332,6 +3351,23 @@
 
         function updateSelectedCount() {
             document.getElementById('selectedCount').textContent = selectedStocks.size;
+            const selectedTickersEl = document.getElementById('selectedTickers');
+            if (selectedTickersEl) {
+                selectedTickersEl.replaceChildren();
+                if (selectedStocks.size === 0) {
+                    const empty = document.createElement('span');
+                    empty.className = 'selected-tickers-empty';
+                    empty.textContent = '尚未勾選個股';
+                    selectedTickersEl.appendChild(empty);
+                } else {
+                    selectedStocks.forEach(function (ticker) {
+                        const chip = document.createElement('span');
+                        chip.className = 'selected-ticker-chip';
+                        chip.textContent = ticker;
+                        selectedTickersEl.appendChild(chip);
+                    });
+                }
+            }
             updateAddToWatchlistBtn();
             const quoteButton = document.getElementById('quoteSystemBtn');
             if (quoteButton) quoteButton.disabled = selectedStocks.size === 0;
@@ -4545,16 +4581,13 @@ ${JSON.stringify(stockData, null, 2)}
                 var ticker = cb.getAttribute('data-ticker');
                 if (selectedStocks.has(ticker)) {
                     cb.checked = true;
-                } else if (selectedStocks.size < 5) {
+                } else {
                     cb.checked = true;
                     selectedStocks.add(ticker);
-                } else {
-                    cb.checked = false;
                 }
             });
             updateSelectedCount();
             saveSettings();
-            if (checkboxes.length > selectedStocks.size) showToast('最多選擇 5 檔個股');
         }
 
         // ---- Preset Editor ----
