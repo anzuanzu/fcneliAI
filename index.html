@@ -2259,6 +2259,7 @@
                     </div>
                     <div class="fcn-actions">
                         <button class="button" onclick="calculateSelected()">開始試算</button>
+                        <button class="button secondary" id="quoteSystemBtn" onclick="openQuoteSystem()" disabled>🧾 送詢價系統</button>
                         <button class="button secondary" onclick="clearAllSelections()"
                             style="padding: 0.4rem 0.75rem; font-size: 0.8rem;" title="清除所有勾選">清除勾選</button>
                         <div class="watchlist-dropdown" id="watchlistDropdown"><button class="button secondary"
@@ -3277,6 +3278,8 @@
             initFilters(rawData);
             loadWatchlists();
             restoreSettings();
+            restoreQuoteSelectionsFromUrl();
+            updateSelectedCount();
             updateDisplay();
         }
 
@@ -3330,6 +3333,39 @@
         function updateSelectedCount() {
             document.getElementById('selectedCount').textContent = selectedStocks.size;
             updateAddToWatchlistBtn();
+            const quoteButton = document.getElementById('quoteSystemBtn');
+            if (quoteButton) quoteButton.disabled = selectedStocks.size === 0;
+        }
+
+        function openQuoteSystem() {
+            const tickers = Array.from(selectedStocks);
+            if (!tickers.length) {
+                alert('請至少選擇一檔個股');
+                return;
+            }
+
+            const returnUrl = new URL(window.location.href);
+            returnUrl.searchParams.set('quoteTickers', tickers.join(','));
+
+            const quoteUrl = new URL('https://anzuanzu.github.io/ilovefcn/');
+            quoteUrl.searchParams.set('tickers', tickers.join(','));
+            quoteUrl.searchParams.set('returnUrl', returnUrl.toString());
+            window.location.href = quoteUrl.toString();
+        }
+
+        function restoreQuoteSelectionsFromUrl() {
+            const url = new URL(window.location.href);
+            const quoteTickers = (url.searchParams.get('quoteTickers') || '')
+                .split(',').map(function (ticker) { return ticker.trim().toUpperCase(); }).filter(Boolean);
+            if (!quoteTickers.length) return;
+
+            const availableTickers = new Set(rawData.map(function (item) { return item.Ticker; }));
+            selectedStocks.clear();
+            quoteTickers.forEach(function (ticker) {
+                if (availableTickers.has(ticker)) selectedStocks.add(ticker);
+            });
+            url.searchParams.delete('quoteTickers');
+            window.history.replaceState({}, document.title, url.toString());
         }
 
         function renderStockFocus(item) {
