@@ -111,12 +111,15 @@
             font-size: 1.1rem;
         }
 
-        .workspace-nav { width:min(1280px, calc(100% - 2rem)); margin:1rem auto 0; padding:.65rem .8rem; display:flex; align-items:center; justify-content:space-between; gap:.8rem; border:1px solid var(--border-color); border-radius:.8rem; background:var(--card-bg); box-shadow:0 10px 30px rgba(15,23,42,.12); backdrop-filter:blur(12px); }
-        .workspace-nav__brand { color:var(--accent-color); font-size:.76rem; font-weight:800; letter-spacing:.08em; white-space:nowrap; }
-        .workspace-nav__links { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:.3rem; }
-        .workspace-nav a { padding:.4rem .55rem; color:var(--text-secondary); border-radius:.45rem; font-size:.76rem; font-weight:700; text-decoration:none; }
-        .workspace-nav a:hover, .workspace-nav a.is-active { color:#fff; background:var(--accent-color); }
-        @media (max-width:720px) { .workspace-nav { width:calc(100% - 1rem); margin-top:.5rem; align-items:flex-start; flex-direction:column; } .workspace-nav__links { justify-content:flex-start; } }
+        .workspace-nav { width:min(1280px, calc(100% - 2rem)); margin:1rem auto 0; padding:.42rem; display:flex; align-items:center; justify-content:space-between; gap:.8rem; border:1px solid var(--border-color); border-radius:1rem; background:linear-gradient(120deg,var(--card-bg),rgba(56,189,248,.1)); box-shadow:0 14px 34px rgba(15,23,42,.16); backdrop-filter:blur(14px); }
+        .workspace-nav__brand { display:flex; align-items:center; gap:.52rem; min-width:max-content; padding:.32rem .48rem; color:var(--text-primary); text-decoration:none; }
+        .workspace-nav__mark { display:grid; width:30px; height:30px; place-items:center; border-radius:.68rem; color:#fff; background:linear-gradient(135deg,#38bdf8,#818cf8); box-shadow:0 5px 12px rgba(56,189,248,.24); font-size:.78rem; }
+        .workspace-nav__brand-copy { display:grid; line-height:1.05; } .workspace-nav__brand strong { font-size:.76rem; letter-spacing:.06em; } .workspace-nav__brand small { margin-top:3px; color:var(--text-secondary); font-size:.57rem; font-weight:700; letter-spacing:.06em; }
+        .workspace-nav__links { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:.18rem; padding:.2rem; border:1px solid var(--border-color); border-radius:.7rem; background:rgba(15,23,42,.06); }
+        .workspace-nav__links a { display:inline-flex; align-items:center; gap:.28rem; padding:.42rem .52rem; color:var(--text-secondary); border-radius:.5rem; font-size:.73rem; font-weight:750; text-decoration:none; transition:transform .16s ease,box-shadow .16s ease,background .16s ease; }
+        .workspace-nav__links a:hover { color:var(--text-primary); background:var(--hover-bg); transform:translateY(-1px); } .workspace-nav__links a.is-active { color:#fff; background:linear-gradient(135deg,#0ea5e9,#6366f1); box-shadow:0 5px 12px rgba(14,165,233,.25); }
+        .workspace-nav__icon { display:inline-grid; min-width:13px; place-items:center; font-size:.62rem; font-weight:850; }
+        @media (max-width:720px) { .workspace-nav { width:calc(100% - 1rem); margin-top:.5rem; align-items:stretch; flex-direction:column; } .workspace-nav__links { justify-content:space-between; } .workspace-nav__links a { flex:1 1 auto; justify-content:center; padding:.42rem .32rem; font-size:.68rem; } .workspace-nav__brand small { display:none; } }
 
         .glass-panel {
             background: var(--card-bg);
@@ -2215,8 +2218,8 @@
 
 <body class="light-mode">
     <nav class="workspace-nav" aria-label="投資工具導覽">
-        <span class="workspace-nav__brand">投資工具中心</span>
-        <span class="workspace-nav__links"><a href="https://anzuanzu.github.io/tools/">工具總覽</a><a href="https://anzuanzu.github.io/BondAndFund/">債券／基金質借</a><a class="is-active" aria-current="page" href="https://anzuanzu.github.io/fcneliAI/">FCN 標的雷達</a><a href="https://anzuanzu.github.io/insurance-financing-v2/">保單融資試算</a><a href="https://anzuanzu.github.io/Top50ETF/">ETF 技術掃描</a></span>
+        <a class="workspace-nav__brand" href="https://anzuanzu.github.io/tools/"><span class="workspace-nav__mark">✦</span><span class="workspace-nav__brand-copy"><strong>投資工具中心</strong><small>RESEARCH · SIMULATE</small></span></a>
+        <span class="workspace-nav__links"><a href="https://anzuanzu.github.io/tools/"><span class="workspace-nav__icon">⌂</span>工具總覽</a><a href="https://anzuanzu.github.io/BondAndFund/"><span class="workspace-nav__icon">◎</span>債券／基金質借</a><a class="is-active" aria-current="page" href="https://anzuanzu.github.io/fcneliAI/"><span class="workspace-nav__icon">FCN</span>標的雷達</a><a href="https://anzuanzu.github.io/insurance-financing-v2/"><span class="workspace-nav__icon">◈</span>保單融資試算</a><a href="https://anzuanzu.github.io/Top50ETF/"><span class="workspace-nav__icon">ETF</span>技術掃描</a></span>
     </nav>
     <!-- Chart Tooltip -->
     <div id="chartTooltip" class="chart-tooltip">
