@@ -10,7 +10,7 @@ const COLUMNS = [
 
 function scannerPayload() {
   return {
-    filter: [{ left: 'type', operation: 'equal', right: 'stock' }],
+    filter: [{ left: 'type', operation: 'in_range', right: ['stock', 'dr'] }],
     options: { lang: 'en' },
     range: [0, 15000],
     sort: { sortBy: 'name', sortOrder: 'asc' },
@@ -47,7 +47,7 @@ export default {
 
     const cache = caches.default;
     const cacheUrl = new URL(url);
-    cacheUrl.searchParams.set('schema', 'scenario-filters-v1');
+    cacheUrl.searchParams.set('schema', 'stock-plus-dr-v1');
     const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
     const cached = await cache.match(cacheKey);
     if (cached) {

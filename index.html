@@ -3681,7 +3681,7 @@ ${JSON.stringify(stockData, null, 2)}
 
         function scannerPayload() {
             return {
-                filter: [{ left: 'type', operation: 'equal', right: 'stock' }],
+                filter: [{ left: 'type', operation: 'in_range', right: ['stock', 'dr'] }],
                 options: { lang: 'en' },
                 range: [0, 15000],
                 sort: { sortBy: 'name', sortOrder: 'asc' },
@@ -3716,7 +3716,7 @@ ${JSON.stringify(stockData, null, 2)}
                 if (!row || typeof row.s !== 'string' || !Array.isArray(row.d)) return null;
                 const [exchange = '', ticker = row.s] = row.s.split(':');
                 const [name, description, close, perfWeek, perfMonth, volatility, sma200, marketCap, sector, industry, type, beta, atr, sma20, sma50, sma150, perfDay, perf3Month, perf6Month, high52Week, low52Week, rsi, relativeVolume, technicalRating] = row.d;
-                if (type !== 'stock' || !ticker || !Number.isFinite(Number(close))) return null;
+                if (!['stock', 'dr'].includes(type) || !ticker || !Number.isFinite(Number(close))) return null;
 
                 const smaDistance = Number(sma200) ? ((Number(close) / Number(sma200)) - 1) * 100 : null;
                 return {
