@@ -50,3 +50,45 @@ test('invalid refresh never replaces the previous snapshot; valid data uses an a
     assert.equal(JSON.parse(await readFile(path,'utf8')).records[0].iv30Percent,29.4);
   } finally {await rm(dir,{recursive:true,force:true});}
 });
+
+test('published older snapshots never replace the latest accepted data',async()=>{
+  const {acceptIV30,validateUpdateStatus}=await import('../assets/current-iv30.mjs');
+  const previous=validateIV30(fixture(),now);
+  assert.throws(()=>acceptIV30(previous,{...fixture(),observedAt:'2026-10-08T22:00:00Z'},now),/OLDER/);
+  assert.equal(acceptIV30(previous,fixture(),now).byTicker.get('NVDA'),29.4);
+  assert.equal(validateUpdateStatus({schemaVersion:1,outcome:'failed',attemptedAt:now.toISOString()},now).outcome,'failed');
+  assert.throws(()=>validateUpdateStatus({schemaVersion:1,outcome:'success',attemptedAt:'2026-10-10T22:00:00Z'},now));
+});
+test('automatic polling pauses hidden pages and resumes on visibility and focus',async()=>{
+  const {startIV30Polling}=await import('../assets/current-iv30.mjs');
+  const document=new EventTarget(),window=new EventTarget();document.visibilityState='visible';
+  let calls=0,tick,cleared;
+  const stop=startIV30Polling(()=>calls++,{document,window,setInterval:(fn,ms)=>{assert.equal(ms,300000);tick=fn;return 42;},clearInterval:id=>cleared=id});
+  tick();assert.equal(calls,1);
+  document.visibilityState='hidden';tick();window.dispatchEvent(new Event('focus'));assert.equal(calls,1);
+  document.visibilityState='visible';document.dispatchEvent(new Event('visibilitychange'));window.dispatchEvent(new Event('focus'));assert.equal(calls,3);
+  stop();assert.equal(cleared,42);window.dispatchEvent(new Event('focus'));assert.equal(calls,3);
+});
+test('crawler transport retry excludes access blocks and invalid data',async()=>{
+  const {isTransportFailure}=await import('../scripts/market-chameleon-iv30.mjs');
+  assert.equal(isTransportFailure(new Error('net::ERR_HTTP2_PROTOCOL_ERROR')),true);
+  assert.equal(isTransportFailure({name:'TimeoutError'}),true);
+  for(const code of ['IV30_SOURCE_HTTP_403','IV30_SOURCE_HTTP_429','IV30_COUNT_CHANGED','IV30_DUPLICATE_SYMBOL']) assert.equal(isTransportFailure(new Error(code)),false);
+});
+
+test('visible-browser captures require full coverage and reject duplicate tickers atomically',async()=>{
+  const {visibleSnapshot,importVisibleIV30}=await import('../scripts/import-visible-iv30.mjs');
+  const capture={sourceUrl:IV30_SOURCE,observedAt:new Date().toISOString(),expectedTotal:2,headers:['Symbol','CurrentIV30'],rows:[['NVDA','29.4'],['AAPL','26.0']]};
+  assert.equal(visibleSnapshot(capture).records.length,2);
+  assert.throws(()=>visibleSnapshot({...capture,expectedTotal:3}),/INCOMPLETE/);
+  assert.throws(()=>visibleSnapshot({...capture,rows:[['NVDA','29.4'],['NVDA','30.1']]}),/SYMBOL/);
+  const dir=await mkdtemp(join(tmpdir(),'iv30-visible-test-')),output=join(dir,'snapshot.json');
+  try {
+    await saveSnapshot({...fixture(),observedAt:capture.observedAt},output);
+    const previous=await readFile(output,'utf8');
+    await assert.rejects(importVisibleIV30({...capture,expectedTotal:3},output));
+    assert.equal(await readFile(output,'utf8'),previous);
+    await assert.rejects(importVisibleIV30({...capture,observedAt:'2026-10-08T00:00:00Z'},output),/OLDER/);
+    assert.equal(await readFile(output,'utf8'),previous);
+  } finally {await rm(dir,{recursive:true,force:true});}
+});
