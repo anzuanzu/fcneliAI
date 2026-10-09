@@ -67,7 +67,7 @@ export async function collectIV30(page, sourceUrl = SOURCE_URL) {
       const ticker=row?.children[symbolIndex]?.innerText.trim().toUpperCase();
       return row?.children.length===columns && /^[A-Z0-9][A-Z0-9.^/-]{0,19}$/.test(ticker || '') && ticker!==previousFirst;
     }, {previousFirst,symbolIndex,columns:headers.length},{timeout:45000});
-    // Pagination is local to the loaded table; no per-symbol upstream requests.
+    // Follow the normal public table pagination; no per-symbol queries.
   }
   throw new Error('IV30_PAGE_LIMIT');
 }

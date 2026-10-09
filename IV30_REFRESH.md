@@ -16,7 +16,7 @@
 4. 逐頁讀取 `#iv_rankings_report_tbl thead tr:last-child th` 的文字與 `tbody tr` 中所有 `td.innerText`。只透過正常 UI 點 Next，等待第一筆股票代碼變更及真實資料列完成，不直接請求頁面內部端點。每次核對 `Showing x to y of total entries` 的起始位置接續、總數不變，直到 `#iv_rankings_report_tbl_next` 的 class 含 disabled。最多 100 頁；所有列數需等於總數。可以在單次工具呼叫中循序讀數頁；用同一個陣列保存資料，避免跨呼叫 helper 的閉包狀態誤用。最後再次從 DOM 確認尾頁與 disabled。
 5. 寫入暫存 JSON，包含 `sourceUrl`（上述網址）、`observedAt`（本次完整取得的 UTC ISO 時間）、`expectedTotal`（整數）、`headers`（標題陣列）、`rows`（每列儲存格陣列）。這只是暫存的公開資料，不提交全表其他欄位。
 6. 執行 `node scripts/publish-visible-iv30.mjs /絕對路徑/暫存資料.json`。此工具從最新 origin/main 建立獨立暫存 checkout，驗證標題與 Current IV30 單位、總筆數、唯一代碼、時間及值域，只更新 IV30 與狀態兩個檔案。原子替換資料、提交並正常推送，主分支同步變更會拒絕推送，不會強推。明確要求 Pages 建置，最多約 5 分鐘核對正式站兩個檔案與預期內容完全一致。不要因為 GitHub commit 成功就宣稱網站已更新。
-7. 真正來源擷取或驗證失敗時，可執行 `node scripts/publish-visible-iv30.mjs --failed`，只發布本次失敗狀態，完全保留最後成功快照及其時間。若只是資料已推送、Pages 發布尚未確認，應回報「發布未確認」，不要把成功取得的資料偽報擷取失敗。發布／GitHub 登入不可用則保留原檔案並回報具體阻礙。勿捏造数据、填零、以歷史估計代替 IV30 或修改取得時間假裝更新。
+7. 真正來源擷取或驗證失敗時，可執行 `node scripts/publish-visible-iv30.mjs --failed`，只發布本次失敗狀態，完全保留最後成功快照及其時間。若只是資料已推送、Pages 發布尚未確認，應回報「發布未確認」，不要把成功取得的資料偽報擷取失敗。發布／GitHub 登入不可用則保留原檔案並回報具體阻礙。勿捏造資料、填零、以歷史估計代替 IV30 或修改取得時間假裝更新。
 8. 完成後關閉本次來源暫存分頁。IV30 更新不得修改 3–6 個月市場 IV、K/KI、商品研究模型、Worker secret 或其他使用者設定。
 
 ## 診斷與驗證
