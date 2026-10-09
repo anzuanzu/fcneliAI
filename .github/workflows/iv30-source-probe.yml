@@ -16,10 +16,10 @@ jobs:
         with:
           node-version: 24
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
-      - run: node scripts/market-chameleon-iv30.mjs /tmp/current-iv30.json
+      - run: npx playwright install --with-deps chrome
+      - run: xvfb-run --auto-servernum node scripts/market-chameleon-iv30.mjs /tmp/current-iv30.json
         env:
-          BROWSER_CHANNEL: chromium
+          BROWSER_CHANNEL: chrome
       - uses: actions/upload-artifact@v4
         with:
           name: iv30-source-probe

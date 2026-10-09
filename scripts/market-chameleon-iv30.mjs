@@ -84,7 +84,7 @@ async function main() {
   // Try the browser's normal protocol first. A single HTTP/1.1 fallback is
   // limited to transport errors; access denials and invalid tables fail closed.
   for (let attempt=0; attempt<2; attempt++) {
-    const browser = await playwright.chromium.launch({headless:true,channel:process.env.BROWSER_CHANNEL || 'chrome',args:attempt ? ['--disable-http2'] : []});
+    const browser = await playwright.chromium.launch({headless:process.env.IV30_HEADLESS==='true',channel:process.env.BROWSER_CHANNEL || 'chrome',args:attempt ? ['--disable-http2'] : []});
     try {
       const page = await browser.newPage();
       page.setDefaultTimeout(15000);
