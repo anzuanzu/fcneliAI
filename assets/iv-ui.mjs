@@ -122,10 +122,12 @@ function cancel(message = '已停止計算。') {
   if (message) $('ivSimulationStatus').textContent = message;
 }
 function stopFetch() {
+  if ($('historySetupStatus').textContent.startsWith('正在檢查')) setupStatus('設定檢查已取消，請重新檢查。');
   fetchEpoch++;
   fetchController?.abort(); fetchController = null;
   fetching = false; $('ivFetch').disabled = false;
   $('historyFetch').disabled = false;
+  $('historyCheck').disabled = false;
 }
 function invalidate() {
   stopFetch();
@@ -261,18 +263,62 @@ $('ivFetch').addEventListener('click', async () => {
 const historyEndpoint = new URL(window.FCNELI_HISTORY_API_URL || endpoint);
 if (!window.FCNELI_HISTORY_API_URL) { historyEndpoint.pathname = '/api/history'; historyEndpoint.search = ''; }
 $('historyEndpoint').value = historyEndpoint.toString();
+function historyApiUrl() {
+  const api = new URL($('historyEndpoint').value);
+  if (api.protocol !== 'https:' && !(api.protocol === 'http:' && ['localhost','127.0.0.1'].includes(api.hostname))) throw new Error('API 需使用 HTTPS');
+  if (api.username || api.password || api.pathname !== '/api/history' || api.search || api.hash)
+    throw new Error('請填 Worker 的 /api/history 網址，不要包含金鑰、參數或片段');
+  return api;
+}
+function setupStatus(message, kind = '') {
+  $('historySetupStatus').textContent = message; $('historySetupStatus').dataset.kind = kind;
+}
+['historyEndpoint','historyAccessKey'].forEach(id => $(id).addEventListener('input', () => {
+  stopFetch(); setupStatus('設定已變更，請重新檢查 Worker 設定。');
+}));
+$('historyCheck').addEventListener('click', async () => {
+  if (fetching) return;
+  let requestEpoch;
+  try {
+    const api = historyApiUrl(); api.pathname += '/status';
+    stopFetch(); requestEpoch = fetchEpoch;
+    fetchController = new AbortController();
+    fetching = true; $('historyCheck').disabled = true; $('historyFetch').disabled = true;
+    setupStatus('正在檢查 Worker 設定（不查詢行情）…');
+    const headers = {}; if ($('historyAccessKey').value) headers['X-History-Key'] = $('historyAccessKey').value;
+    const response = await fetch(api, {headers, signal: AbortSignal.any([fetchController.signal, AbortSignal.timeout(10000)])});
+    if (requestEpoch !== fetchEpoch) return;
+    if (response.status === 404) throw new Error('請先部署新版 Worker，舊版尚無設定檢查接口');
+    if (response.status === 403) throw new Error('網站來源不符，請檢查 Worker 的 ALLOWED_ORIGIN');
+    if (!response.ok) throw new Error(`設定檢查失敗 (${response.status})`);
+    let body; try { body = await response.json(); } catch { throw new Error('請確認網址並部署新版 Worker（接口未回傳 JSON）'); }
+    if (requestEpoch !== fetchEpoch) return;
+    if (body.schemaVersion !== 1 || body.kind !== 'history-configuration' ||
+        ['providerConfigured','accessConfigured','usageConfirmed','configurationReady'].some(key => typeof body[key] !== 'boolean') ||
+        ![true,false,null].includes(body.accessVerified) || body.providerConnectionTested !== false)
+      throw new Error('設定檢查格式不符，請部署新版 Worker');
+    const missing = [];
+    if (!body.providerConfigured) missing.push('設定 TWELVE_DATA_API_KEY secret');
+    if (!body.accessConfigured) missing.push('設定 HISTORY_ACCESS_KEY secret');
+    if (!body.usageConfirmed) missing.push('核對帳戶個人研究與展示授權，再設定 HISTORY_DISPLAY_LICENSE_CONFIRMED=true');
+    if (body.accessConfigured && body.accessVerified === false) missing.push('個人查詢密碼不符');
+    setupStatus(missing.length ? `尚需：${missing.join('；')}。請參照個人使用設定指引。`
+      : `Worker 設定齊全${body.accessVerified === true ? '，個人查詢密碼正確' : '；請輸入個人查詢密碼'}。尚未驗證真實金鑰、股票覆蓋或資料品質，取價成功後才能確認。`, missing.length ? 'error' : 'success');
+  } catch(error) {
+    if (requestEpoch === undefined || requestEpoch === fetchEpoch) setupStatus(error.message, 'error');
+  } finally { if (requestEpoch === fetchEpoch) stopFetch(); }
+});
 $('historyFetch').addEventListener('click', async () => {
   if (fetching) return;
   let requestEpoch; const pending = new Map(), errors = [];
   try {
     const selected = tickers();
     if (!selected.length || selected.length > 6) throw new Error('自動取價每次請選擇 1–6 檔股票，避免超過免費額度');
-    const api = new URL($('historyEndpoint').value);
-    if (api.protocol !== 'https:' && !(api.protocol === 'http:' && ['localhost','127.0.0.1'].includes(api.hostname))) throw new Error('API 需使用 HTTPS');
+    const api = historyApiUrl();
     if (api.username || api.password) throw new Error('API 網址不可包含密碼');
     invalidate(); requestEpoch = fetchEpoch;
     fetchController = new AbortController(); const signal = fetchController.signal;
-    fetching = true; $('historyFetch').disabled = true;
+    fetching = true; $('historyFetch').disabled = true; $('historyCheck').disabled = true;
     for (const ticker of selected) {
       $('historyStatus').textContent = `正在取得 ${ticker} 歷史股價…`;
       api.searchParams.set('ticker',ticker);
@@ -282,7 +328,7 @@ $('historyFetch').addEventListener('click', async () => {
         if (requestEpoch !== fetchEpoch) return;
         let body; try { body = await response.json(); } catch { throw new Error('歷史股價接口尚未部署或未回傳 JSON'); }
         if (!response.ok) {
-          if (body.code === 'HISTORY_LICENSE_NOT_CONFIRMED') throw new Error('尚未設定網頁展示授權；免費 Basic 非展示用途不能直接啟用本頁');
+          if (body.code === 'HISTORY_LICENSE_NOT_CONFIRMED') throw new Error('尚未確認帳戶個人研究與展示授權，請參照個人使用設定指引');
           if (response.status === 503 || response.status === 404) throw new Error('請先部署新版 Worker 並設定 Twelve Data 金鑰與個人查詢密碼');
           if (response.status === 401 || response.status === 403) throw new Error('查詢未授權，請確認個人查詢密碼與資料方案');
           if (response.status === 429) throw new Error('已達查詢額度，稍後再試；不要重複批次查詢');

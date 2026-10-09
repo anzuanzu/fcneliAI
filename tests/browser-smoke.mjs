@@ -134,6 +134,33 @@ try {
   await page.locator('#ivTickers').fill('AAPL, MSFT');
   await page.locator('#historyEndpoint').fill(base+'/api/history');
   await page.locator('#historyAccessKey').fill('synthetic-history-private-key');
+  let setup = {schemaVersion:1, kind:'history-configuration', providerConfigured:false,
+    accessConfigured:false, usageConfirmed:false, configurationReady:false,
+    accessVerified:null, providerConnectionTested:false};
+  let setupResponse = 200;
+  await page.route('**/api/history/status', route => {
+    assert.equal(route.request().headers()['x-history-key'],'synthetic-history-private-key');
+    assert.equal(new URL(route.request().url()).search,'');
+    return route.fulfill({status:setupResponse,json:setup});
+  });
+  await page.locator('#historyCheck').click();
+  await page.waitForFunction(()=>document.getElementById('historySetupStatus').textContent.includes('TWELVE_DATA_API_KEY'));
+  assert.match(await page.locator('#historySetupStatus').innerText(),/HISTORY_ACCESS_KEY/);
+  setupResponse = 404;
+  await page.locator('#historyCheck').click();
+  await page.waitForFunction(()=>document.getElementById('historySetupStatus').textContent.includes('部署新版 Worker'));
+  setupResponse = 200;
+  setup = {...setup,providerConfigured:true,accessConfigured:true,usageConfirmed:true,configurationReady:true,accessVerified:false};
+  await page.locator('#historyCheck').click();
+  await page.waitForFunction(()=>document.getElementById('historySetupStatus').textContent.includes('密碼不符'));
+  setup.accessVerified = true;
+  await page.locator('#historyCheck').click();
+  await page.waitForFunction(()=>document.getElementById('historySetupStatus').textContent.includes('設定齊全'));
+  assert.match(await page.locator('#historySetupStatus').innerText(),/尚未驗證真實金鑰/);
+  await page.locator('#historyEndpoint').fill(base+'/api/history?apikey=should-not-send');
+  await page.locator('#historyCheck').click();
+  await page.waitForFunction(()=>document.getElementById('historySetupStatus').textContent.includes('不要包含金鑰'));
+  await page.locator('#historyEndpoint').fill(base+'/api/history');
   await page.route('**/api/history?*', route => {
     assert.equal(route.request().headers()['x-history-key'],'synthetic-history-private-key');
     const ticker = new URL(route.request().url()).searchParams.get('ticker');
@@ -188,10 +215,20 @@ try {
   await page.waitForTimeout(400);
   assert.match(await page.locator('#ivSurface').innerText(),/尚未取得歷史股價/);
   assert.equal(await page.locator('#historyFetch').isEnabled(),true);
+  await page.unroute('**/api/history/status');
+  await page.route('**/api/history/status',async route=>{
+    await new Promise(r=>setTimeout(r,250));
+    try {await route.fulfill({json:setup});} catch {}
+  });
+  await page.locator('#historyCheck').click();
+  await page.locator('#historyClear').click();
+  await page.waitForTimeout(350);
+  assert.match(await page.locator('#historySetupStatus').innerText(),/已取消/);
+  assert.equal(await page.locator('#historyCheck').isEnabled(),true);
   await page.locator('#ivCompare').click();
   assert.match(await page.locator('#ivSimulationStatus').innerText(),/所有研究股票的歷史股價/);
   await page.setViewportSize({width:390,height:844});
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth<=innerWidth+1),true,'mobile page should not overflow');
   assert.deepEqual(errors,[]);
-  console.log('Browser smoke passed: IV regression; automatic historical fetch, 12 scenario comparisons, source/labels, export/key privacy, unavailable license, mismatched ticker, cancellation, missing history, scan outage, mobile.');
+  console.log('Browser smoke passed: IV regression; Worker setup checks, missing settings/password/old deployment/unsafe URL/cancellation; historical fetch, 12 scenario comparisons, source/labels, export/key privacy, unavailable license, mismatched ticker, missing history, scan outage, mobile.');
 } finally { if (browser) await browser.close(); await new Promise(resolve => server.close(resolve)); }

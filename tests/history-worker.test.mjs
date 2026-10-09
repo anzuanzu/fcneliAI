@@ -55,6 +55,57 @@ test('history stays disabled without provider and private access secrets', async
   } finally { mock.restore(); }
 });
 
+test('configuration status checks missing settings and optional password without provider or cache access', async () => {
+  const mock = mocks(() => { throw new Error('must not contact provider'); });
+  globalThis.caches.default.match = async () => { throw new Error('must not read cache'); };
+  const statusRequest = key => new Request('https://worker.example/api/history/status', {
+    headers: { Origin: env.ALLOWED_ORIGIN, ...(key ? { 'X-History-Key': key } : {}) }
+  });
+  try {
+    const missing = await worker.fetch(statusRequest(), {}, mock.ctx);
+    assert.equal(missing.status, 200);
+    assert.equal(missing.headers.get('Cache-Control'), 'private, no-store');
+    assert.deepEqual(await missing.json(), {
+      schemaVersion: 1, kind: 'history-configuration', source: 'Twelve Data',
+      providerConfigured: false, accessConfigured: false, usageConfirmed: false,
+      accessVerified: null, configurationReady: false, providerConnectionTested: false
+    });
+    for (const [key, verified] of [[null, null], ['wrong-key', false], ['history-key', true]]) {
+      const data = await (await worker.fetch(statusRequest(key), env, mock.ctx)).json();
+      assert.equal(data.configurationReady, true);
+      assert.equal(data.accessVerified, verified);
+      const serialized = JSON.stringify(data);
+      for (const secret of ['provider-secret','history-key','wrong-key']) assert.ok(!serialized.includes(secret));
+      assert.ok(!('bars' in data));
+      assert.equal(data.providerConnectionTested, false);
+    }
+    const fallback = await (await worker.fetch(statusRequest('options-key'), {
+      OPTIONS_ACCESS_KEY: 'options-key', HISTORY_DISPLAY_LICENSE_CONFIRMED: 'true'
+    }, mock.ctx)).json();
+    assert.equal(fallback.accessVerified, true);
+    assert.equal(fallback.configurationReady, false);
+    const unconfirmed = await (await worker.fetch(statusRequest(), {
+      ...env, HISTORY_DISPLAY_LICENSE_CONFIRMED: undefined
+    }, mock.ctx)).json();
+    assert.equal(unconfirmed.configurationReady, false);
+    assert.equal(unconfirmed.usageConfirmed, false);
+    assert.equal(mock.calls.length, 0);
+    assert.equal(mock.entries.size, 0);
+  } finally { mock.restore(); }
+});
+
+test('configuration status restricts methods, query parameters and browser origin', async () => {
+  const ctx = { waitUntil: () => { throw new Error('no background tasks'); } };
+  for (const [url, options, expected] of [
+    ['https://worker.example/api/history/status', {method:'POST'}, 405],
+    ['https://worker.example/api/history/status?ticker=AAPL', {}, 400],
+    ['https://worker.example/api/history/status', {headers:{Origin:'https://other.example'}}, 403]
+  ]) {
+    const response = await worker.fetch(new Request(url, options), env, ctx);
+    assert.equal(response.status, expected);
+  }
+});
+
 test('history accepts strict share-class symbols, rejects custom parameters and supports CORS', async () => {
   const mock = mocks();
   try {

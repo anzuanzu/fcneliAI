@@ -2294,9 +2294,10 @@
     </div>
     <div class="iv-actions"><button id="ivUseSelection" class="button secondary" type="button">使用勾選個股</button><a href="IV_RESEARCH.md" target="_blank" rel="noopener">資料格式與模型說明</a></div>
     <div id="historyControls">
-      <p class="iv-note">自動取價需設定 Twelve Data 資料帳戶金鑰與 Worker，無須券商帳戶。免費 Basic 每分鐘 8、每日 800 API credits，但僅允許內部非展示用途；本頁需另有內部網頁展示授權或適用方案。每次查詢最多 6 檔，不會批次抓取全站。介面預設關閉取價，實際市場覆蓋依資料方案。</p>
+      <p class="iv-note">供個人研究使用。自動取價需自己的 Twelve Data 帳戶金鑰與 Worker，無須券商帳戶。可先從免費帳戶確認美股日收盤資料；帳戶的私人展示權利與股票覆蓋仍需核對。每次最多 6 檔，不會批次抓取全站；金鑰只放在 Worker。</p>
       <div class="iv-controls"><label class="iv-field" for="historyEndpoint">歷史股價 API 網址<input id="historyEndpoint" type="url" autocomplete="off"></label><label for="historyAccessKey">個人查詢密碼（僅本次頁面）<input id="historyAccessKey" type="password" autocomplete="off"></label></div>
-      <div class="iv-actions"><button id="historyFetch" class="button" type="button">自動取得研究股票的歷史股價</button><button id="historyClear" class="button secondary" type="button">清除歷史股價</button><a href="DEPLOYMENT.md" target="_blank" rel="noopener">自動取價設定</a></div>
+      <div class="iv-actions"><button id="historyCheck" class="button secondary" type="button">檢查 Worker 設定</button><button id="historyFetch" class="button" type="button">自動取得研究股票的歷史股價</button><button id="historyClear" class="button secondary" type="button">清除歷史股價</button><a href="PERSONAL_SETUP.md" target="_blank" rel="noopener">個人使用設定指引</a></div>
+      <p id="historySetupStatus" class="iv-status" role="status" aria-live="polite">第一次使用：建立資料帳戶 → 設定 Worker 金鑰與個人查詢密碼 → 部署後檢查設定。此檢查不耗行情額度。</p>
       <p id="historyStatus" class="iv-status" role="status" aria-live="polite">尚未取得歷史股價。設定 Worker 後，輸入股票代碼即可查詢。</p>
       <p class="iv-note">模型初始參考價採各股票最近完成收盤，K／KO／KI 依此價位比例設定；上方「價位試算」另依掃描行情換算。歷史價格已調整拆股，未保證調整現金股息，至少需 126 筆日報酬。EWMA 與均值回歸參數為固定研究假設；低／基準／高波動為敏感度情境，不是信賴區間，沒有建立 K／KI／KO 的市場偏斜曲面。</p>
     </div>

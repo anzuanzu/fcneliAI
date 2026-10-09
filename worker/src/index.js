@@ -1,5 +1,5 @@
 import { handleOptions } from './options.js';
-import { handleHistory } from './history.js';
+import { handleHistory, handleHistoryStatus } from './history.js';
 
 const TRADINGVIEW_SCAN_URL = 'https://scanner.tradingview.com/america/scan';
 
@@ -46,6 +46,7 @@ export default {
 
     if (request.method === 'OPTIONS') return new Response(null, { headers });
     if (url.pathname === '/api/options') return handleOptions(request, env, ctx, headers);
+    if (url.pathname === '/api/history/status') return handleHistoryStatus(request, env, headers);
     if (url.pathname === '/api/history') return handleHistory(request, env, ctx, headers);
     if (url.pathname !== '/api/scan') return jsonResponse({ error: 'Not found' }, 404, headers);
     if (request.method !== 'POST') return jsonResponse({ error: 'Method not allowed' }, 405, headers);

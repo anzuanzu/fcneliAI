@@ -147,6 +147,28 @@ async function scopeFor(token) {
   return [...new Uint8Array(digest)].slice(0, 16).map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
+// Configuration only: never contact the provider, inspect cached prices, or echo secrets.
+export function handleHistoryStatus(request, env, headers) {
+  if (request.method !== 'GET') return failure('METHOD_NOT_ALLOWED', 405, headers, 'Use GET /api/history/status.');
+  const origin = request.headers.get('Origin');
+  if (origin && env.ALLOWED_ORIGIN && env.ALLOWED_ORIGIN !== '*' && origin !== env.ALLOWED_ORIGIN)
+    return failure('HISTORY_ORIGIN_DENIED', 403, headers);
+  if (new URL(request.url).search)
+    return failure('INVALID_QUERY', 400, headers, 'The configuration check accepts no query parameters.');
+  const accessKey = env.HISTORY_ACCESS_KEY || env.OPTIONS_ACCESS_KEY;
+  const suppliedKey = request.headers.get('X-History-Key');
+  const providerConfigured = Boolean(env.TWELVE_DATA_API_KEY);
+  const accessConfigured = Boolean(accessKey);
+  const usageConfirmed = env.HISTORY_DISPLAY_LICENSE_CONFIRMED === 'true';
+  return respond({
+    schemaVersion: 1, kind: 'history-configuration', source: 'Twelve Data',
+    providerConfigured, accessConfigured, usageConfirmed,
+    accessVerified: suppliedKey ? Boolean(accessKey && suppliedKey === accessKey) : null,
+    configurationReady: providerConfigured && accessConfigured && usageConfirmed,
+    providerConnectionTested: false
+  }, 200, headers);
+}
+
 export async function handleHistory(request, env, ctx, headers) {
   if (request.method !== 'GET') return failure('METHOD_NOT_ALLOWED', 405, headers, 'Use GET /api/history?ticker=SYMBOL.');
   if (!env.TWELVE_DATA_API_KEY) return failure('HISTORY_NOT_CONFIGURED', 503, headers, 'Add TWELVE_DATA_API_KEY as a Worker secret to enable automatic daily history.');
@@ -156,7 +178,7 @@ export async function handleHistory(request, env, ctx, headers) {
     return failure('HISTORY_ACCESS_REQUIRED', 401, headers, 'Enter the private history access key; do not enter the provider API key in the website.');
   if (env.HISTORY_DISPLAY_LICENSE_CONFIRMED !== 'true')
     return failure('HISTORY_LICENSE_NOT_CONFIRMED', 503, headers,
-      'Confirm a plan or written permission covering private web display before enabling history. Basic non-display access does not authorize this interface.');
+      'Confirm that your account permits this personal research and private display before enabling history. This setting does not verify account permissions or require a commercial subscription.');
   const origin = request.headers.get('Origin');
   if (origin && env.ALLOWED_ORIGIN && env.ALLOWED_ORIGIN !== '*' && origin !== env.ALLOWED_ORIGIN)
     return failure('HISTORY_ORIGIN_DENIED', 403, headers);

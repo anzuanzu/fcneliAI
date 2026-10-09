@@ -123,13 +123,13 @@ node --test tests/worker-options.test.mjs
 
 ## 選用：自動取得日收盤價，計算估計波動率
 
-歷史股價情境使用獨立的 `GET /api/history?ticker=AAPL` 接口，不需要券商帳戶，也不需要先取得選擇權 IV。先建立 Twelve Data 資料帳戶、確認所需顯示權利，再取得自己方案允許的 API key。Basic 目前免費額度為每分鐘 8 API credits、每天 800，單一標的 `/time_series` 使用 1 credit；但 Basic 的 non-display 權利不包含本網頁供自然人查看的介面。來源覆蓋、資料深度及權利仍須以帳戶實際許可確認，**不承諾本網頁可以用 Basic 免費啟用，或全部股票免費可取得**。
+個人使用的逐步流程見 [PERSONAL_SETUP.md](PERSONAL_SETUP.md)。歷史情境使用獨立的 `GET /api/history?ticker=AAPL` 接口，不需要券商帳戶或選擇權帳戶；從日收盤價估計波動率，不產生市場 IV。
 
-Basic 價格頁標示 internal non-display usage，Grow 才標示 internal display data access；條款對 non-display 的定義不包含向自然人展示。私人密碼只限制誰能進入，並不能把網頁顯示轉成 non-display。個人方案不能將原始資料或衍生資料當作已獲公開再分發授權。須先取得允許本網頁私人顯示的方案或書面許可，再明確設定 `HISTORY_DISPLAY_LICENSE_CONFIRMED = "true"`；未設定時接口回傳 HTTP 503 `HISTORY_LICENSE_NOT_CONFIRMED`，不查來源、不讀快取、不耗來源額度。這個設定是部署者的許可確認，程式無法自行驗證契約，也不會代替使用者接受資料授權。
+可以先建立 Twelve Data 免費帳戶確認所需美股歷史資料。官方美股說明列出歷史／日收盤資料從 Basic 開始提供；Basic 目前每分鐘 8、每日 800 API credits。但價格頁另標示 Basic 為 internal non-display，私人網頁展示的具體權利仍須依帳戶條款或供應商答覆確認。**個人非商用不等於必須購買商用方案，也不表示全部資料與展示方式一定免費。** 本專案不會購買方案。
 
-本接口固定要求私人密碼，沒有 `ALLOW_PUBLIC_HISTORY`。Twelve Data 條款 2.3(f) 對建立衍生金融商品另要求書面許可；若將工具用於實際商品創建、客戶報價、公開展示或多人商業服務，須先確認對應方案、書面許可及交易所權利，不能只憑私人研究密碼啟用。
+核對帳戶允許本工具的個人研究與私人展示後，設定 `HISTORY_DISPLAY_LICENSE_CONFIRMED = "true"`。未設定時接口回傳 HTTP 503 `HISTORY_LICENSE_NOT_CONFIRMED`，不查來源、不讀快取、不耗行情額度。這只是部署者的確認，程式無法驗證契約。接口固定要求個人查詢密碼，不提供公開資料再分發功能。
 
-在 `worker` 目錄執行，部署前確認所使用的是自己的 Cloudflare 帳戶：
+以下在**專案根目錄（含 `wrangler.toml` 的目錄）**執行，部署前確認自己的 Cloudflare 帳戶與 Worker 名稱；先在 `[vars]` 核對 `ALLOWED_ORIGIN` 並加入上述確認設定：
 
 ```bash
 npx wrangler secret put TWELVE_DATA_API_KEY
@@ -137,7 +137,7 @@ npx wrangler secret put HISTORY_ACCESS_KEY
 npx wrangler deploy
 ```
 
-確認上述顯示授權後，才在 Worker 的 Wrangler `[vars]` 或 Cloudflare 環境變數設定 `HISTORY_DISPLAY_LICENSE_CONFIRMED = "true"`。API key 與私人存取密碼仍須用 secrets，不能放進 `[vars]`。未確認授權時保持接口關閉，仍可查看程式及用 mock 測試。
+核對帳戶個人使用與私人展示範圍後，在 Worker 的 Wrangler `[vars]` 或 Cloudflare 環境變數設定 `HISTORY_DISPLAY_LICENSE_CONFIRMED = "true"`。API key 與私人存取密碼仍須用 secrets，不能放進 `[vars]`。未確認授權時保持接口關閉，仍可查看程式及用 mock 測試。
 
 `TWELVE_DATA_API_KEY` 僅保留在 Worker secret，由固定上游 `https://api.twelvedata.com/time_series` 的 `Authorization: apikey ...` header 使用，不進網址、HTML、瀏覽器或 GitHub。`HISTORY_ACCESS_KEY` 是另外自行產生的私人研究密碼；瀏覽器透過 `X-History-Key` header 傳送。若未設定 `HISTORY_ACCESS_KEY`，接口可沿用已設定的 `OPTIONS_ACCESS_KEY`，但 header 仍是 `X-History-Key`。若兩者都有，僅接受 `HISTORY_ACCESS_KEY`。前端存取密碼不得永久儲存；勿將 provider key 輸入網頁。
 
@@ -150,6 +150,12 @@ npx wrangler deploy
 ```
 
 `ALLOWED_ORIGIN` 應設定為網頁 origin，例如 `https://anzuanzu.github.io`。CORS 允許 `X-History-Key`，存取驗證發生在快取查詢之前；Origin 規則不是身份驗證。缺少 provider secret 回傳 HTTP 503 `HISTORY_NOT_CONFIGURED`，缺少私人密碼回傳 503 `HISTORY_ACCESS_NOT_CONFIGURED`，密碼錯誤回傳 401 `HISTORY_ACCESS_REQUIRED`。上游或格式錯誤不回傳來源錯誤原文與金鑰；未支援／不足資料回傳 404，超時 504，上游限流或本地用量限制回傳 429。
+
+### 不耗行情額度的設定檢查
+
+`GET /api/history/status` 回傳 schemaVersion 1、kind `history-configuration` 與設定布林值：`providerConfigured`、`accessConfigured`、`usageConfirmed`、`configurationReady`。`accessVerified` 在未提供 `X-History-Key` 時為 null，提供時表示密碼是否相符。不回傳任何 secret、股票資料或來源錯誤，不查供應商或快取；瀏覽器不快取回應。只接受 GET 與無參數網址，遵守 `ALLOWED_ORIGIN`。
+
+這僅表示設定存在，**不是金鑰有效、授權合格、資料覆蓋或真實連線通過**；`providerConnectionTested` 固定為 false。前端「檢查 Worker 設定」列出缺項，404 提示部署新版，填錯密碼或網址時給出原因。
 
 ### 歷史接口資料與限制
 
@@ -169,4 +175,4 @@ node --test tests/history-worker.test.mjs tests/worker-options.test.mjs
 
 測試以 mock 驗證隱私、請求、拆股資料格式、日線有效性、快取、並行合併、限流、超時、錯誤清理及既有掃描／選擇權接口。尚無 Twelve Data 帳戶金鑰，因此未驗證 live 股票覆蓋、免費歷史深度及實際調整品質；新增接口本身不表示自動行情已啟用。
 
-官方資料：[方案、顯示權與額度](https://twelvedata.com/pricing)、[資料條款與衍生金融商品限制](https://twelvedata.com/terms)、[歷史資料範圍](https://support.twelvedata.com/en/articles/5214728-getting-historical-data)、[每日拆股調整](https://support.twelvedata.com/en/articles/5179064-are-the-prices-adjusted)、[官方 API SDK 的 time_series 參數與日線時區](https://github.com/twelvedata/twelvedata-java/blob/main/docs/MarketDataApi.md#apigettimeseriesrequest)、[個人／商業使用](https://support.twelvedata.com/en/articles/5332349-commercial-and-personal-usage)。
+官方資料：[方案、顯示權與額度](https://twelvedata.com/pricing)、[資料條款與衍生金融商品限制](https://twelvedata.com/terms)、[歷史資料範圍](https://support.twelvedata.com/en/articles/5214728-getting-historical-data)、[每日拆股調整](https://support.twelvedata.com/en/articles/5179064-are-the-prices-adjusted)、[官方 API SDK 的 time_series 參數與日線時區](https://github.com/twelvedata/twelvedata-java/blob/main/docs/MarketDataApi.md#apigettimeseriesrequest)、[個人／商業使用](https://support.twelvedata.com/en/articles/5332349-commercial-and-personal-usage)、[美股歷史／日收盤資料](https://support.twelvedata.com/en/articles/9935903-us-equities-market-data)。
