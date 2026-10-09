@@ -1,0 +1,26 @@
+name: IV30 source probe
+on:
+  push:
+    branches: [feat/scheduled-iv30-refresh]
+    paths:
+      - .github/workflows/iv30-source-probe.yml
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/market-chameleon-iv30.mjs /tmp/current-iv30.json
+        env:
+          BROWSER_CHANNEL: chromium
+      - uses: actions/upload-artifact@v4
+        with:
+          name: iv30-source-probe
+          path: /tmp/current-iv30.json
