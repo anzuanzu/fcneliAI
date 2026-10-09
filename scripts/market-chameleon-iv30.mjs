@@ -27,12 +27,14 @@ export async function collectIV30(page, sourceUrl = SOURCE_URL) {
   const response = await page.goto(sourceUrl, {waitUntil:'commit',timeout:45000});
   if (!response?.ok()) throw new Error(`IV30_SOURCE_HTTP_${response?.status() ?? 'FAILED'}`);
   if (new URL(page.url()).origin!==new URL(sourceUrl).origin) throw new Error('IV30_SOURCE_REDIRECT');
-  await page.locator('#iv_rankings_report_tbl tbody tr').first().waitFor({timeout:45000});
+  // DataTables inserts a one-cell loading row before its asynchronous data
+  // arrives. Changing page size then cancels that request and can stall forever.
+  await page.locator('#iv_rankings_report_tbl tbody tr:first-child td:nth-child(2)').waitFor({timeout:45000});
   const initialInfo = await page.locator('#iv_rankings_report_tbl_wrapper').innerText();
   const initialTotal = Number(initialInfo.match(/of\s+([\d,]+)\s+entries/)?.[1]?.replaceAll(',',''));
   if (!(initialTotal>0)) throw new Error('IV30_COUNT_MISSING');
   await page.locator('select[name="iv_rankings_report_tbl_length"]').selectOption('100');
-  await page.locator(`#iv_rankings_report_tbl tbody tr:nth-child(${Math.min(100,initialTotal)})`).waitFor({timeout:15000});
+  await page.locator(`#iv_rankings_report_tbl tbody tr:nth-child(${Math.min(100,initialTotal)}) td:nth-child(2)`).waitFor({timeout:45000});
   const table = page.locator('#iv_rankings_report_tbl');
   const records = new Map();
   let expected;
@@ -60,7 +62,11 @@ export async function collectIV30(page, sourceUrl = SOURCE_URL) {
     }
     const previousFirst = parsed[0].ticker, symbolIndex = headers.map(normalHeader).indexOf('Symbol');
     await next.click();
-    await page.waitForFunction(({previousFirst,symbolIndex}) => document.querySelector('#iv_rankings_report_tbl tbody tr')?.children[symbolIndex]?.innerText.trim().toUpperCase() !== previousFirst, {previousFirst,symbolIndex},{timeout:10000});
+    await page.waitForFunction(({previousFirst,symbolIndex,columns}) => {
+      const row=document.querySelector('#iv_rankings_report_tbl tbody tr');
+      const ticker=row?.children[symbolIndex]?.innerText.trim().toUpperCase();
+      return row?.children.length===columns && /^[A-Z0-9][A-Z0-9.^/-]{0,19}$/.test(ticker || '') && ticker!==previousFirst;
+    }, {previousFirst,symbolIndex,columns:headers.length},{timeout:45000});
     // Pagination is local to the loaded table; no per-symbol upstream requests.
   }
   throw new Error('IV30_PAGE_LIMIT');
@@ -83,8 +89,9 @@ async function main() {
   const output = resolve(process.argv[2] || 'assets/current-iv30.json');
   // Try the browser's normal protocol first. A single HTTP/1.1 fallback is
   // limited to transport errors; access denials and invalid tables fail closed.
+  let useHTTP1=false;
   for (let attempt=0; attempt<2; attempt++) {
-    const browser = await playwright.chromium.launch({headless:process.env.IV30_HEADLESS==='true',channel:process.env.BROWSER_CHANNEL || 'chrome',args:attempt ? ['--disable-http2'] : []});
+    const browser = await playwright.chromium.launch({headless:process.env.IV30_HEADLESS==='true',channel:process.env.BROWSER_CHANNEL || 'chrome',args:useHTTP1 ? ['--disable-http2'] : []});
     try {
       const page = await browser.newPage();
       page.setDefaultTimeout(15000);
@@ -94,7 +101,8 @@ async function main() {
       return;
     } catch (error) {
       if (attempt || !isTransportFailure(error)) throw error;
-      console.warn('IV30 transport failed; retrying once with HTTP/1.1.');
+      useHTTP1=/net::ERR_HTTP2_PROTOCOL_ERROR/.test(error.message || '');
+      console.warn(`IV30 transient load failure; retrying once${useHTTP1 ? ' with HTTP/1.1' : ' with the same normal browser protocol'}.`);
       await new Promise(resolve=>setTimeout(resolve,3000));
     } finally { await browser.close(); }
   }
