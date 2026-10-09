@@ -246,12 +246,17 @@ try {
   assert.match(await page.locator('#ivSurface').innerText(),/尚未取得歷史股價/);
   assert.equal(await page.locator('#historyFetch').isEnabled(),true);
   await page.unroute('**/api/history/status');
+  let finishSetupCheck;
+  const setupCheckGate = new Promise(resolve => { finishSetupCheck = resolve; });
   await page.route('**/api/history/status',async route=>{
-    await new Promise(r=>setTimeout(r,250));
+    await setupCheckGate;
     try {await route.fulfill({json:setup});} catch {}
   });
+  const setupCheckRequest = page.waitForRequest('**/api/history/status');
   await page.locator('#historyCheck').click();
+  await setupCheckRequest;
   await page.locator('#historyClear').click();
+  finishSetupCheck();
   await page.waitForTimeout(350);
   assert.match(await page.locator('#historySetupStatus').innerText(),/已取消/);
   assert.equal(await page.locator('#historyCheck').isEnabled(),true);
