@@ -14,11 +14,11 @@ function html(mode) {
     document.getElementById('iv_rankings_report_tbl_next').className=end===201?'paginate_button next disabled':'paginate_button next';
   }
   document.querySelector('select').onchange=e=>{size=+e.target.value;start=0;render();};
-  document.getElementById('iv_rankings_report_tbl_next').onclick=e=>{e.preventDefault();start+=size;render();};render();
+  document.getElementById('iv_rankings_report_tbl_next').onclick=e=>{e.preventDefault();start+=size;render();};if(mode==='loading'){document.querySelector('tbody').innerHTML='<tr><td colspan="3">Loading...</td></tr>';const pending=setTimeout(render,150);document.querySelector('select').onchange=e=>{clearTimeout(pending);size=+e.target.value;start=0;setTimeout(render,50);};}else render();
   </script>`;
 }
 try {
-  for (const [mode,error] of [['good',null],['duplicate',/DUPLICATE/],['count',/COUNT_CHANGED/],['blocked',/SOURCE_HTTP_403/]]) {
+  for (const [mode,error] of [['good',null],['loading',null],['duplicate',/DUPLICATE/],['count',/COUNT_CHANGED/],['blocked',/SOURCE_HTTP_403/]]) {
     const page=await browser.newPage();
     await page.route('**/*',route=>route.fulfill({status:mode==='blocked'?403:200,contentType:'text/html',body:html(mode)}));
     if(error) await assert.rejects(collectIV30(page,'https://synthetic-iv30.example/'),error);

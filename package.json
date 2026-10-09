@@ -8,7 +8,8 @@
     "test:browser": "node tests/browser-smoke.mjs",
     "test:worker": "node tests/worker-runtime.mjs",
     "refresh:iv30": "node scripts/market-chameleon-iv30.mjs",
-    "test:iv30-crawler": "node tests/iv30-crawler-browser.mjs"
+    "test:iv30-crawler": "node tests/iv30-crawler-browser.mjs",
+    "test:iv30-autorefresh": "node tests/iv30-autorefresh-browser.mjs"
   },
   "engines": {
     "node": ">=22"

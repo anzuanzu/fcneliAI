@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FCN 標的雷達</title>
-    <link rel="stylesheet" href="assets/iv-research.css?v=iv30-snapshot-v1">
+    <link rel="stylesheet" href="assets/iv-research.css?v=iv30-auto-v2">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -2512,7 +2512,7 @@
                     <button id="iv30Reload" type="button" class="button secondary">重新讀取 IV30</button>
                     <button id="ivOpenImport" type="button" class="button secondary">商品研究／IV 查詢指引</button>
                     <p id="iv30Status" class="iv-note" aria-live="polite">載入 IV30 快照…</p>
-                    <p class="iv-note">Current IV30 是 30 天隱含波動率的年化值，不是 IV30 % Rank，也不是 3–6 個月 IV。數值依股票代碼比對來源快照，未覆蓋時顯示缺資料。來源行情延遲 15 分鐘；取得時間不是報價更新時間。「重新讀取」載入已發布快照，不會即時爬取原站。</p>
+                    <p class="iv-note">Current IV30 是 30 天隱含波動率的年化值，不是 IV30 % Rank，也不是 3–6 個月 IV。數值依股票代碼比對來源快照，未覆蓋時顯示缺資料。來源行情延遲 15 分鐘；取得時間不是報價更新時間。頁面開啟時及每 5 分鐘自動讀取共用快照，切回分頁也會檢查；「重新讀取」可立即檢查已發布資料。擷取失敗時保留最後成功快照；資料由每日美股收盤後的本機排程更新，需排程電腦與 Codex 執行中。</p>
                 </div>
                 <div class="table-container">
                     <table>
@@ -5622,13 +5622,13 @@ ${JSON.stringify(stockData, null, 2)}
         }
     </script>
     <script type="module">
-        import('./assets/current-iv30.mjs?v=iv30-snapshot-v1').catch(() => {
+        import('./assets/current-iv30.mjs?v=iv30-auto-v2').catch(() => {
             window.fcnCurrentIv30Cell = () => '<div class="iv30-cell"><strong>—</strong><small>IV30 模組載入失敗</small></div>';
             document.getElementById('iv30Status').textContent = 'IV30 模組載入失敗，請重新整理。';
             document.getElementById('iv30Reload').disabled = true;
             window.refreshFcnTable?.();
         });
-        import('./assets/iv-ui.mjs?v=iv30-snapshot-v1').catch(() => {
+        import('./assets/iv-ui.mjs?v=iv30-auto-v2').catch(() => {
             const button = document.getElementById('ivOpenImport');
             button.disabled = true;
             button.textContent = '研究模組載入失敗，請重新整理';

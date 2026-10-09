@@ -21,3 +21,6 @@ jobs:
       - run: npm run test:iv30-crawler
         env:
           BROWSER_CHANNEL: chromium
+      - run: npm run test:iv30-autorefresh
+        env:
+          BROWSER_CHANNEL: chromium

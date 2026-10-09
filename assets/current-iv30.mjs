@@ -31,29 +31,71 @@ export function compareIV30(a,b,direction='desc') {
   return direction==='asc' ? a-b : b-a;
 }
 
+export function acceptIV30(previous,raw,now=new Date()) {
+  const next=validateIV30(raw,now);
+  if (previous && Date.parse(next.observedAt)<Date.parse(previous.observedAt)) throw new Error('IV30_OLDER_SNAPSHOT');
+  return next;
+}
+
+export function validateUpdateStatus(raw,now=new Date()) {
+  if (raw?.schemaVersion!==1 || !['success','failed'].includes(raw.outcome) ||
+      typeof raw.attemptedAt!=='string' || !/(?:Z|[+-]\d{2}:\d{2})$/.test(raw.attemptedAt) ||
+      !Number.isFinite(Date.parse(raw.attemptedAt)) || Date.parse(raw.attemptedAt)>+now+300000) throw new Error('IV30_STATUS_INVALID');
+  return {outcome:raw.outcome,attemptedAt:raw.attemptedAt};
+}
+
+// Poll the shared published file, never the source site. Hidden tabs pause;
+// returning to a tab checks immediately, and refresh() prevents overlap.
+export function startIV30Polling(refresh,{document,window,setInterval,clearInterval}) {
+  const visible=()=>{if(document.visibilityState==='visible') refresh();};
+  const timer=setInterval(visible,5*60*1000);
+  document.addEventListener('visibilitychange',visible);
+  window.addEventListener('focus',visible);
+  return ()=>{
+    clearInterval(timer);
+    document.removeEventListener('visibilitychange',visible);
+    window.removeEventListener('focus',visible);
+  };
+}
+
 if (typeof window !== 'undefined') {
-  let snapshot=null,state='loading',busy=false;
+  let snapshot=null,state='loading',busy=false,updateStatus=null;
   window.fcnCurrentIv30Cell = (ticker,url) => renderIV30Cell(snapshot,ticker,url,state);
   window.fcnCurrentIv30Value = ticker => snapshot?.byTicker.get(ticker);
   window.fcnCompareIv30 = compareIV30;
+  async function readJSON(file,limit) {
+    const response=await fetch(new URL(`./${file}?t=${Date.now()}`,import.meta.url),{cache:'no-store',signal:AbortSignal.timeout(15000)});
+    if (!response.ok) throw new Error('IV30_FETCH_FAILED');
+    const text=await response.text();
+    if(text.length>limit) throw new Error('IV30_FILE_TOO_LARGE');
+    return JSON.parse(text);
+  }
   async function refresh() {
     if (busy) return;
     busy=true;
     const button=document.getElementById('iv30Reload'),status=document.getElementById('iv30Status');
     button.disabled=true;status.textContent='正在讀取 IV30 快照…';
     try {
-      const response=await fetch(new URL(`./current-iv30.json?t=${Date.now()}`,import.meta.url),{cache:'no-store',signal:AbortSignal.timeout(15000)});
-      if (!response.ok) throw new Error('IV30_FETCH_FAILED');
-      const text=await response.text();
-      if(text.length>1000000) throw new Error('IV30_FILE_TOO_LARGE');
-      snapshot=validateIV30(JSON.parse(text));state='ready';
+      const [data,report]=await Promise.allSettled([readJSON('current-iv30.json',1000000),readJSON('iv30-update-status.json',10000)]);
+      if(data.status==='rejected') throw data.reason;
+      snapshot=acceptIV30(snapshot,data.value);state='ready';
+      if(report.status==='fulfilled') {
+        try {
+          const next=validateUpdateStatus(report.value);
+          if(!updateStatus || Date.parse(next.attemptedAt)>=Date.parse(updateStatus.attemptedAt)) updateStatus=next;
+        } catch { /* A status file cannot replace validated stock data. */ }
+      }
       const fetched=new Date(snapshot.observedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false});
-      status.textContent=`已載入 ${snapshot.byTicker.size.toLocaleString('zh-TW')} 檔 IV30；取得時間（台北）${fetched}${snapshot.stale ? ' · 快照已過期' : ''}。原站未提供報價更新時間。`;
+      const failed=updateStatus?.outcome==='failed' && Date.parse(updateStatus.attemptedAt)>=Date.parse(snapshot.observedAt);
+      const reportNote=failed ? `最近擷取失敗（台北 ${new Date(updateStatus.attemptedAt).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',hour12:false})}）；保留最後成功快照。` : '';
+      status.textContent=`已載入 ${snapshot.byTicker.size.toLocaleString('zh-TW')} 檔 IV30；取得時間（台北）${fetched}${snapshot.stale ? ' · 快照已過期' : ''}。${reportNote}頁面每 5 分鐘自動檢查。原站未提供報價更新時間。`;
     } catch {
       state='failed';
+      if(snapshot) snapshot.stale=weekdayHoursBetween(snapshot.observedAt,new Date())>24;
       status.textContent=snapshot ? '重新讀取失敗；保留上次快照，請核對取得時間或開啟來源查詢。' : 'IV30 快照載入失敗，請重新讀取或開啟來源查詢。';
     } finally { busy=false;button.disabled=false;window.refreshFcnTable?.(); }
   }
   document.getElementById('iv30Reload').addEventListener('click',refresh);
+  startIV30Polling(refresh,{document,window,setInterval,clearInterval});
   refresh();
 }

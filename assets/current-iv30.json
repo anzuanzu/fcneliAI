@@ -3,65 +3,65 @@
   "source": "Market Chameleon",
   "sourceUrl": "https://marketchameleon.com/volReports/VolatilityRankings",
   "ivUnit": "annualized-percent",
-  "observedAt": "2026-10-09T19:20:33.314Z",
+  "observedAt": "2026-10-09T19:58:26.638Z",
   "sourceAsOf": null,
   "coverage": "volume-qualified-ranking",
   "records": [
     {
       "ticker": "A",
-      "iv30Percent": 32.8
+      "iv30Percent": 32.7
     },
     {
       "ticker": "AA",
-      "iv30Percent": 47.8
+      "iv30Percent": 46.7
     },
     {
       "ticker": "AAL",
-      "iv30Percent": 44.1
+      "iv30Percent": 44.7
     },
     {
       "ticker": "AAOI",
-      "iv30Percent": 97.8
+      "iv30Percent": 97
     },
     {
       "ticker": "AAOX",
-      "iv30Percent": 179.1
+      "iv30Percent": 180.9
     },
     {
       "ticker": "AAP",
-      "iv30Percent": 58.2
+      "iv30Percent": 59.2
     },
     {
       "ticker": "AAPL",
-      "iv30Percent": 25.7
+      "iv30Percent": 26
     },
     {
       "ticker": "AAPU",
-      "iv30Percent": 46.4
+      "iv30Percent": 46.9
     },
     {
       "ticker": "ABAT",
-      "iv30Percent": 75.8
+      "iv30Percent": 76.5
     },
     {
       "ticker": "ABBV",
-      "iv30Percent": 29
+      "iv30Percent": 29.1
     },
     {
       "ticker": "ABCL",
-      "iv30Percent": 78.2
+      "iv30Percent": 78
     },
     {
       "ticker": "ABNB",
-      "iv30Percent": 43
+      "iv30Percent": 43.3
     },
     {
       "ticker": "ABR",
-      "iv30Percent": 99.2
+      "iv30Percent": 95
     },
     {
       "ticker": "ABSI",
-      "iv30Percent": 95.8
+      "iv30Percent": 98.1
     },
     {
       "ticker": "ABT",
@@ -69,31 +69,31 @@
     },
     {
       "ticker": "ABTC",
-      "iv30Percent": 90.5
+      "iv30Percent": 89.3
     },
     {
       "ticker": "ABVX",
-      "iv30Percent": 62.9
+      "iv30Percent": 65.1
     },
     {
       "ticker": "ACAD",
-      "iv30Percent": 40.6
+      "iv30Percent": 39.1
     },
     {
       "ticker": "ACHR",
-      "iv30Percent": 69.4
+      "iv30Percent": 68.3
     },
     {
       "ticker": "ACI",
-      "iv30Percent": 41
+      "iv30Percent": 40.5
     },
     {
       "ticker": "ACMR",
-      "iv30Percent": 84
+      "iv30Percent": 84.9
     },
     {
       "ticker": "ACN",
-      "iv30Percent": 42.3
+      "iv30Percent": 41.7
     },
     {
       "ticker": "ADBE",
@@ -101,15 +101,15 @@
     },
     {
       "ticker": "ADCT",
-      "iv30Percent": 97.3
+      "iv30Percent": 100
     },
     {
       "ticker": "ADI",
-      "iv30Percent": 36.9
+      "iv30Percent": 37.2
     },
     {
       "ticker": "ADM",
-      "iv30Percent": 30.1
+      "iv30Percent": 30.3
     },
     {
       "ticker": "ADP",
@@ -117,7 +117,7 @@
     },
     {
       "ticker": "ADSK",
-      "iv30Percent": 39.5
+      "iv30Percent": 40.6
     },
     {
       "ticker": "ADT",
@@ -125,7 +125,7 @@
     },
     {
       "ticker": "ADTN",
-      "iv30Percent": 61.6
+      "iv30Percent": 60.8
     },
     {
       "ticker": "AEHR",
@@ -133,19 +133,19 @@
     },
     {
       "ticker": "AEM",
-      "iv30Percent": 40.6
+      "iv30Percent": 40.5
     },
     {
       "ticker": "AEO",
-      "iv30Percent": 45.9
+      "iv30Percent": 45.4
     },
     {
       "ticker": "AEP",
-      "iv30Percent": 19
+      "iv30Percent": 19.2
     },
     {
       "ticker": "AEVA",
-      "iv30Percent": 89.9
+      "iv30Percent": 90.2
     },
     {
       "ticker": "AEXA",
@@ -153,19 +153,19 @@
     },
     {
       "ticker": "AFRM",
-      "iv30Percent": 65.5
+      "iv30Percent": 65.2
     },
     {
       "ticker": "AG",
-      "iv30Percent": 57.7
+      "iv30Percent": 57.8
     },
     {
       "ticker": "AGI",
-      "iv30Percent": 44.8
+      "iv30Percent": 45.1
     },
     {
       "ticker": "AGNC",
-      "iv30Percent": 29.5
+      "iv30Percent": 30.2
     },
     {
       "ticker": "AGQ",
@@ -173,43 +173,47 @@
     },
     {
       "ticker": "AI",
-      "iv30Percent": 50.9
+      "iv30Percent": 51.4
     },
     {
       "ticker": "AIG",
-      "iv30Percent": 25.9
+      "iv30Percent": 26.3
     },
     {
       "ticker": "AISP",
-      "iv30Percent": 105.2
+      "iv30Percent": 100.4
     },
     {
       "ticker": "AKAM",
-      "iv30Percent": 72.2
+      "iv30Percent": 74.2
     },
     {
       "ticker": "ALAB",
-      "iv30Percent": 86.5
+      "iv30Percent": 86.4
     },
     {
       "ticker": "ALB",
-      "iv30Percent": 53.1
+      "iv30Percent": 53.4
     },
     {
       "ticker": "ALC",
-      "iv30Percent": 29.9
+      "iv30Percent": 30.1
     },
     {
       "ticker": "ALGN",
-      "iv30Percent": 55.6
+      "iv30Percent": 56.1
     },
     {
       "ticker": "ALHC",
-      "iv30Percent": 70.6
+      "iv30Percent": 68.3
+    },
+    {
+      "ticker": "ALIT",
+      "iv30Percent": 93.7
     },
     {
       "ticker": "ALK",
-      "iv30Percent": 46.5
+      "iv30Percent": 46.3
     },
     {
       "ticker": "ALL",
@@ -217,107 +221,107 @@
     },
     {
       "ticker": "ALLY",
-      "iv30Percent": 31
+      "iv30Percent": 30.3
     },
     {
       "ticker": "ALM",
-      "iv30Percent": 83.2
+      "iv30Percent": 84.3
     },
     {
       "ticker": "ALMS",
-      "iv30Percent": 66.4
+      "iv30Percent": 65.7
     },
     {
       "ticker": "ALNY",
-      "iv30Percent": 51.9
+      "iv30Percent": 52.1
     },
     {
       "ticker": "ALOY",
-      "iv30Percent": 97.9
+      "iv30Percent": 98
     },
     {
       "ticker": "ALT",
-      "iv30Percent": 58.4
+      "iv30Percent": 58.8
     },
     {
       "ticker": "AMAT",
-      "iv30Percent": 51.8
+      "iv30Percent": 51.6
     },
     {
       "ticker": "AMBA",
-      "iv30Percent": 54.6
+      "iv30Percent": 55.1
     },
     {
       "ticker": "AMC",
-      "iv30Percent": 85.3
+      "iv30Percent": 87
     },
     {
       "ticker": "AMD",
-      "iv30Percent": 53.2
+      "iv30Percent": 53.6
     },
     {
       "ticker": "AMDL",
-      "iv30Percent": 104
+      "iv30Percent": 103.5
     },
     {
       "ticker": "AME",
-      "iv30Percent": 25.1
+      "iv30Percent": 25.6
     },
     {
       "ticker": "AMGN",
-      "iv30Percent": 30.7
+      "iv30Percent": 30.8
     },
     {
       "ticker": "AMKR",
-      "iv30Percent": 75.5
+      "iv30Percent": 76
     },
     {
       "ticker": "AMPG",
-      "iv30Percent": 76.6
+      "iv30Percent": 72.5
     },
     {
       "ticker": "AMPL",
-      "iv30Percent": 70.6
+      "iv30Percent": 70
     },
     {
       "ticker": "AMPX",
-      "iv30Percent": 78.4
+      "iv30Percent": 78.2
     },
     {
       "ticker": "AMRZ",
-      "iv30Percent": 35.2
+      "iv30Percent": 35.7
     },
     {
       "ticker": "AMT",
-      "iv30Percent": 29.2
+      "iv30Percent": 29.6
     },
     {
       "ticker": "AMTM",
-      "iv30Percent": 39.6
+      "iv30Percent": 40
     },
     {
       "ticker": "AMTX",
-      "iv30Percent": 71.7
+      "iv30Percent": 70.1
     },
     {
       "ticker": "AMZN",
-      "iv30Percent": 38.6
+      "iv30Percent": 38.7
     },
     {
       "ticker": "AMZU",
-      "iv30Percent": 65.4
+      "iv30Percent": 63.9
     },
     {
       "ticker": "ANET",
-      "iv30Percent": 52.9
+      "iv30Percent": 52.5
     },
     {
       "ticker": "ANF",
-      "iv30Percent": 45.5
+      "iv30Percent": 45.7
     },
     {
       "ticker": "ANGX",
-      "iv30Percent": 85
+      "iv30Percent": 85.3
     },
     {
       "ticker": "ANVS",
@@ -325,55 +329,55 @@
     },
     {
       "ticker": "APA",
-      "iv30Percent": 45.1
+      "iv30Percent": 45.6
     },
     {
       "ticker": "APH",
-      "iv30Percent": 40.5
+      "iv30Percent": 40.3
     },
     {
       "ticker": "APLD",
-      "iv30Percent": 72.1
+      "iv30Percent": 72
     },
     {
       "ticker": "APLX",
-      "iv30Percent": 142.1
+      "iv30Percent": 148.1
     },
     {
       "ticker": "APO",
-      "iv30Percent": 41.1
+      "iv30Percent": 40.3
     },
     {
       "ticker": "APP",
-      "iv30Percent": 72.5
+      "iv30Percent": 73
     },
     {
       "ticker": "APPS",
-      "iv30Percent": 89.3
+      "iv30Percent": 91.9
     },
     {
       "ticker": "AQST",
-      "iv30Percent": 71.4
+      "iv30Percent": 73
     },
     {
       "ticker": "AR",
-      "iv30Percent": 38.5
+      "iv30Percent": 38
     },
     {
       "ticker": "ARCC",
-      "iv30Percent": 18.3
+      "iv30Percent": 16.1
     },
     {
       "ticker": "ARCT",
-      "iv30Percent": 86.2
+      "iv30Percent": 86.4
     },
     {
       "ticker": "ARDX",
-      "iv30Percent": 54.6
+      "iv30Percent": 56.5
     },
     {
       "ticker": "ARE",
-      "iv30Percent": 40.5
+      "iv30Percent": 40.6
     },
     {
       "ticker": "AREC",
@@ -381,15 +385,15 @@
     },
     {
       "ticker": "ARES",
-      "iv30Percent": 41.6
+      "iv30Percent": 41.1
     },
     {
       "ticker": "ARKG",
-      "iv30Percent": 52.5
+      "iv30Percent": 52.1
     },
     {
       "ticker": "ARKK",
-      "iv30Percent": 32.9
+      "iv30Percent": 33.4
     },
     {
       "ticker": "ARM",
@@ -397,47 +401,51 @@
     },
     {
       "ticker": "ARMG",
-      "iv30Percent": 124.7
+      "iv30Percent": 125.4
     },
     {
       "ticker": "ARQQ",
-      "iv30Percent": 92.7
+      "iv30Percent": 93
     },
     {
       "ticker": "ARRY",
-      "iv30Percent": 76
+      "iv30Percent": 77.4
     },
     {
       "ticker": "ARWR",
-      "iv30Percent": 55.5
+      "iv30Percent": 54.8
     },
     {
       "ticker": "AS",
-      "iv30Percent": 42.3
+      "iv30Percent": 42
     },
     {
       "ticker": "ASAN",
-      "iv30Percent": 61.4
+      "iv30Percent": 62.7
     },
     {
       "ticker": "ASHR",
-      "iv30Percent": 19.9
+      "iv30Percent": 20
+    },
+    {
+      "ticker": "ASM",
+      "iv30Percent": 64.5
     },
     {
       "ticker": "ASML",
-      "iv30Percent": 43.5
+      "iv30Percent": 42.6
     },
     {
       "ticker": "ASND",
-      "iv30Percent": 40
+      "iv30Percent": 40.4
     },
     {
       "ticker": "ASPI",
-      "iv30Percent": 76.7
+      "iv30Percent": 76
     },
     {
       "ticker": "ASST",
-      "iv30Percent": 77.9
+      "iv30Percent": 79.9
     },
     {
       "ticker": "ASTS",
@@ -445,55 +453,59 @@
     },
     {
       "ticker": "ASTX",
-      "iv30Percent": 162.1
+      "iv30Percent": 161
     },
     {
       "ticker": "ASX",
-      "iv30Percent": 53.2
+      "iv30Percent": 53.5
     },
     {
       "ticker": "ATEX",
-      "iv30Percent": 68.4
+      "iv30Percent": 68
     },
     {
       "ticker": "ATI",
-      "iv30Percent": 45.4
+      "iv30Percent": 45.8
+    },
+    {
+      "ticker": "ATOM",
+      "iv30Percent": 98.6
     },
     {
       "ticker": "AU",
-      "iv30Percent": 40.6
+      "iv30Percent": 41.4
     },
     {
       "ticker": "AUPH",
-      "iv30Percent": 44.3
+      "iv30Percent": 46.1
     },
     {
       "ticker": "AUR",
-      "iv30Percent": 75.1
+      "iv30Percent": 74.3
     },
     {
       "ticker": "AVAV",
-      "iv30Percent": 54.4
+      "iv30Percent": 54.2
     },
     {
       "ticker": "AVBP",
-      "iv30Percent": 69.6
+      "iv30Percent": 69.1
     },
     {
       "ticker": "AVGG",
-      "iv30Percent": 74
+      "iv30Percent": 73.4
     },
     {
       "ticker": "AVGO",
-      "iv30Percent": 35.2
+      "iv30Percent": 35.3
     },
     {
       "ticker": "AVL",
-      "iv30Percent": 67.8
+      "iv30Percent": 68.4
     },
     {
       "ticker": "AVTR",
-      "iv30Percent": 42.4
+      "iv30Percent": 42.3
     },
     {
       "ticker": "AWR",
@@ -501,7 +513,7 @@
     },
     {
       "ticker": "AXGN",
-      "iv30Percent": 70.9
+      "iv30Percent": 72.9
     },
     {
       "ticker": "AXON",
@@ -513,27 +525,31 @@
     },
     {
       "ticker": "AXSM",
-      "iv30Percent": 47.1
+      "iv30Percent": 47.3
     },
     {
       "ticker": "AXTI",
-      "iv30Percent": 110.9
+      "iv30Percent": 112.5
     },
     {
       "ticker": "AXTX",
-      "iv30Percent": 194.8
+      "iv30Percent": 195.5
+    },
+    {
+      "ticker": "AZ",
+      "iv30Percent": 65.1
     },
     {
       "ticker": "AZN",
-      "iv30Percent": 31.2
+      "iv30Percent": 31.4
     },
     {
       "ticker": "B",
-      "iv30Percent": 36.8
+      "iv30Percent": 37.5
     },
     {
       "ticker": "BA",
-      "iv30Percent": 35.7
+      "iv30Percent": 35.5
     },
     {
       "ticker": "BABA",
@@ -541,59 +557,59 @@
     },
     {
       "ticker": "BABX",
-      "iv30Percent": 74.3
+      "iv30Percent": 74.5
     },
     {
       "ticker": "BAC",
-      "iv30Percent": 26.5
+      "iv30Percent": 26.9
     },
     {
       "ticker": "BAH",
-      "iv30Percent": 39.8
+      "iv30Percent": 39.7
     },
     {
       "ticker": "BAM",
-      "iv30Percent": 31.1
+      "iv30Percent": 31
     },
     {
       "ticker": "BAX",
-      "iv30Percent": 50.3
+      "iv30Percent": 50.5
     },
     {
       "ticker": "BB",
-      "iv30Percent": 55.7
+      "iv30Percent": 56.5
     },
     {
       "ticker": "BBAI",
-      "iv30Percent": 72.4
+      "iv30Percent": 70.1
     },
     {
       "ticker": "BBAR",
-      "iv30Percent": 44.6
+      "iv30Percent": 43.4
     },
     {
       "ticker": "BBD",
-      "iv30Percent": 46.8
+      "iv30Percent": 46.9
     },
     {
       "ticker": "BBWI",
-      "iv30Percent": 49.6
+      "iv30Percent": 50.2
     },
     {
       "ticker": "BBY",
-      "iv30Percent": 36.2
+      "iv30Percent": 36.5
     },
     {
       "ticker": "BCE",
-      "iv30Percent": 27.7
+      "iv30Percent": 26.3
     },
     {
       "ticker": "BCRX",
-      "iv30Percent": 49.6
+      "iv30Percent": 49.1
     },
     {
       "ticker": "BCS",
-      "iv30Percent": 29.6
+      "iv30Percent": 30.2
     },
     {
       "ticker": "BDN",
@@ -601,79 +617,83 @@
     },
     {
       "ticker": "BE",
-      "iv30Percent": 77.1
+      "iv30Percent": 77.6
     },
     {
       "ticker": "BEAM",
-      "iv30Percent": 69.9
+      "iv30Percent": 72.3
     },
     {
       "ticker": "BEKE",
-      "iv30Percent": 33.7
+      "iv30Percent": 36.1
     },
     {
       "ticker": "BEX",
-      "iv30Percent": 136.8
+      "iv30Percent": 138.4
     },
     {
       "ticker": "BFLY",
-      "iv30Percent": 96.1
+      "iv30Percent": 96.4
     },
     {
       "ticker": "BG",
-      "iv30Percent": 34.1
+      "iv30Percent": 34.5
     },
     {
       "ticker": "BGS",
-      "iv30Percent": 54.8
+      "iv30Percent": 53.5
+    },
+    {
+      "ticker": "BHC",
+      "iv30Percent": 52.3
     },
     {
       "ticker": "BHF",
-      "iv30Percent": 50.1
+      "iv30Percent": 48.5
     },
     {
       "ticker": "BHP",
-      "iv30Percent": 31
+      "iv30Percent": 31.2
     },
     {
       "ticker": "BHYP",
-      "iv30Percent": 56
+      "iv30Percent": 56.7
     },
     {
       "ticker": "BIDU",
-      "iv30Percent": 36.8
+      "iv30Percent": 36.7
     },
     {
       "ticker": "BIIB",
-      "iv30Percent": 38.5
+      "iv30Percent": 38.6
     },
     {
       "ticker": "BILI",
-      "iv30Percent": 46.3
+      "iv30Percent": 46.9
     },
     {
       "ticker": "BITO",
-      "iv30Percent": 32.8
-    },
-    {
-      "ticker": "BITX",
-      "iv30Percent": 71.3
-    },
-    {
-      "ticker": "BKNG",
-      "iv30Percent": 45.3
-    },
-    {
-      "ticker": "BKR",
       "iv30Percent": 32.6
     },
     {
+      "ticker": "BITX",
+      "iv30Percent": 71.6
+    },
+    {
+      "ticker": "BKNG",
+      "iv30Percent": 45.4
+    },
+    {
+      "ticker": "BKR",
+      "iv30Percent": 32.8
+    },
+    {
       "ticker": "BLDR",
-      "iv30Percent": 54.5
+      "iv30Percent": 54.4
     },
     {
       "ticker": "BLK",
-      "iv30Percent": 32.2
+      "iv30Percent": 32
     },
     {
       "ticker": "BLSH",
@@ -681,123 +701,131 @@
     },
     {
       "ticker": "BLZE",
-      "iv30Percent": 92.4
+      "iv30Percent": 94.8
     },
     {
       "ticker": "BMEA",
-      "iv30Percent": 117.1
+      "iv30Percent": 114.8
     },
     {
       "ticker": "BMNR",
-      "iv30Percent": 63.1
+      "iv30Percent": 62.3
     },
     {
       "ticker": "BMNU",
-      "iv30Percent": 126.4
+      "iv30Percent": 125.4
+    },
+    {
+      "ticker": "BMRN",
+      "iv30Percent": 39.7
     },
     {
       "ticker": "BMY",
-      "iv30Percent": 35.8
+      "iv30Percent": 35.5
     },
     {
       "ticker": "BN",
-      "iv30Percent": 29.2
+      "iv30Percent": 29.9
     },
     {
       "ticker": "BNO",
-      "iv30Percent": 49
+      "iv30Percent": 49.1
     },
     {
       "ticker": "BNTX",
-      "iv30Percent": 45.7
+      "iv30Percent": 47.2
     },
     {
       "ticker": "BNY",
-      "iv30Percent": 30.1
+      "iv30Percent": 30.9
     },
     {
       "ticker": "BOIL",
-      "iv30Percent": 79.8
+      "iv30Percent": 79.9
     },
     {
       "ticker": "BORR",
-      "iv30Percent": 60.2
+      "iv30Percent": 60.1
     },
     {
       "ticker": "BOX",
-      "iv30Percent": 32.4
+      "iv30Percent": 32.5
     },
     {
       "ticker": "BP",
-      "iv30Percent": 33.6
+      "iv30Percent": 33.5
     },
     {
       "ticker": "BRK.B",
-      "iv30Percent": 12.9
+      "iv30Percent": 12.7
+    },
+    {
+      "ticker": "BRO",
+      "iv30Percent": 29.3
     },
     {
       "ticker": "BROS",
-      "iv30Percent": 66.1
+      "iv30Percent": 65.5
     },
     {
       "ticker": "BRSL",
-      "iv30Percent": 35.8
+      "iv30Percent": 34.4
     },
     {
       "ticker": "BRUN",
-      "iv30Percent": 108.3
+      "iv30Percent": 108.4
     },
     {
       "ticker": "BRZE",
-      "iv30Percent": 56.6
+      "iv30Percent": 57.6
     },
     {
       "ticker": "BRZU",
-      "iv30Percent": 66.7
+      "iv30Percent": 66.8
     },
     {
       "ticker": "BSOL",
-      "iv30Percent": 51.6
+      "iv30Percent": 52
     },
     {
       "ticker": "BSP",
-      "iv30Percent": 107.7
+      "iv30Percent": 106.5
     },
     {
       "ticker": "BSX",
-      "iv30Percent": 47
+      "iv30Percent": 47.2
     },
     {
       "ticker": "BTBT",
-      "iv30Percent": 86.9
+      "iv30Percent": 88.3
     },
     {
       "ticker": "BTDR",
-      "iv30Percent": 83.9
+      "iv30Percent": 83.6
     },
     {
       "ticker": "BTG",
-      "iv30Percent": 45.9
+      "iv30Percent": 46.4
     },
     {
       "ticker": "BTI",
-      "iv30Percent": 21.7
+      "iv30Percent": 21.8
     },
     {
       "ticker": "BTU",
-      "iv30Percent": 58.7
+      "iv30Percent": 59
     },
     {
       "ticker": "BUD",
-      "iv30Percent": 29.7
+      "iv30Percent": 29.9
     },
     {
       "ticker": "BUG",
-      "iv30Percent": 33.9
+      "iv30Percent": 34.2
     },
     {
       "ticker": "BULL",
-      "iv30Percent": 62.4
+      "iv30Percent": 61.2
     },
     {
       "ticker": "BURL",
@@ -805,23 +833,23 @@
     },
     {
       "ticker": "BW",
-      "iv30Percent": 95.4
+      "iv30Percent": 96.5
     },
     {
       "ticker": "BWXT",
-      "iv30Percent": 43.4
+      "iv30Percent": 43.3
     },
     {
       "ticker": "BX",
-      "iv30Percent": 40.2
+      "iv30Percent": 39.7
     },
     {
       "ticker": "BXMT",
-      "iv30Percent": 35.6
+      "iv30Percent": 35.5
     },
     {
       "ticker": "BYND",
-      "iv30Percent": 104.2
+      "iv30Percent": 100.6
     },
     {
       "ticker": "BZH",
@@ -829,15 +857,15 @@
     },
     {
       "ticker": "C",
-      "iv30Percent": 30.1
+      "iv30Percent": 30.4
     },
     {
       "ticker": "CABA",
-      "iv30Percent": 83.5
+      "iv30Percent": 66.4
     },
     {
       "ticker": "CADL",
-      "iv30Percent": 64.2
+      "iv30Percent": 63.3
     },
     {
       "ticker": "CAG",
@@ -845,11 +873,11 @@
     },
     {
       "ticker": "CAH",
-      "iv30Percent": 34
+      "iv30Percent": 34.1
     },
     {
       "ticker": "CAKE",
-      "iv30Percent": 43.5
+      "iv30Percent": 43.3
     },
     {
       "ticker": "CAN",
@@ -857,59 +885,63 @@
     },
     {
       "ticker": "CANE",
-      "iv30Percent": 23.3
+      "iv30Percent": 22.3
     },
     {
       "ticker": "CAPR",
-      "iv30Percent": 100.4
+      "iv30Percent": 100.6
     },
     {
       "ticker": "CAR",
-      "iv30Percent": 69.7
+      "iv30Percent": 70.5
     },
     {
       "ticker": "CARR",
-      "iv30Percent": 37.9
+      "iv30Percent": 37.5
     },
     {
       "ticker": "CART",
-      "iv30Percent": 44.7
+      "iv30Percent": 43.9
     },
     {
       "ticker": "CASY",
-      "iv30Percent": 30.5
+      "iv30Percent": 30.3
     },
     {
       "ticker": "CAT",
-      "iv30Percent": 43.1
+      "iv30Percent": 42.7
     },
     {
       "ticker": "CAVA",
-      "iv30Percent": 60.2
+      "iv30Percent": 61
     },
     {
       "ticker": "CB",
-      "iv30Percent": 20
+      "iv30Percent": 20.3
     },
     {
       "ticker": "CBOE",
-      "iv30Percent": 40.7
+      "iv30Percent": 40.9
     },
     {
       "ticker": "CBRG",
-      "iv30Percent": 143.6
+      "iv30Percent": 139.7
     },
     {
       "ticker": "CBRL",
-      "iv30Percent": 47.3
+      "iv30Percent": 45.7
     },
     {
       "ticker": "CBRS",
-      "iv30Percent": 66.8
+      "iv30Percent": 66.3
     },
     {
       "ticker": "CCC",
-      "iv30Percent": 57.9
+      "iv30Percent": 62.7
+    },
+    {
+      "ticker": "CCCC",
+      "iv30Percent": 86
     },
     {
       "ticker": "CCI",
@@ -917,7 +949,7 @@
     },
     {
       "ticker": "CCJ",
-      "iv30Percent": 45.5
+      "iv30Percent": 45.1
     },
     {
       "ticker": "CCL",
@@ -925,59 +957,63 @@
     },
     {
       "ticker": "CCXI",
-      "iv30Percent": 67.2
+      "iv30Percent": 68.4
     },
     {
       "ticker": "CDE",
-      "iv30Percent": 57.9
+      "iv30Percent": 58.9
     },
     {
       "ticker": "CDNS",
-      "iv30Percent": 44.3
+      "iv30Percent": 44.1
     },
     {
       "ticker": "CECO",
-      "iv30Percent": 64.1
+      "iv30Percent": 65.1
     },
     {
       "ticker": "CEG",
-      "iv30Percent": 47.5
+      "iv30Percent": 47.2
     },
     {
       "ticker": "CELH",
-      "iv30Percent": 62.7
+      "iv30Percent": 60.1
+    },
+    {
+      "ticker": "CENX",
+      "iv30Percent": 58.7
     },
     {
       "ticker": "CF",
-      "iv30Percent": 45.3
+      "iv30Percent": 46.1
     },
     {
       "ticker": "CG",
-      "iv30Percent": 40.8
+      "iv30Percent": 41.4
     },
     {
       "ticker": "CGC",
-      "iv30Percent": 72.3
+      "iv30Percent": 72.5
     },
     {
       "ticker": "CGON",
-      "iv30Percent": 112.3
+      "iv30Percent": 129.9
     },
     {
       "ticker": "CHKP",
-      "iv30Percent": 39.9
+      "iv30Percent": 39.8
     },
     {
       "ticker": "CHPT",
-      "iv30Percent": 76.7
+      "iv30Percent": 76.1
     },
     {
       "ticker": "CHRW",
-      "iv30Percent": 39.6
+      "iv30Percent": 40.1
     },
     {
       "ticker": "CHTR",
-      "iv30Percent": 80.1
+      "iv30Percent": 79.8
     },
     {
       "ticker": "CHWY",
@@ -985,107 +1021,111 @@
     },
     {
       "ticker": "CHYM",
-      "iv30Percent": 49.2
+      "iv30Percent": 50.3
     },
     {
       "ticker": "CI",
-      "iv30Percent": 35.3
+      "iv30Percent": 35.2
     },
     {
       "ticker": "CIA",
-      "iv30Percent": 83.4
+      "iv30Percent": 87.3
     },
     {
       "ticker": "CIBR",
-      "iv30Percent": 27.7
-    },
-    {
-      "ticker": "CIEN",
-      "iv30Percent": 64.3
-    },
-    {
-      "ticker": "CIFR",
-      "iv30Percent": 93.4
-    },
-    {
-      "ticker": "CL",
-      "iv30Percent": 22.8
-    },
-    {
-      "ticker": "CLF",
-      "iv30Percent": 77.1
-    },
-    {
-      "ticker": "CLMT",
-      "iv30Percent": 57.6
-    },
-    {
-      "ticker": "CLNE",
-      "iv30Percent": 53
-    },
-    {
-      "ticker": "CLOV",
-      "iv30Percent": 72.4
-    },
-    {
-      "ticker": "CLS",
-      "iv30Percent": 71.1
-    },
-    {
-      "ticker": "CLSK",
-      "iv30Percent": 73.4
-    },
-    {
-      "ticker": "CLX",
-      "iv30Percent": 34.4
-    },
-    {
-      "ticker": "CMCSA",
-      "iv30Percent": 39.1
-    },
-    {
-      "ticker": "CME",
       "iv30Percent": 27.6
     },
     {
+      "ticker": "CIEN",
+      "iv30Percent": 64.6
+    },
+    {
+      "ticker": "CIFR",
+      "iv30Percent": 92.9
+    },
+    {
+      "ticker": "CL",
+      "iv30Percent": 22.3
+    },
+    {
+      "ticker": "CLF",
+      "iv30Percent": 76.4
+    },
+    {
+      "ticker": "CLMT",
+      "iv30Percent": 58.3
+    },
+    {
+      "ticker": "CLNE",
+      "iv30Percent": 52.7
+    },
+    {
+      "ticker": "CLOV",
+      "iv30Percent": 72.5
+    },
+    {
+      "ticker": "CLS",
+      "iv30Percent": 71.4
+    },
+    {
+      "ticker": "CLSK",
+      "iv30Percent": 73.9
+    },
+    {
+      "ticker": "CLX",
+      "iv30Percent": 34.2
+    },
+    {
+      "ticker": "CMCSA",
+      "iv30Percent": 39.2
+    },
+    {
+      "ticker": "CME",
+      "iv30Percent": 27.3
+    },
+    {
       "ticker": "CMG",
-      "iv30Percent": 46.6
+      "iv30Percent": 46.7
     },
     {
       "ticker": "CMPS",
-      "iv30Percent": 73.7
+      "iv30Percent": 73.2
     },
     {
       "ticker": "CNC",
-      "iv30Percent": 50.2
+      "iv30Percent": 50.6
     },
     {
       "ticker": "CNQ",
-      "iv30Percent": 29.4
+      "iv30Percent": 28.6
+    },
+    {
+      "ticker": "CNX",
+      "iv30Percent": 29.1
     },
     {
       "ticker": "CODI",
-      "iv30Percent": 49.2
+      "iv30Percent": 51.3
     },
     {
       "ticker": "COF",
-      "iv30Percent": 35
+      "iv30Percent": 35.1
     },
     {
       "ticker": "COHR",
-      "iv30Percent": 73.4
+      "iv30Percent": 73
     },
     {
       "ticker": "COHX",
-      "iv30Percent": 143.5
+      "iv30Percent": 143.2
     },
     {
       "ticker": "COIN",
-      "iv30Percent": 63.7
+      "iv30Percent": 63.3
     },
     {
       "ticker": "COMP",
-      "iv30Percent": 65.7
+      "iv30Percent": 66.4
     },
     {
       "ticker": "CON",
@@ -1093,47 +1133,51 @@
     },
     {
       "ticker": "CONL",
-      "iv30Percent": 125.6
+      "iv30Percent": 129.3
     },
     {
       "ticker": "COP",
-      "iv30Percent": 31.6
+      "iv30Percent": 32
     },
     {
       "ticker": "COPX",
-      "iv30Percent": 39.9
+      "iv30Percent": 40
     },
     {
       "ticker": "CORN",
-      "iv30Percent": 15.8
+      "iv30Percent": 16.1
+    },
+    {
+      "ticker": "CORT",
+      "iv30Percent": 53.2
     },
     {
       "ticker": "CORZ",
-      "iv30Percent": 71.6
+      "iv30Percent": 72
     },
     {
       "ticker": "COST",
-      "iv30Percent": 17.6
+      "iv30Percent": 17.4
     },
     {
       "ticker": "CPB",
-      "iv30Percent": 31.3
+      "iv30Percent": 30.2
     },
     {
       "ticker": "CPER",
-      "iv30Percent": 22.4
+      "iv30Percent": 23
     },
     {
       "ticker": "CPNG",
-      "iv30Percent": 55
+      "iv30Percent": 54.3
     },
     {
       "ticker": "CPRI",
-      "iv30Percent": 64
+      "iv30Percent": 64.1
     },
     {
       "ticker": "CPRT",
-      "iv30Percent": 31.8
+      "iv30Percent": 32.3
     },
     {
       "ticker": "CRBP",
@@ -1141,119 +1185,123 @@
     },
     {
       "ticker": "CRCG",
-      "iv30Percent": 131.1
+      "iv30Percent": 131.4
     },
     {
       "ticker": "CRCL",
-      "iv30Percent": 72.1
+      "iv30Percent": 72.2
     },
     {
       "ticker": "CRDO",
-      "iv30Percent": 74.7
+      "iv30Percent": 74.8
     },
     {
       "ticker": "CRGY",
-      "iv30Percent": 44.1
+      "iv30Percent": 47.1
+    },
+    {
+      "ticker": "CRH",
+      "iv30Percent": 38.7
     },
     {
       "ticker": "CRK",
-      "iv30Percent": 49.3
+      "iv30Percent": 50.1
     },
     {
       "ticker": "CRM",
-      "iv30Percent": 37.7
+      "iv30Percent": 37.5
     },
     {
       "ticker": "CRML",
-      "iv30Percent": 92.6
+      "iv30Percent": 91.4
     },
     {
       "ticker": "CRSP",
-      "iv30Percent": 55.8
+      "iv30Percent": 55.6
     },
     {
       "ticker": "CRUS",
-      "iv30Percent": 40.7
+      "iv30Percent": 40.6
     },
     {
       "ticker": "CRVS",
-      "iv30Percent": 61.2
+      "iv30Percent": 60.9
     },
     {
       "ticker": "CRWD",
-      "iv30Percent": 47.4
+      "iv30Percent": 48.1
     },
     {
       "ticker": "CRWV",
-      "iv30Percent": 66.9
+      "iv30Percent": 67
     },
     {
       "ticker": "CSCO",
-      "iv30Percent": 31.6
+      "iv30Percent": 31.5
     },
     {
       "ticker": "CSGP",
-      "iv30Percent": 58.2
+      "iv30Percent": 58.4
     },
     {
       "ticker": "CSIQ",
-      "iv30Percent": 70.3
+      "iv30Percent": 69.5
     },
     {
       "ticker": "CSX",
-      "iv30Percent": 27.4
+      "iv30Percent": 27.5
     },
     {
       "ticker": "CTAS",
-      "iv30Percent": 21.6
+      "iv30Percent": 21.9
     },
     {
       "ticker": "CTSH",
-      "iv30Percent": 44.1
+      "iv30Percent": 43.9
     },
     {
       "ticker": "CTVA",
-      "iv30Percent": 56
+      "iv30Percent": 55.8
     },
     {
       "ticker": "CVE",
-      "iv30Percent": 37.1
+      "iv30Percent": 37.6
     },
     {
       "ticker": "CVLG",
-      "iv30Percent": 45.2
+      "iv30Percent": 42.4
     },
     {
       "ticker": "CVNA",
-      "iv30Percent": 72.6
+      "iv30Percent": 72.9
     },
     {
       "ticker": "CVS",
-      "iv30Percent": 37.7
+      "iv30Percent": 37.5
     },
     {
       "ticker": "CVX",
-      "iv30Percent": 27.2
+      "iv30Percent": 27.4
     },
     {
       "ticker": "CWEB",
-      "iv30Percent": 52.8
+      "iv30Percent": 51.9
     },
     {
       "ticker": "CWVX",
-      "iv30Percent": 138.9
+      "iv30Percent": 137.9
     },
     {
       "ticker": "CYPH",
-      "iv30Percent": 148.6
+      "iv30Percent": 146.4
     },
     {
       "ticker": "CYTK",
-      "iv30Percent": 49.4
+      "iv30Percent": 52.1
     },
     {
       "ticker": "DAC",
-      "iv30Percent": 26.9
+      "iv30Percent": 27.6
     },
     {
       "ticker": "DAL",
@@ -1261,31 +1309,35 @@
     },
     {
       "ticker": "DAR",
-      "iv30Percent": 44.2
+      "iv30Percent": 43
     },
     {
       "ticker": "DASH",
-      "iv30Percent": 55
+      "iv30Percent": 55.5
+    },
+    {
+      "ticker": "DB",
+      "iv30Percent": 33.5
     },
     {
       "ticker": "DBA",
-      "iv30Percent": 19
+      "iv30Percent": 18.6
     },
     {
       "ticker": "DBX",
-      "iv30Percent": 41
+      "iv30Percent": 40.9
     },
     {
       "ticker": "DC",
-      "iv30Percent": 61.4
+      "iv30Percent": 62.4
     },
     {
       "ticker": "DDOG",
-      "iv30Percent": 68.7
+      "iv30Percent": 69
     },
     {
       "ticker": "DE",
-      "iv30Percent": 31.8
+      "iv30Percent": 31.9
     },
     {
       "ticker": "DECK",
@@ -1297,39 +1349,43 @@
     },
     {
       "ticker": "DELL",
-      "iv30Percent": 55.9
+      "iv30Percent": 56.4
     },
     {
       "ticker": "DFDV",
-      "iv30Percent": 110.3
+      "iv30Percent": 116
+    },
+    {
+      "ticker": "DFEN",
+      "iv30Percent": 63
     },
     {
       "ticker": "DFTX",
-      "iv30Percent": 56
+      "iv30Percent": 54.8
     },
     {
       "ticker": "DG",
-      "iv30Percent": 32.1
+      "iv30Percent": 32.2
     },
     {
       "ticker": "DGRO",
-      "iv30Percent": 9.7
+      "iv30Percent": 9.6
     },
     {
       "ticker": "DGXX",
-      "iv30Percent": 82.9
+      "iv30Percent": 83.8
     },
     {
       "ticker": "DHI",
-      "iv30Percent": 39.3
+      "iv30Percent": 39.1
     },
     {
       "ticker": "DHR",
-      "iv30Percent": 41.1
+      "iv30Percent": 41.2
     },
     {
       "ticker": "DHT",
-      "iv30Percent": 55.9
+      "iv30Percent": 55.2
     },
     {
       "ticker": "DIA",
@@ -1337,43 +1393,43 @@
     },
     {
       "ticker": "DINO",
-      "iv30Percent": 51
+      "iv30Percent": 50.8
     },
     {
       "ticker": "DIS",
-      "iv30Percent": 23.3
+      "iv30Percent": 22.9
     },
     {
       "ticker": "DJT",
-      "iv30Percent": 60.1
+      "iv30Percent": 60.9
     },
     {
       "ticker": "DKNG",
-      "iv30Percent": 63.6
+      "iv30Percent": 63
     },
     {
       "ticker": "DKS",
-      "iv30Percent": 38.4
+      "iv30Percent": 38.1
     },
     {
       "ticker": "DLLL",
-      "iv30Percent": 106.8
+      "iv30Percent": 106.6
     },
     {
       "ticker": "DLO",
-      "iv30Percent": 45.7
+      "iv30Percent": 45.3
     },
     {
       "ticker": "DLR",
-      "iv30Percent": 33
+      "iv30Percent": 33.4
     },
     {
       "ticker": "DLTR",
-      "iv30Percent": 34.2
+      "iv30Percent": 34
     },
     {
       "ticker": "DNA",
-      "iv30Percent": 111.8
+      "iv30Percent": 114
     },
     {
       "ticker": "DNLI",
@@ -1381,95 +1437,95 @@
     },
     {
       "ticker": "DNN",
-      "iv30Percent": 57.4
+      "iv30Percent": 58.3
     },
     {
       "ticker": "DNUT",
-      "iv30Percent": 70.8
+      "iv30Percent": 72.3
     },
     {
       "ticker": "DOC",
-      "iv30Percent": 24.4
+      "iv30Percent": 24.5
     },
     {
       "ticker": "DOCN",
-      "iv30Percent": 89
+      "iv30Percent": 88.3
     },
     {
       "ticker": "DOCS",
-      "iv30Percent": 68.3
+      "iv30Percent": 67.8
     },
     {
       "ticker": "DOCU",
-      "iv30Percent": 41.9
+      "iv30Percent": 42.3
     },
     {
       "ticker": "DOW",
-      "iv30Percent": 42.4
+      "iv30Percent": 42.5
     },
     {
       "ticker": "DPRO",
-      "iv30Percent": 81.6
+      "iv30Percent": 81.7
     },
     {
       "ticker": "DPST",
-      "iv30Percent": 76.3
+      "iv30Percent": 74.7
     },
     {
       "ticker": "DPZ",
-      "iv30Percent": 47.9
+      "iv30Percent": 48.6
     },
     {
       "ticker": "DRAM",
-      "iv30Percent": 48.4
+      "iv30Percent": 47.9
     },
     {
       "ticker": "DT",
-      "iv30Percent": 41.6
+      "iv30Percent": 42.7
     },
     {
       "ticker": "DUK",
-      "iv30Percent": 16.8
+      "iv30Percent": 17.2
     },
     {
       "ticker": "DUOL",
-      "iv30Percent": 75.6
+      "iv30Percent": 75.7
     },
     {
       "ticker": "DUOT",
-      "iv30Percent": 81.1
+      "iv30Percent": 82.1
     },
     {
       "ticker": "DVN",
-      "iv30Percent": 36.1
+      "iv30Percent": 36.6
     },
     {
       "ticker": "DXCM",
-      "iv30Percent": 46.3
+      "iv30Percent": 48.3
     },
     {
       "ticker": "DXYZ",
-      "iv30Percent": 50.9
+      "iv30Percent": 49.3
     },
     {
       "ticker": "DYN",
-      "iv30Percent": 59.6
+      "iv30Percent": 61.1
     },
     {
       "ticker": "EAT",
-      "iv30Percent": 48.2
+      "iv30Percent": 48.3
     },
     {
       "ticker": "EBAY",
-      "iv30Percent": 41.3
+      "iv30Percent": 40.5
     },
     {
       "ticker": "ECHO",
-      "iv30Percent": 45.4
+      "iv30Percent": 45
     },
     {
       "ticker": "ECO",
-      "iv30Percent": 54.7
+      "iv30Percent": 53.5
     },
     {
       "ticker": "EE",
@@ -1481,87 +1537,91 @@
     },
     {
       "ticker": "EFA",
-      "iv30Percent": 12.8
+      "iv30Percent": 13.5
     },
     {
       "ticker": "EGO",
-      "iv30Percent": 53.7
-    },
-    {
-      "ticker": "EIX",
-      "iv30Percent": 39.5
-    },
-    {
-      "ticker": "EL",
-      "iv30Percent": 50.9
-    },
-    {
-      "ticker": "ELF",
-      "iv30Percent": 67
-    },
-    {
-      "ticker": "ELIL",
-      "iv30Percent": 71.1
-    },
-    {
-      "ticker": "ELV",
-      "iv30Percent": 33.9
-    },
-    {
-      "ticker": "EMBJ",
-      "iv30Percent": 38.8
-    },
-    {
-      "ticker": "EMR",
-      "iv30Percent": 31.2
-    },
-    {
-      "ticker": "ENB",
-      "iv30Percent": 18.5
-    },
-    {
-      "ticker": "ENPH",
-      "iv30Percent": 75.8
-    },
-    {
-      "ticker": "ENVX",
-      "iv30Percent": 96.1
-    },
-    {
-      "ticker": "EOG",
-      "iv30Percent": 31.8
-    },
-    {
-      "ticker": "EOSE",
-      "iv30Percent": 101.4
-    },
-    {
-      "ticker": "EPD",
-      "iv30Percent": 17.9
-    },
-    {
-      "ticker": "EQNR",
-      "iv30Percent": 36.6
-    },
-    {
-      "ticker": "EQPT",
-      "iv30Percent": 107.8
-    },
-    {
-      "ticker": "EQT",
-      "iv30Percent": 32.1
-    },
-    {
-      "ticker": "EQX",
       "iv30Percent": 52.9
     },
     {
+      "ticker": "EIX",
+      "iv30Percent": 39.4
+    },
+    {
+      "ticker": "EL",
+      "iv30Percent": 50.8
+    },
+    {
+      "ticker": "ELF",
+      "iv30Percent": 65.8
+    },
+    {
+      "ticker": "ELIL",
+      "iv30Percent": 70.2
+    },
+    {
+      "ticker": "ELV",
+      "iv30Percent": 34.1
+    },
+    {
+      "ticker": "EMBJ",
+      "iv30Percent": 39.4
+    },
+    {
+      "ticker": "EMR",
+      "iv30Percent": 32.1
+    },
+    {
+      "ticker": "ENB",
+      "iv30Percent": 18.7
+    },
+    {
+      "ticker": "ENPH",
+      "iv30Percent": 76.7
+    },
+    {
+      "ticker": "ENTG",
+      "iv30Percent": 61.9
+    },
+    {
+      "ticker": "ENVX",
+      "iv30Percent": 96
+    },
+    {
+      "ticker": "EOG",
+      "iv30Percent": 31.3
+    },
+    {
+      "ticker": "EOSE",
+      "iv30Percent": 106.4
+    },
+    {
+      "ticker": "EPD",
+      "iv30Percent": 19.9
+    },
+    {
+      "ticker": "EQNR",
+      "iv30Percent": 36.8
+    },
+    {
+      "ticker": "EQPT",
+      "iv30Percent": 109.5
+    },
+    {
+      "ticker": "EQT",
+      "iv30Percent": 32.2
+    },
+    {
+      "ticker": "EQX",
+      "iv30Percent": 54
+    },
+    {
       "ticker": "ERAS",
-      "iv30Percent": 99
+      "iv30Percent": 103.3
     },
     {
       "ticker": "ERO",
-      "iv30Percent": 59.1
+      "iv30Percent": 58.1
     },
     {
       "ticker": "ESRT",
@@ -1569,107 +1629,107 @@
     },
     {
       "ticker": "ESTA",
-      "iv30Percent": 53.6
+      "iv30Percent": 52.7
     },
     {
       "ticker": "ESTC",
-      "iv30Percent": 52.9
+      "iv30Percent": 52.4
     },
     {
       "ticker": "ETH",
-      "iv30Percent": 46.5
+      "iv30Percent": 46.7
     },
     {
       "ticker": "ETHA",
-      "iv30Percent": 46.1
+      "iv30Percent": 46.4
     },
     {
       "ticker": "ETHU",
-      "iv30Percent": 86.2
+      "iv30Percent": 88.9
     },
     {
       "ticker": "ETN",
-      "iv30Percent": 40.3
+      "iv30Percent": 40.5
     },
     {
       "ticker": "ETR",
-      "iv30Percent": 21.6
+      "iv30Percent": 21.5
     },
     {
       "ticker": "ETSY",
-      "iv30Percent": 65.3
+      "iv30Percent": 65.7
     },
     {
       "ticker": "EWG",
-      "iv30Percent": 18.9
+      "iv30Percent": 19.2
     },
     {
       "ticker": "EWJ",
-      "iv30Percent": 19.9
+      "iv30Percent": 20.4
     },
     {
       "ticker": "EWT",
-      "iv30Percent": 30.1
+      "iv30Percent": 30.2
     },
     {
       "ticker": "EWY",
-      "iv30Percent": 38.4
+      "iv30Percent": 37
     },
     {
       "ticker": "EWZ",
-      "iv30Percent": 39.2
+      "iv30Percent": 39
     },
     {
       "ticker": "EWZS",
-      "iv30Percent": 47.2
+      "iv30Percent": 48.1
     },
     {
       "ticker": "EXE",
-      "iv30Percent": 30.5
+      "iv30Percent": 31
     },
     {
       "ticker": "EXK",
-      "iv30Percent": 68.2
+      "iv30Percent": 68.1
     },
     {
       "ticker": "EXPE",
-      "iv30Percent": 59.5
+      "iv30Percent": 59.3
     },
     {
       "ticker": "EYPT",
-      "iv30Percent": 271.6
+      "iv30Percent": 274.4
     },
     {
       "ticker": "F",
-      "iv30Percent": 38.2
+      "iv30Percent": 38.4
     },
     {
       "ticker": "FANG",
-      "iv30Percent": 34
+      "iv30Percent": 33.6
     },
     {
       "ticker": "FAS",
-      "iv30Percent": 49
+      "iv30Percent": 49.9
     },
     {
       "ticker": "FAST",
-      "iv30Percent": 38.9
+      "iv30Percent": 39.1
     },
     {
       "ticker": "FAZ",
-      "iv30Percent": 50.4
+      "iv30Percent": 49.6
     },
     {
       "ticker": "FBL",
-      "iv30Percent": 74.2
+      "iv30Percent": 73.1
     },
     {
       "ticker": "FBTC",
-      "iv30Percent": 37.4
+      "iv30Percent": 37.5
     },
     {
       "ticker": "FCEL",
-      "iv30Percent": 91.6
+      "iv30Percent": 91.3
     },
     {
       "ticker": "FCX",
@@ -1677,11 +1737,11 @@
     },
     {
       "ticker": "FDS",
-      "iv30Percent": 41.7
+      "iv30Percent": 41
     },
     {
       "ticker": "FDX",
-      "iv30Percent": 38.6
+      "iv30Percent": 38.7
     },
     {
       "ticker": "FERG",
@@ -1689,75 +1749,83 @@
     },
     {
       "ticker": "FEZ",
-      "iv30Percent": 15.9
+      "iv30Percent": 15.7
     },
     {
       "ticker": "FF",
-      "iv30Percent": 69.5
+      "iv30Percent": 66.9
+    },
+    {
+      "ticker": "FHN",
+      "iv30Percent": 31.6
     },
     {
       "ticker": "FICO",
-      "iv30Percent": 61.4
+      "iv30Percent": 64.5
     },
     {
       "ticker": "FIG",
-      "iv30Percent": 72.1
+      "iv30Percent": 71.6
     },
     {
       "ticker": "FIGR",
-      "iv30Percent": 73.7
+      "iv30Percent": 74.7
     },
     {
       "ticker": "FIGS",
-      "iv30Percent": 70.9
+      "iv30Percent": 66.7
     },
     {
       "ticker": "FIS",
-      "iv30Percent": 29.8
+      "iv30Percent": 40.9
     },
     {
       "ticker": "FISV",
-      "iv30Percent": 50.1
+      "iv30Percent": 49.9
+    },
+    {
+      "ticker": "FIVN",
+      "iv30Percent": 70.2
     },
     {
       "ticker": "FIX",
-      "iv30Percent": 58.2
+      "iv30Percent": 57.9
     },
     {
       "ticker": "FJET",
-      "iv30Percent": 98.5
+      "iv30Percent": 98.4
     },
     {
       "ticker": "FLEX",
-      "iv30Percent": 63.8
+      "iv30Percent": 63.2
     },
     {
       "ticker": "FLG",
-      "iv30Percent": 33.6
+      "iv30Percent": 34.2
     },
     {
       "ticker": "FLNC",
-      "iv30Percent": 76
+      "iv30Percent": 75.4
     },
     {
       "ticker": "FLO",
-      "iv30Percent": 44.8
+      "iv30Percent": 44.4
     },
     {
       "ticker": "FLR",
-      "iv30Percent": 51.4
+      "iv30Percent": 51.7
     },
     {
       "ticker": "FLY",
-      "iv30Percent": 83.8
+      "iv30Percent": 83.9
     },
     {
       "ticker": "FMC",
-      "iv30Percent": 66
+      "iv30Percent": 66.5
     },
     {
       "ticker": "FN",
-      "iv30Percent": 65.7
+      "iv30Percent": 66.2
     },
     {
       "ticker": "FNGR",
@@ -1773,11 +1841,11 @@
     },
     {
       "ticker": "FRMI",
-      "iv30Percent": 95.1
+      "iv30Percent": 95.4
     },
     {
       "ticker": "FRO",
-      "iv30Percent": 55.8
+      "iv30Percent": 55.3
     },
     {
       "ticker": "FROG",
@@ -1785,7 +1853,7 @@
     },
     {
       "ticker": "FRVO",
-      "iv30Percent": 92.8
+      "iv30Percent": 93.6
     },
     {
       "ticker": "FSK",
@@ -1793,123 +1861,123 @@
     },
     {
       "ticker": "FSLR",
-      "iv30Percent": 59.1
+      "iv30Percent": 59.8
     },
     {
       "ticker": "FSLY",
-      "iv30Percent": 109.8
+      "iv30Percent": 110
     },
     {
       "ticker": "FSM",
-      "iv30Percent": 52.6
+      "iv30Percent": 52.4
     },
     {
       "ticker": "FTAI",
-      "iv30Percent": 70.4
+      "iv30Percent": 70.6
     },
     {
       "ticker": "FTNT",
-      "iv30Percent": 63
+      "iv30Percent": 63.4
     },
     {
       "ticker": "FUBO",
-      "iv30Percent": 77.9
+      "iv30Percent": 77.1
     },
     {
       "ticker": "FUN",
-      "iv30Percent": 68.1
+      "iv30Percent": 68.6
     },
     {
       "ticker": "FUTU",
-      "iv30Percent": 46.3
+      "iv30Percent": 42.3
     },
     {
       "ticker": "FWONK",
-      "iv30Percent": 31
+      "iv30Percent": 30.9
     },
     {
       "ticker": "FXE",
-      "iv30Percent": 6.7
+      "iv30Percent": 6.2
     },
     {
       "ticker": "FXI",
-      "iv30Percent": 19.1
+      "iv30Percent": 19
     },
     {
       "ticker": "FXY",
-      "iv30Percent": 8.5
+      "iv30Percent": 8.4
     },
     {
       "ticker": "GAP",
-      "iv30Percent": 36.3
+      "iv30Percent": 36.4
     },
     {
       "ticker": "GBTC",
-      "iv30Percent": 36.6
+      "iv30Percent": 36.7
     },
     {
       "ticker": "GCT",
-      "iv30Percent": 62.4
+      "iv30Percent": 62.6
     },
     {
       "ticker": "GD",
-      "iv30Percent": 24.4
+      "iv30Percent": 24.2
     },
     {
       "ticker": "GDDY",
-      "iv30Percent": 57.5
+      "iv30Percent": 54.1
     },
     {
       "ticker": "GDS",
-      "iv30Percent": 59.3
+      "iv30Percent": 58.2
     },
     {
       "ticker": "GDX",
-      "iv30Percent": 38.5
+      "iv30Percent": 38.6
     },
     {
       "ticker": "GDXJ",
-      "iv30Percent": 42.4
+      "iv30Percent": 42.8
     },
     {
       "ticker": "GE",
-      "iv30Percent": 36.9
+      "iv30Percent": 37
     },
     {
       "ticker": "GEHC",
-      "iv30Percent": 37.5
+      "iv30Percent": 37
     },
     {
       "ticker": "GEMI",
-      "iv30Percent": 90.6
+      "iv30Percent": 92.4
     },
     {
       "ticker": "GEN",
-      "iv30Percent": 44.3
+      "iv30Percent": 45.1
     },
     {
       "ticker": "GENI",
-      "iv30Percent": 82.3
+      "iv30Percent": 82.4
     },
     {
       "ticker": "GEO",
-      "iv30Percent": 57
+      "iv30Percent": 56.4
     },
     {
       "ticker": "GEV",
-      "iv30Percent": 49.6
+      "iv30Percent": 49.5
     },
     {
       "ticker": "GFI",
-      "iv30Percent": 45
+      "iv30Percent": 44.7
     },
     {
       "ticker": "GFL",
-      "iv30Percent": 71.7
+      "iv30Percent": 73.9
     },
     {
       "ticker": "GFS",
-      "iv30Percent": 56.5
+      "iv30Percent": 56.3
     },
     {
       "ticker": "GFUZ",
@@ -1917,27 +1985,27 @@
     },
     {
       "ticker": "GGLL",
-      "iv30Percent": 61.2
+      "iv30Percent": 61.4
     },
     {
       "ticker": "GH",
-      "iv30Percent": 57.9
+      "iv30Percent": 57.3
     },
     {
       "ticker": "GILD",
-      "iv30Percent": 34.8
+      "iv30Percent": 35
     },
     {
       "ticker": "GIS",
-      "iv30Percent": 29.2
+      "iv30Percent": 29.6
     },
     {
       "ticker": "GKOS",
-      "iv30Percent": 58.1
+      "iv30Percent": 59.2
     },
     {
       "ticker": "GLAS",
-      "iv30Percent": 88.1
+      "iv30Percent": 87.8
     },
     {
       "ticker": "GLD",
@@ -1945,23 +2013,23 @@
     },
     {
       "ticker": "GLND",
-      "iv30Percent": 131.3
+      "iv30Percent": 130.3
     },
     {
       "ticker": "GLNG",
-      "iv30Percent": 30
+      "iv30Percent": 30.3
     },
     {
       "ticker": "GLP",
-      "iv30Percent": 29.9
+      "iv30Percent": 26.5
     },
     {
       "ticker": "GLW",
-      "iv30Percent": 59.1
+      "iv30Percent": 59.3
     },
     {
       "ticker": "GLXY",
-      "iv30Percent": 79.8
+      "iv30Percent": 80.2
     },
     {
       "ticker": "GM",
@@ -1973,15 +2041,19 @@
     },
     {
       "ticker": "GME",
-      "iv30Percent": 59.6
+      "iv30Percent": 58.6
+    },
+    {
+      "ticker": "GMEU",
+      "iv30Percent": 106.2
     },
     {
       "ticker": "GNRC",
-      "iv30Percent": 58
+      "iv30Percent": 59.2
     },
     {
       "ticker": "GOOG",
-      "iv30Percent": 34.9
+      "iv30Percent": 35
     },
     {
       "ticker": "GOOGL",
@@ -1989,35 +2061,35 @@
     },
     {
       "ticker": "GOOS",
-      "iv30Percent": 54.1
+      "iv30Percent": 40.7
     },
     {
       "ticker": "GPRO",
-      "iv30Percent": 75.5
+      "iv30Percent": 67.9
     },
     {
       "ticker": "GRAB",
-      "iv30Percent": 50.4
+      "iv30Percent": 51.2
     },
     {
       "ticker": "GRAL",
-      "iv30Percent": 86.2
+      "iv30Percent": 85.8
     },
     {
       "ticker": "GROY",
-      "iv30Percent": 57.4
+      "iv30Percent": 58.3
     },
     {
       "ticker": "GRPN",
-      "iv30Percent": 74
+      "iv30Percent": 74.4
     },
     {
       "ticker": "GRRR",
-      "iv30Percent": 86.5
+      "iv30Percent": 85.2
     },
     {
       "ticker": "GS",
-      "iv30Percent": 32.9
+      "iv30Percent": 32.7
     },
     {
       "ticker": "GSK",
@@ -2025,39 +2097,39 @@
     },
     {
       "ticker": "GT",
-      "iv30Percent": 54.1
+      "iv30Percent": 56.7
     },
     {
       "ticker": "GTES",
-      "iv30Percent": 37
+      "iv30Percent": 37.2
     },
     {
       "ticker": "GTLB",
-      "iv30Percent": 46.9
+      "iv30Percent": 49.4
     },
     {
       "ticker": "GTM",
-      "iv30Percent": 71.5
+      "iv30Percent": 73.1
     },
     {
       "ticker": "GUSH",
-      "iv30Percent": 59.1
+      "iv30Percent": 58.3
     },
     {
       "ticker": "HAE",
-      "iv30Percent": 48
+      "iv30Percent": 47.7
     },
     {
       "ticker": "HAL",
-      "iv30Percent": 36.3
+      "iv30Percent": 36.4
     },
     {
       "ticker": "HBAN",
-      "iv30Percent": 31.5
+      "iv30Percent": 30.5
     },
     {
       "ticker": "HCA",
-      "iv30Percent": 31.4
+      "iv30Percent": 32
     },
     {
       "ticker": "HD",
@@ -2065,51 +2137,51 @@
     },
     {
       "ticker": "HELP",
-      "iv30Percent": 148.2
+      "iv30Percent": 151.3
     },
     {
       "ticker": "HESM",
-      "iv30Percent": 26.8
+      "iv30Percent": 28
     },
     {
       "ticker": "HHH",
-      "iv30Percent": 32.1
+      "iv30Percent": 31.4
     },
     {
       "ticker": "HIMS",
-      "iv30Percent": 75
+      "iv30Percent": 75.9
     },
     {
       "ticker": "HIMX",
-      "iv30Percent": 64.5
+      "iv30Percent": 65.4
     },
     {
       "ticker": "HIMZ",
-      "iv30Percent": 145.7
+      "iv30Percent": 149.5
     },
     {
       "ticker": "HIVE",
-      "iv30Percent": 77.6
+      "iv30Percent": 77.8
     },
     {
       "ticker": "HL",
-      "iv30Percent": 53.9
+      "iv30Percent": 54.4
     },
     {
       "ticker": "HLF",
-      "iv30Percent": 67.5
+      "iv30Percent": 67.7
     },
     {
       "ticker": "HLT",
-      "iv30Percent": 27.7
+      "iv30Percent": 27.6
     },
     {
       "ticker": "HNGE",
-      "iv30Percent": 54.7
+      "iv30Percent": 54
     },
     {
       "ticker": "HNRG",
-      "iv30Percent": 66.3
+      "iv30Percent": 69.8
     },
     {
       "ticker": "HOG",
@@ -2117,39 +2189,39 @@
     },
     {
       "ticker": "HON",
-      "iv30Percent": 31.7
+      "iv30Percent": 31.5
     },
     {
       "ticker": "HONA",
-      "iv30Percent": 41.3
-    },
-    {
-      "ticker": "HOOD",
-      "iv30Percent": 61.5
-    },
-    {
-      "ticker": "HPE",
-      "iv30Percent": 58.3
-    },
-    {
-      "ticker": "HPK",
-      "iv30Percent": 71.8
-    },
-    {
-      "ticker": "HPQ",
       "iv30Percent": 41.6
     },
     {
+      "ticker": "HOOD",
+      "iv30Percent": 61.1
+    },
+    {
+      "ticker": "HPE",
+      "iv30Percent": 58.1
+    },
+    {
+      "ticker": "HPK",
+      "iv30Percent": 67.9
+    },
+    {
+      "ticker": "HPQ",
+      "iv30Percent": 41.8
+    },
+    {
       "ticker": "HRB",
-      "iv30Percent": 38.2
+      "iv30Percent": 39.2
     },
     {
       "ticker": "HRL",
-      "iv30Percent": 22.9
+      "iv30Percent": 22.7
     },
     {
       "ticker": "HROW",
-      "iv30Percent": 48.3
+      "iv30Percent": 56.6
     },
     {
       "ticker": "HSBC",
@@ -2161,23 +2233,23 @@
     },
     {
       "ticker": "HTFL",
-      "iv30Percent": 82.9
+      "iv30Percent": 82.7
     },
     {
       "ticker": "HTHT",
-      "iv30Percent": 29.6
+      "iv30Percent": 28.4
     },
     {
       "ticker": "HTZ",
-      "iv30Percent": 120
+      "iv30Percent": 120.1
     },
     {
       "ticker": "HUBS",
-      "iv30Percent": 67.4
+      "iv30Percent": 68
     },
     {
       "ticker": "HUM",
-      "iv30Percent": 46.7
+      "iv30Percent": 46.9
     },
     {
       "ticker": "HUMA",
@@ -2185,11 +2257,11 @@
     },
     {
       "ticker": "HUT",
-      "iv30Percent": 92.6
+      "iv30Percent": 93
     },
     {
       "ticker": "HWM",
-      "iv30Percent": 39.3
+      "iv30Percent": 40
     },
     {
       "ticker": "HYG",
@@ -2197,59 +2269,63 @@
     },
     {
       "ticker": "HYLN",
-      "iv30Percent": 95
+      "iv30Percent": 91.7
     },
     {
       "ticker": "HYMC",
-      "iv30Percent": 73
+      "iv30Percent": 74
     },
     {
       "ticker": "IAU",
-      "iv30Percent": 19.5
+      "iv30Percent": 19.6
     },
     {
       "ticker": "IBB",
-      "iv30Percent": 24.2
+      "iv30Percent": 24.5
     },
     {
       "ticker": "IBIT",
-      "iv30Percent": 35.1
+      "iv30Percent": 34.8
     },
     {
       "ticker": "IBKR",
-      "iv30Percent": 39.9
+      "iv30Percent": 40.2
     },
     {
       "ticker": "IBM",
-      "iv30Percent": 41.7
+      "iv30Percent": 41.5
     },
     {
       "ticker": "IBRX",
-      "iv30Percent": 83
+      "iv30Percent": 84.2
     },
     {
       "ticker": "ICE",
       "iv30Percent": 27.2
     },
     {
+      "ticker": "ICLN",
+      "iv30Percent": 24.4
+    },
+    {
       "ticker": "IE",
-      "iv30Percent": 68.3
+      "iv30Percent": 69.3
     },
     {
       "ticker": "IEF",
-      "iv30Percent": 7
+      "iv30Percent": 7.1
     },
     {
       "ticker": "IEP",
-      "iv30Percent": 28.8
+      "iv30Percent": 28.7
     },
     {
       "ticker": "IEX",
-      "iv30Percent": 23.7
+      "iv30Percent": 23.9
     },
     {
       "ticker": "IGLB",
-      "iv30Percent": 9.3
+      "iv30Percent": 9.5
     },
     {
       "ticker": "IGV",
@@ -2257,15 +2333,15 @@
     },
     {
       "ticker": "ILMN",
-      "iv30Percent": 57.8
+      "iv30Percent": 58.4
     },
     {
       "ticker": "IMAX",
-      "iv30Percent": 50.3
+      "iv30Percent": 49.9
     },
     {
       "ticker": "IMSR",
-      "iv30Percent": 92.6
+      "iv30Percent": 92.5
     },
     {
       "ticker": "IMVT",
@@ -2273,23 +2349,23 @@
     },
     {
       "ticker": "IMXI",
-      "iv30Percent": 64.8
+      "iv30Percent": 65.8
     },
     {
       "ticker": "INDA",
-      "iv30Percent": 16.1
+      "iv30Percent": 15.9
     },
     {
       "ticker": "INDI",
-      "iv30Percent": 79.3
+      "iv30Percent": 77.8
     },
     {
       "ticker": "INFQ",
-      "iv30Percent": 77
+      "iv30Percent": 75.6
     },
     {
       "ticker": "INFY",
-      "iv30Percent": 43.6
+      "iv30Percent": 44
     },
     {
       "ticker": "INO",
@@ -2297,55 +2373,55 @@
     },
     {
       "ticker": "INOD",
-      "iv30Percent": 94.3
+      "iv30Percent": 95
     },
     {
       "ticker": "INSM",
-      "iv30Percent": 57.1
+      "iv30Percent": 55.6
     },
     {
       "ticker": "INSW",
-      "iv30Percent": 46.6
+      "iv30Percent": 47.2
     },
     {
       "ticker": "INTC",
-      "iv30Percent": 62.9
+      "iv30Percent": 63.1
     },
     {
       "ticker": "INTR",
-      "iv30Percent": 51.4
+      "iv30Percent": 50.5
     },
     {
       "ticker": "INTU",
-      "iv30Percent": 44.6
+      "iv30Percent": 44.3
     },
     {
       "ticker": "INTW",
-      "iv30Percent": 116.6
+      "iv30Percent": 117.3
     },
     {
       "ticker": "IONQ",
-      "iv30Percent": 67.1
+      "iv30Percent": 67.9
     },
     {
       "ticker": "IONS",
-      "iv30Percent": 50.1
+      "iv30Percent": 48.8
     },
     {
       "ticker": "IOT",
-      "iv30Percent": 50.4
+      "iv30Percent": 51
     },
     {
       "ticker": "IOVA",
-      "iv30Percent": 92.1
+      "iv30Percent": 90.4
     },
     {
       "ticker": "IP",
-      "iv30Percent": 42.5
+      "iv30Percent": 41.9
     },
     {
       "ticker": "IPSC",
-      "iv30Percent": 78.1
+      "iv30Percent": 82.1
     },
     {
       "ticker": "IQ",
@@ -2353,35 +2429,35 @@
     },
     {
       "ticker": "IRE",
-      "iv30Percent": 142.8
+      "iv30Percent": 143.2
     },
     {
       "ticker": "IREN",
-      "iv30Percent": 72.9
+      "iv30Percent": 72.4
     },
     {
       "ticker": "IREX",
-      "iv30Percent": 141
+      "iv30Percent": 144.1
     },
     {
       "ticker": "IRM",
-      "iv30Percent": 34.6
+      "iv30Percent": 34.3
     },
     {
       "ticker": "IRON",
-      "iv30Percent": 179.4
+      "iv30Percent": 182.5
     },
     {
       "ticker": "ISRG",
-      "iv30Percent": 44.2
+      "iv30Percent": 43.9
     },
     {
       "ticker": "ITA",
-      "iv30Percent": 21.9
+      "iv30Percent": 22.1
     },
     {
       "ticker": "ITB",
-      "iv30Percent": 32.6
+      "iv30Percent": 32
     },
     {
       "ticker": "ITOT",
@@ -2389,127 +2465,131 @@
     },
     {
       "ticker": "ITUB",
-      "iv30Percent": 37.8
+      "iv30Percent": 37.2
     },
     {
       "ticker": "IVVD",
-      "iv30Percent": 104
+      "iv30Percent": 103.6
     },
     {
       "ticker": "IWM",
-      "iv30Percent": 18
+      "iv30Percent": 17.9
     },
     {
       "ticker": "IYR",
-      "iv30Percent": 19.6
+      "iv30Percent": 20.1
     },
     {
       "ticker": "JANX",
-      "iv30Percent": 61.1
+      "iv30Percent": 58.8
     },
     {
       "ticker": "JBL",
-      "iv30Percent": 42.3
+      "iv30Percent": 42.5
     },
     {
       "ticker": "JBLU",
-      "iv30Percent": 64.9
+      "iv30Percent": 64.2
     },
     {
       "ticker": "JBS",
-      "iv30Percent": 37
+      "iv30Percent": 36.8
     },
     {
       "ticker": "JCI",
-      "iv30Percent": 32.8
+      "iv30Percent": 33.1
     },
     {
       "ticker": "JD",
-      "iv30Percent": 28.9
+      "iv30Percent": 29.5
     },
     {
       "ticker": "JEPI",
-      "iv30Percent": 6.5
+      "iv30Percent": 6
     },
     {
       "ticker": "JEPQ",
-      "iv30Percent": 10.1
+      "iv30Percent": 10.2
     },
     {
       "ticker": "JETS",
-      "iv30Percent": 33.5
+      "iv30Percent": 34.2
     },
     {
       "ticker": "JMIA",
-      "iv30Percent": 63.7
+      "iv30Percent": 66.2
     },
     {
       "ticker": "JMKE",
-      "iv30Percent": 56.8
+      "iv30Percent": 55.7
     },
     {
       "ticker": "JNJ",
-      "iv30Percent": 24.9
-    },
-    {
-      "ticker": "JNUG",
-      "iv30Percent": 80
-    },
-    {
-      "ticker": "JOBY",
-      "iv30Percent": 60.9
-    },
-    {
-      "ticker": "JPM",
-      "iv30Percent": 24.9
-    },
-    {
-      "ticker": "KBH",
-      "iv30Percent": 35.1
-    },
-    {
-      "ticker": "KBWB",
       "iv30Percent": 24.7
     },
     {
+      "ticker": "JNUG",
+      "iv30Percent": 81.6
+    },
+    {
+      "ticker": "JOBY",
+      "iv30Percent": 63.3
+    },
+    {
+      "ticker": "JPM",
+      "iv30Percent": 25
+    },
+    {
+      "ticker": "KBH",
+      "iv30Percent": 36.8
+    },
+    {
+      "ticker": "KBWB",
+      "iv30Percent": 24.9
+    },
+    {
       "ticker": "KEEL",
-      "iv30Percent": 84
+      "iv30Percent": 86.6
     },
     {
       "ticker": "KEY",
-      "iv30Percent": 26.2
+      "iv30Percent": 25.5
     },
     {
       "ticker": "KGC",
-      "iv30Percent": 44.4
+      "iv30Percent": 46.7
     },
     {
       "ticker": "KHC",
-      "iv30Percent": 31.1
+      "iv30Percent": 30.3
     },
     {
       "ticker": "KKR",
-      "iv30Percent": 38.3
+      "iv30Percent": 38.7
     },
     {
       "ticker": "KLAC",
-      "iv30Percent": 61.9
+      "iv30Percent": 61.7
     },
     {
       "ticker": "KLAR",
-      "iv30Percent": 40.9
+      "iv30Percent": 42.3
     },
     {
       "ticker": "KMB",
-      "iv30Percent": 26.5
+      "iv30Percent": 26.6
     },
     {
       "ticker": "KMI",
-      "iv30Percent": 23.2
+      "iv30Percent": 23.4
+    },
+    {
+      "ticker": "KNSA",
+      "iv30Percent": 44.7
     },
     {
       "ticker": "KNX",
-      "iv30Percent": 39.4
+      "iv30Percent": 39.1
     },
     {
       "ticker": "KO",
@@ -2517,23 +2597,27 @@
     },
     {
       "ticker": "KOD",
-      "iv30Percent": 72.3
+      "iv30Percent": 73.4
     },
     {
       "ticker": "KOLD",
-      "iv30Percent": 80
+      "iv30Percent": 80.4
     },
     {
       "ticker": "KOPN",
-      "iv30Percent": 77.6
+      "iv30Percent": 77.5
     },
     {
       "ticker": "KORU",
-      "iv30Percent": 112.7
+      "iv30Percent": 113.1
+    },
+    {
+      "ticker": "KOS",
+      "iv30Percent": 72.3
     },
     {
       "ticker": "KR",
-      "iv30Percent": 28
+      "iv30Percent": 27.5
     },
     {
       "ticker": "KRE",
@@ -2541,23 +2625,27 @@
     },
     {
       "ticker": "KRMN",
-      "iv30Percent": 72.8
+      "iv30Percent": 73.2
     },
     {
       "ticker": "KSS",
-      "iv30Percent": 50.5
+      "iv30Percent": 49.6
     },
     {
       "ticker": "KTOS",
-      "iv30Percent": 64.3
+      "iv30Percent": 64.1
     },
     {
       "ticker": "KURA",
-      "iv30Percent": 64
+      "iv30Percent": 63.5
+    },
+    {
+      "ticker": "KVUE",
+      "iv30Percent": 18.5
     },
     {
       "ticker": "KVYO",
-      "iv30Percent": 71.6
+      "iv30Percent": 70.1
     },
     {
       "ticker": "KWEB",
@@ -2565,47 +2653,51 @@
     },
     {
       "ticker": "LABD",
-      "iv30Percent": 93.9
+      "iv30Percent": 88.8
     },
     {
       "ticker": "LABU",
-      "iv30Percent": 94.8
+      "iv30Percent": 92.5
     },
     {
       "ticker": "LAC",
-      "iv30Percent": 64
+      "iv30Percent": 63.9
     },
     {
       "ticker": "LAES",
-      "iv30Percent": 61.4
+      "iv30Percent": 54.3
     },
     {
       "ticker": "LBTYA",
-      "iv30Percent": 35.5
+      "iv30Percent": 35.8
     },
     {
       "ticker": "LCID",
-      "iv30Percent": 88.7
+      "iv30Percent": 90.5
     },
     {
       "ticker": "LCUT",
-      "iv30Percent": 59.5
+      "iv30Percent": 59.4
     },
     {
       "ticker": "LDOS",
-      "iv30Percent": 34.9
+      "iv30Percent": 34.7
+    },
+    {
+      "ticker": "LEGN",
+      "iv30Percent": 62.1
     },
     {
       "ticker": "LEN",
-      "iv30Percent": 40.5
+      "iv30Percent": 40.8
     },
     {
       "ticker": "LEU",
-      "iv30Percent": 67.2
+      "iv30Percent": 66.9
     },
     {
       "ticker": "LEVI",
-      "iv30Percent": 30.2
+      "iv30Percent": 29.5
     },
     {
       "ticker": "LFCR",
@@ -2617,83 +2709,91 @@
     },
     {
       "ticker": "LI",
-      "iv30Percent": 42.3
+      "iv30Percent": 42.2
     },
     {
       "ticker": "LIN",
-      "iv30Percent": 22.5
+      "iv30Percent": 22.3
     },
     {
       "ticker": "LITE",
-      "iv30Percent": 75.1
+      "iv30Percent": 75.3
     },
     {
       "ticker": "LITX",
-      "iv30Percent": 133.6
+      "iv30Percent": 134.3
     },
     {
       "ticker": "LLY",
-      "iv30Percent": 41.3
+      "iv30Percent": 40.7
     },
     {
       "ticker": "LMND",
-      "iv30Percent": 74.5
+      "iv30Percent": 74.4
     },
     {
       "ticker": "LMT",
-      "iv30Percent": 29.8
+      "iv30Percent": 29.6
     },
     {
       "ticker": "LNC",
-      "iv30Percent": 34.1
+      "iv30Percent": 34.2
     },
     {
       "ticker": "LNG",
-      "iv30Percent": 32.4
+      "iv30Percent": 32.2
+    },
+    {
+      "ticker": "LODE",
+      "iv30Percent": 72.3
     },
     {
       "ticker": "LOFF",
-      "iv30Percent": 91.8
+      "iv30Percent": 90.6
     },
     {
       "ticker": "LOPE",
-      "iv30Percent": 32.3
+      "iv30Percent": 32.5
     },
     {
       "ticker": "LOW",
-      "iv30Percent": 28.7
+      "iv30Percent": 29.2
     },
     {
       "ticker": "LPTH",
-      "iv30Percent": 80.8
+      "iv30Percent": 80.9
     },
     {
       "ticker": "LQD",
-      "iv30Percent": 7.6
+      "iv30Percent": 7.7
     },
     {
       "ticker": "LQDA",
-      "iv30Percent": 119.2
+      "iv30Percent": 118.9
     },
     {
       "ticker": "LRCX",
-      "iv30Percent": 58.9
+      "iv30Percent": 58.6
     },
     {
       "ticker": "LRN",
-      "iv30Percent": 51.7
+      "iv30Percent": 51.9
+    },
+    {
+      "ticker": "LSCC",
+      "iv30Percent": 61.7
     },
     {
       "ticker": "LULU",
-      "iv30Percent": 39.9
+      "iv30Percent": 40
     },
     {
       "ticker": "LUMN",
-      "iv30Percent": 69.5
+      "iv30Percent": 73.3
     },
     {
       "ticker": "LUNR",
-      "iv30Percent": 78.3
+      "iv30Percent": 77.2
     },
     {
       "ticker": "LUV",
@@ -2701,27 +2801,27 @@
     },
     {
       "ticker": "LVS",
-      "iv30Percent": 39.7
+      "iv30Percent": 40.9
     },
     {
       "ticker": "LW",
-      "iv30Percent": 31.1
+      "iv30Percent": 31.4
     },
     {
       "ticker": "LWLG",
-      "iv30Percent": 88.8
+      "iv30Percent": 89.7
     },
     {
       "ticker": "LYB",
-      "iv30Percent": 39.4
+      "iv30Percent": 39.3
     },
     {
       "ticker": "LYFT",
-      "iv30Percent": 57.8
+      "iv30Percent": 56
     },
     {
       "ticker": "LYV",
-      "iv30Percent": 32.6
+      "iv30Percent": 32.4
     },
     {
       "ticker": "LZM",
@@ -2729,51 +2829,51 @@
     },
     {
       "ticker": "M",
-      "iv30Percent": 39.6
+      "iv30Percent": 39.9
     },
     {
       "ticker": "MA",
-      "iv30Percent": 25.1
+      "iv30Percent": 25.5
     },
     {
       "ticker": "MAGS",
-      "iv30Percent": 20.2
+      "iv30Percent": 20.4
     },
     {
       "ticker": "MANE",
-      "iv30Percent": 118.4
+      "iv30Percent": 126.8
     },
     {
       "ticker": "MAR",
-      "iv30Percent": 27.9
+      "iv30Percent": 27.7
     },
     {
       "ticker": "MARA",
-      "iv30Percent": 72
+      "iv30Percent": 72.7
     },
     {
       "ticker": "MAT",
-      "iv30Percent": 47.9
+      "iv30Percent": 46.4
     },
     {
       "ticker": "MBLY",
-      "iv30Percent": 64.1
+      "iv30Percent": 61.3
     },
     {
       "ticker": "MCD",
-      "iv30Percent": 23.7
+      "iv30Percent": 23.6
     },
     {
       "ticker": "MCHP",
-      "iv30Percent": 57.6
+      "iv30Percent": 57.7
     },
     {
       "ticker": "MDB",
-      "iv30Percent": 55.8
+      "iv30Percent": 56.3
     },
     {
       "ticker": "MDLN",
-      "iv30Percent": 47.2
+      "iv30Percent": 47.1
     },
     {
       "ticker": "MDLZ",
@@ -2781,15 +2881,19 @@
     },
     {
       "ticker": "MDT",
-      "iv30Percent": 29.2
+      "iv30Percent": 30.6
     },
     {
       "ticker": "MELI",
-      "iv30Percent": 45
+      "iv30Percent": 44.8
+    },
+    {
+      "ticker": "MERC",
+      "iv30Percent": 100.5
     },
     {
       "ticker": "MET",
-      "iv30Percent": 25
+      "iv30Percent": 24.9
     },
     {
       "ticker": "META",
@@ -2797,15 +2901,15 @@
     },
     {
       "ticker": "METC",
-      "iv30Percent": 78.5
+      "iv30Percent": 79.2
     },
     {
       "ticker": "METU",
-      "iv30Percent": 83.8
+      "iv30Percent": 83.2
     },
     {
       "ticker": "MGM",
-      "iv30Percent": 38
+      "iv30Percent": 37.8
     },
     {
       "ticker": "MGNI",
@@ -2813,27 +2917,27 @@
     },
     {
       "ticker": "MGY",
-      "iv30Percent": 38.2
+      "iv30Percent": 38.3
     },
     {
       "ticker": "MIR",
-      "iv30Percent": 59.7
+      "iv30Percent": 60.1
     },
     {
       "ticker": "MKC",
-      "iv30Percent": 27.2
+      "iv30Percent": 27.6
     },
     {
       "ticker": "MLTX",
-      "iv30Percent": 73.2
+      "iv30Percent": 71
     },
     {
       "ticker": "MMED",
-      "iv30Percent": 75.1
+      "iv30Percent": 74.4
     },
     {
       "ticker": "MMM",
-      "iv30Percent": 31.6
+      "iv30Percent": 31.8
     },
     {
       "ticker": "MMSI",
@@ -2841,19 +2945,19 @@
     },
     {
       "ticker": "MMYT",
-      "iv30Percent": 58.6
+      "iv30Percent": 59.1
     },
     {
       "ticker": "MNDY",
-      "iv30Percent": 71.4
+      "iv30Percent": 72.2
     },
     {
       "ticker": "MNKD",
-      "iv30Percent": 53.4
+      "iv30Percent": 50.3
     },
     {
       "ticker": "MNST",
-      "iv30Percent": 28.5
+      "iv30Percent": 29
     },
     {
       "ticker": "MO",
@@ -2861,31 +2965,31 @@
     },
     {
       "ticker": "MOD",
-      "iv30Percent": 72.9
+      "iv30Percent": 72.1
     },
     {
       "ticker": "MOS",
-      "iv30Percent": 50.3
+      "iv30Percent": 49.8
     },
     {
       "ticker": "MP",
-      "iv30Percent": 57.1
+      "iv30Percent": 58.7
     },
     {
       "ticker": "MPC",
-      "iv30Percent": 47.4
+      "iv30Percent": 47.8
     },
     {
       "ticker": "MPLX",
-      "iv30Percent": 17.6
+      "iv30Percent": 17.9
     },
     {
       "ticker": "MPT",
-      "iv30Percent": 48.3
+      "iv30Percent": 44.1
     },
     {
       "ticker": "MRAM",
-      "iv30Percent": 84.1
+      "iv30Percent": 83.7
     },
     {
       "ticker": "MRK",
@@ -2893,23 +2997,23 @@
     },
     {
       "ticker": "MRNA",
-      "iv30Percent": 112.1
+      "iv30Percent": 111.2
     },
     {
       "ticker": "MRP",
-      "iv30Percent": 39.2
+      "iv30Percent": 40.1
     },
     {
       "ticker": "MRSH",
-      "iv30Percent": 29.1
+      "iv30Percent": 30.2
     },
     {
       "ticker": "MRVL",
-      "iv30Percent": 56.3
+      "iv30Percent": 56.4
     },
     {
       "ticker": "MS",
-      "iv30Percent": 30.9
+      "iv30Percent": 31.2
     },
     {
       "ticker": "MSFT",
@@ -2917,75 +3021,79 @@
     },
     {
       "ticker": "MSFU",
-      "iv30Percent": 53.4
+      "iv30Percent": 53.6
+    },
+    {
+      "ticker": "MSGS",
+      "iv30Percent": 25
     },
     {
       "ticker": "MSM",
-      "iv30Percent": 28.9
+      "iv30Percent": 28.2
     },
     {
       "ticker": "MSOS",
-      "iv30Percent": 61.9
+      "iv30Percent": 62.8
     },
     {
       "ticker": "MSOX",
-      "iv30Percent": 129.1
+      "iv30Percent": 128.4
     },
     {
       "ticker": "MSTR",
-      "iv30Percent": 62.4
+      "iv30Percent": 62.7
     },
     {
       "ticker": "MSTU",
-      "iv30Percent": 125
+      "iv30Percent": 125.3
     },
     {
       "ticker": "MSTX",
-      "iv30Percent": 123.5
+      "iv30Percent": 123.7
     },
     {
       "ticker": "MSTY",
-      "iv30Percent": 47
+      "iv30Percent": 47.4
     },
     {
       "ticker": "MSTZ",
-      "iv30Percent": 124
+      "iv30Percent": 121.9
     },
     {
       "ticker": "MT",
-      "iv30Percent": 44.1
+      "iv30Percent": 44.3
     },
     {
       "ticker": "MTN",
-      "iv30Percent": 32.8
+      "iv30Percent": 33.1
     },
     {
       "ticker": "MTUM",
-      "iv30Percent": 26.3
+      "iv30Percent": 26.4
     },
     {
       "ticker": "MTZ",
-      "iv30Percent": 58.5
+      "iv30Percent": 59.1
     },
     {
       "ticker": "MU",
-      "iv30Percent": 45
+      "iv30Percent": 44.8
     },
     {
       "ticker": "MUB",
-      "iv30Percent": 5.4
+      "iv30Percent": 5.7
     },
     {
       "ticker": "MULL",
-      "iv30Percent": 86.5
+      "iv30Percent": 86.8
     },
     {
       "ticker": "MUU",
-      "iv30Percent": 90
+      "iv30Percent": 90.6
     },
     {
       "ticker": "MUZ",
-      "iv30Percent": 86.8
+      "iv30Percent": 84.5
     },
     {
       "ticker": "MVIS",
@@ -2997,55 +3105,55 @@
     },
     {
       "ticker": "MWH",
-      "iv30Percent": 58.8
+      "iv30Percent": 59.5
     },
     {
       "ticker": "MXL",
-      "iv30Percent": 99.5
+      "iv30Percent": 99.9
     },
     {
       "ticker": "NAIL",
-      "iv30Percent": 96.1
+      "iv30Percent": 92
     },
     {
       "ticker": "NAK",
-      "iv30Percent": 102.9
+      "iv30Percent": 100.2
     },
     {
       "ticker": "NASA",
-      "iv30Percent": 43
+      "iv30Percent": 43.6
     },
     {
       "ticker": "NAT",
-      "iv30Percent": 48.9
+      "iv30Percent": 50.3
     },
     {
       "ticker": "NAUT",
-      "iv30Percent": 129.8
+      "iv30Percent": 127.1
     },
     {
       "ticker": "NB",
-      "iv30Percent": 69
+      "iv30Percent": 69.5
     },
     {
       "ticker": "NBIG",
-      "iv30Percent": 141.8
+      "iv30Percent": 142
     },
     {
       "ticker": "NBIL",
-      "iv30Percent": 139.3
+      "iv30Percent": 140.5
     },
     {
       "ticker": "NBIS",
-      "iv30Percent": 69
+      "iv30Percent": 69.1
     },
     {
       "ticker": "NCLD",
-      "iv30Percent": 68.3
+      "iv30Percent": 68.5
     },
     {
       "ticker": "NCLH",
-      "iv30Percent": 54.8
+      "iv30Percent": 54.6
     },
     {
       "ticker": "NDAQ",
@@ -3053,39 +3161,39 @@
     },
     {
       "ticker": "NEBX",
-      "iv30Percent": 138.2
+      "iv30Percent": 139.1
     },
     {
       "ticker": "NEE",
-      "iv30Percent": 24.9
+      "iv30Percent": 24.8
     },
     {
       "ticker": "NEM",
-      "iv30Percent": 40.9
+      "iv30Percent": 41.2
     },
     {
       "ticker": "NET",
-      "iv30Percent": 68.1
+      "iv30Percent": 67.4
     },
     {
       "ticker": "NEWP",
-      "iv30Percent": 64
+      "iv30Percent": 62.9
     },
     {
       "ticker": "NEXT",
-      "iv30Percent": 54
+      "iv30Percent": 53.8
     },
     {
       "ticker": "NFLX",
-      "iv30Percent": 43.9
+      "iv30Percent": 43.6
     },
     {
       "ticker": "NG",
-      "iv30Percent": 63.7
+      "iv30Percent": 64.8
     },
     {
       "ticker": "NIO",
-      "iv30Percent": 44.4
+      "iv30Percent": 44.7
     },
     {
       "ticker": "NKE",
@@ -3093,39 +3201,43 @@
     },
     {
       "ticker": "NKTR",
-      "iv30Percent": 61.9
+      "iv30Percent": 61.5
     },
     {
       "ticker": "NLR",
-      "iv30Percent": 33.7
+      "iv30Percent": 33.6
     },
     {
       "ticker": "NLY",
-      "iv30Percent": 25.9
+      "iv30Percent": 26.8
     },
     {
       "ticker": "NN",
-      "iv30Percent": 98.9
+      "iv30Percent": 102.9
     },
     {
       "ticker": "NNE",
-      "iv30Percent": 64.8
+      "iv30Percent": 66.2
+    },
+    {
+      "ticker": "NOC",
+      "iv30Percent": 27.3
     },
     {
       "ticker": "NOG",
-      "iv30Percent": 41.7
+      "iv30Percent": 41.5
     },
     {
       "ticker": "NOK",
-      "iv30Percent": 63
+      "iv30Percent": 63.1
     },
     {
       "ticker": "NOW",
-      "iv30Percent": 58.9
+      "iv30Percent": 58.8
     },
     {
       "ticker": "NRG",
-      "iv30Percent": 55.2
+      "iv30Percent": 55.3
     },
     {
       "ticker": "NRGV",
@@ -3133,51 +3245,51 @@
     },
     {
       "ticker": "NRIX",
-      "iv30Percent": 43.7
+      "iv30Percent": 44
     },
     {
       "ticker": "NTAP",
-      "iv30Percent": 44.6
+      "iv30Percent": 44.8
     },
     {
       "ticker": "NTES",
-      "iv30Percent": 33.2
+      "iv30Percent": 33.5
     },
     {
       "ticker": "NTLA",
-      "iv30Percent": 76.9
+      "iv30Percent": 74.7
     },
     {
       "ticker": "NTR",
-      "iv30Percent": 34.5
+      "iv30Percent": 34.8
     },
     {
       "ticker": "NTRA",
-      "iv30Percent": 52.8
+      "iv30Percent": 53.3
     },
     {
       "ticker": "NTSK",
-      "iv30Percent": 63.2
+      "iv30Percent": 63.6
     },
     {
       "ticker": "NU",
-      "iv30Percent": 47.3
+      "iv30Percent": 48.2
     },
     {
       "ticker": "NUAI",
-      "iv30Percent": 107.1
+      "iv30Percent": 105.6
     },
     {
       "ticker": "NUE",
-      "iv30Percent": 37.8
+      "iv30Percent": 37.7
     },
     {
       "ticker": "NUGT",
-      "iv30Percent": 77.1
+      "iv30Percent": 77.3
     },
     {
       "ticker": "NVAX",
-      "iv30Percent": 85
+      "iv30Percent": 86
     },
     {
       "ticker": "NVDA",
@@ -3185,31 +3297,31 @@
     },
     {
       "ticker": "NVDL",
-      "iv30Percent": 57.9
+      "iv30Percent": 56.3
     },
     {
       "ticker": "NVDX",
-      "iv30Percent": 57.7
+      "iv30Percent": 58.7
     },
     {
       "ticker": "NVO",
-      "iv30Percent": 40.6
+      "iv30Percent": 40.4
     },
     {
       "ticker": "NVS",
-      "iv30Percent": 23.4
+      "iv30Percent": 23.6
     },
     {
       "ticker": "NVTS",
-      "iv30Percent": 85.9
+      "iv30Percent": 86.7
     },
     {
       "ticker": "NWL",
-      "iv30Percent": 61.2
+      "iv30Percent": 59.8
     },
     {
       "ticker": "NXE",
-      "iv30Percent": 50.8
+      "iv30Percent": 51.3
     },
     {
       "ticker": "NXH",
@@ -3217,59 +3329,59 @@
     },
     {
       "ticker": "NXPI",
-      "iv30Percent": 43.4
+      "iv30Percent": 42.9
     },
     {
       "ticker": "NYT",
-      "iv30Percent": 36.3
+      "iv30Percent": 37.3
     },
     {
       "ticker": "O",
-      "iv30Percent": 17.2
+      "iv30Percent": 17.1
     },
     {
       "ticker": "OBE",
-      "iv30Percent": 65.4
-    },
-    {
-      "ticker": "OCGN",
-      "iv30Percent": 78.8
-    },
-    {
-      "ticker": "ODD",
-      "iv30Percent": 73.1
-    },
-    {
-      "ticker": "OKLL",
-      "iv30Percent": 130
-    },
-    {
-      "ticker": "OKLO",
-      "iv30Percent": 64.5
-    },
-    {
-      "ticker": "OKTA",
-      "iv30Percent": 53.3
-    },
-    {
-      "ticker": "OLED",
-      "iv30Percent": 49.6
-    },
-    {
-      "ticker": "OLMA",
-      "iv30Percent": 71.5
-    },
-    {
-      "ticker": "OLN",
-      "iv30Percent": 48.9
-    },
-    {
-      "ticker": "OMER",
       "iv30Percent": 65.5
     },
     {
+      "ticker": "OCGN",
+      "iv30Percent": 81.1
+    },
+    {
+      "ticker": "ODD",
+      "iv30Percent": 72
+    },
+    {
+      "ticker": "OKLL",
+      "iv30Percent": 129.5
+    },
+    {
+      "ticker": "OKLO",
+      "iv30Percent": 63.8
+    },
+    {
+      "ticker": "OKTA",
+      "iv30Percent": 53.8
+    },
+    {
+      "ticker": "OLED",
+      "iv30Percent": 50
+    },
+    {
+      "ticker": "OLMA",
+      "iv30Percent": 72.4
+    },
+    {
+      "ticker": "OLN",
+      "iv30Percent": 50.7
+    },
+    {
+      "ticker": "OMER",
+      "iv30Percent": 64.8
+    },
+    {
       "ticker": "ON",
-      "iv30Percent": 61.1
+      "iv30Percent": 61.3
     },
     {
       "ticker": "ONDS",
@@ -3277,15 +3389,15 @@
     },
     {
       "ticker": "ONON",
-      "iv30Percent": 40.6
+      "iv30Percent": 40.5
     },
     {
       "ticker": "OPCH",
-      "iv30Percent": 10.6
+      "iv30Percent": 11.1
     },
     {
       "ticker": "OPEN",
-      "iv30Percent": 84.1
+      "iv30Percent": 83.6
     },
     {
       "ticker": "ORBS",
@@ -3293,31 +3405,31 @@
     },
     {
       "ticker": "ORCL",
-      "iv30Percent": 52.1
+      "iv30Percent": 52.7
     },
     {
       "ticker": "ORCU",
-      "iv30Percent": 98.1
+      "iv30Percent": 98.2
     },
     {
       "ticker": "ORCX",
-      "iv30Percent": 99
+      "iv30Percent": 98.2
     },
     {
       "ticker": "ORLY",
-      "iv30Percent": 28.1
+      "iv30Percent": 27.9
     },
     {
       "ticker": "OSCR",
-      "iv30Percent": 74.2
+      "iv30Percent": 73.9
     },
     {
       "ticker": "OUST",
-      "iv30Percent": 97
+      "iv30Percent": 97.5
     },
     {
       "ticker": "OWL",
-      "iv30Percent": 49.3
+      "iv30Percent": 50.4
     },
     {
       "ticker": "OXY",
@@ -3329,47 +3441,51 @@
     },
     {
       "ticker": "PAA",
-      "iv30Percent": 19.8
+      "iv30Percent": 19.4
     },
     {
       "ticker": "PAAS",
-      "iv30Percent": 46.7
+      "iv30Percent": 47.5
     },
     {
       "ticker": "PACB",
-      "iv30Percent": 104
+      "iv30Percent": 103.9
     },
     {
       "ticker": "PAG",
-      "iv30Percent": 35.8
+      "iv30Percent": 35.7
+    },
+    {
+      "ticker": "PAGP",
+      "iv30Percent": 20.5
     },
     {
       "ticker": "PAGS",
-      "iv30Percent": 51.8
+      "iv30Percent": 52.4
     },
     {
       "ticker": "PALL",
-      "iv30Percent": 33.8
+      "iv30Percent": 33.9
     },
     {
       "ticker": "PANW",
-      "iv30Percent": 47.8
+      "iv30Percent": 48.7
     },
     {
       "ticker": "PAR",
-      "iv30Percent": 67.8
+      "iv30Percent": 64.4
     },
     {
       "ticker": "PARR",
-      "iv30Percent": 57.9
+      "iv30Percent": 57.5
     },
     {
       "ticker": "PATH",
-      "iv30Percent": 51.7
+      "iv30Percent": 51.8
     },
     {
       "ticker": "PAYS",
-      "iv30Percent": 62.7
+      "iv30Percent": 65.8
     },
     {
       "ticker": "PAYX",
@@ -3377,55 +3493,63 @@
     },
     {
       "ticker": "PBF",
-      "iv30Percent": 67.8
+      "iv30Percent": 67.9
     },
     {
       "ticker": "PBR",
-      "iv30Percent": 39.3
+      "iv30Percent": 43.5
     },
     {
       "ticker": "PCG",
-      "iv30Percent": 48.6
+      "iv30Percent": 47
+    },
+    {
+      "ticker": "PCOR",
+      "iv30Percent": 52.9
     },
     {
       "ticker": "PCT",
-      "iv30Percent": 103.9
+      "iv30Percent": 111.8
     },
     {
       "ticker": "PCVX",
-      "iv30Percent": 47.4
+      "iv30Percent": 47
     },
     {
       "ticker": "PDD",
-      "iv30Percent": 30
+      "iv30Percent": 29.9
     },
     {
       "ticker": "PDSB",
-      "iv30Percent": 140.1
+      "iv30Percent": 143.3
     },
     {
       "ticker": "PEG",
-      "iv30Percent": 21
+      "iv30Percent": 20.6
     },
     {
       "ticker": "PENG",
-      "iv30Percent": 75.6
+      "iv30Percent": 75.8
+    },
+    {
+      "ticker": "PENN",
+      "iv30Percent": 47.9
     },
     {
       "ticker": "PEP",
-      "iv30Percent": 19.6
+      "iv30Percent": 19.5
     },
     {
       "ticker": "PFE",
-      "iv30Percent": 24.5
+      "iv30Percent": 24.4
     },
     {
       "ticker": "PFF",
-      "iv30Percent": 10.2
+      "iv30Percent": 9.9
     },
     {
       "ticker": "PFSI",
-      "iv30Percent": 35.7
+      "iv30Percent": 37
     },
     {
       "ticker": "PG",
@@ -3433,143 +3557,147 @@
     },
     {
       "ticker": "PGEN",
-      "iv30Percent": 76
+      "iv30Percent": 80
     },
     {
       "ticker": "PGR",
-      "iv30Percent": 26.3
+      "iv30Percent": 25.9
     },
     {
       "ticker": "PGY",
-      "iv30Percent": 71.2
+      "iv30Percent": 71.1
     },
     {
       "ticker": "PHM",
-      "iv30Percent": 37.9
+      "iv30Percent": 38.7
     },
     {
       "ticker": "PINS",
-      "iv30Percent": 61
+      "iv30Percent": 60.5
     },
     {
       "ticker": "PL",
-      "iv30Percent": 64.3
-    },
-    {
-      "ticker": "PLCE",
-      "iv30Percent": 111
-    },
-    {
-      "ticker": "PLD",
-      "iv30Percent": 27.4
-    },
-    {
-      "ticker": "PLNT",
-      "iv30Percent": 52.6
-    },
-    {
-      "ticker": "PLTR",
-      "iv30Percent": 56
-    },
-    {
-      "ticker": "PLTU",
-      "iv30Percent": 95.2
-    },
-    {
-      "ticker": "PLUG",
       "iv30Percent": 64.7
     },
     {
+      "ticker": "PLCE",
+      "iv30Percent": 106.7
+    },
+    {
+      "ticker": "PLD",
+      "iv30Percent": 28.2
+    },
+    {
+      "ticker": "PLNT",
+      "iv30Percent": 53.1
+    },
+    {
+      "ticker": "PLTR",
+      "iv30Percent": 55.8
+    },
+    {
+      "ticker": "PLTU",
+      "iv30Percent": 96.6
+    },
+    {
+      "ticker": "PLUG",
+      "iv30Percent": 63.6
+    },
+    {
       "ticker": "PM",
-      "iv30Percent": 30.7
+      "iv30Percent": 30.6
     },
     {
       "ticker": "PNC",
-      "iv30Percent": 26.6
+      "iv30Percent": 25.9
     },
     {
       "ticker": "POET",
-      "iv30Percent": 74.9
+      "iv30Percent": 73.3
     },
     {
       "ticker": "PONY",
-      "iv30Percent": 64.2
+      "iv30Percent": 61.7
     },
     {
       "ticker": "PPLT",
-      "iv30Percent": 33.4
+      "iv30Percent": 33.8
     },
     {
       "ticker": "PPTA",
-      "iv30Percent": 54.3
+      "iv30Percent": 56.1
     },
     {
       "ticker": "PR",
-      "iv30Percent": 36.2
+      "iv30Percent": 36.4
     },
     {
       "ticker": "PRAX",
-      "iv30Percent": 83.4
+      "iv30Percent": 83.3
     },
     {
       "ticker": "PRGO",
-      "iv30Percent": 55.9
+      "iv30Percent": 45.7
     },
     {
       "ticker": "PRME",
-      "iv30Percent": 97.3
+      "iv30Percent": 116.1
+    },
+    {
+      "ticker": "PROP",
+      "iv30Percent": 120.3
     },
     {
       "ticker": "PRU",
-      "iv30Percent": 26.5
+      "iv30Percent": 26.7
     },
     {
       "ticker": "PSA",
-      "iv30Percent": 22.9
+      "iv30Percent": 23.7
     },
     {
       "ticker": "PSX",
-      "iv30Percent": 40.6
+      "iv30Percent": 40.5
     },
     {
       "ticker": "PTC",
-      "iv30Percent": 3.6
+      "iv30Percent": 3.4
     },
     {
       "ticker": "PTIR",
-      "iv30Percent": 93.5
+      "iv30Percent": 93.7
     },
     {
       "ticker": "PTLO",
-      "iv30Percent": 55.1
+      "iv30Percent": 56.4
     },
     {
       "ticker": "PTON",
-      "iv30Percent": 69.5
+      "iv30Percent": 70
     },
     {
       "ticker": "PURR",
-      "iv30Percent": 87.6
+      "iv30Percent": 86.8
     },
     {
       "ticker": "PWR",
-      "iv30Percent": 42.8
+      "iv30Percent": 42.6
     },
     {
       "ticker": "PYPL",
-      "iv30Percent": 44.1
+      "iv30Percent": 43.9
     },
     {
       "ticker": "PZZA",
-      "iv30Percent": 69.5
+      "iv30Percent": 69.3
     },
     {
       "ticker": "QBTS",
-      "iv30Percent": 66.3
+      "iv30Percent": 66.4
     },
     {
       "ticker": "QCOM",
-      "iv30Percent": 49.9
+      "iv30Percent": 50.8
     },
     {
       "ticker": "QFIN",
@@ -3577,15 +3705,19 @@
     },
     {
       "ticker": "QID",
-      "iv30Percent": 35
+      "iv30Percent": 34.2
+    },
+    {
+      "ticker": "QLYS",
+      "iv30Percent": 55
     },
     {
       "ticker": "QNT",
-      "iv30Percent": 77.7
+      "iv30Percent": 78.4
     },
     {
       "ticker": "QQQ",
-      "iv30Percent": 17.7
+      "iv30Percent": 17.8
     },
     {
       "ticker": "QQQI",
@@ -3597,59 +3729,59 @@
     },
     {
       "ticker": "QS",
-      "iv30Percent": 78.5
+      "iv30Percent": 79.6
     },
     {
       "ticker": "QSI",
-      "iv30Percent": 143.2
+      "iv30Percent": 141.3
     },
     {
       "ticker": "QUBT",
-      "iv30Percent": 65.6
+      "iv30Percent": 65.1
     },
     {
       "ticker": "QURE",
-      "iv30Percent": 89.5
+      "iv30Percent": 90.9
     },
     {
       "ticker": "QXO",
-      "iv30Percent": 60.7
+      "iv30Percent": 59.9
     },
     {
       "ticker": "RAM",
-      "iv30Percent": 91.6
+      "iv30Percent": 93.4
     },
     {
       "ticker": "RARE",
-      "iv30Percent": 53.1
+      "iv30Percent": 50.9
     },
     {
       "ticker": "RBLX",
-      "iv30Percent": 83.2
+      "iv30Percent": 82.6
     },
     {
       "ticker": "RBRK",
-      "iv30Percent": 50
+      "iv30Percent": 51.9
     },
     {
       "ticker": "RCAT",
-      "iv30Percent": 72.8
+      "iv30Percent": 71.7
     },
     {
       "ticker": "RCI",
-      "iv30Percent": 28.1
+      "iv30Percent": 28.3
     },
     {
       "ticker": "RCL",
-      "iv30Percent": 48.2
+      "iv30Percent": 48.1
     },
     {
       "ticker": "RDDT",
-      "iv30Percent": 72.2
+      "iv30Percent": 72.5
     },
     {
       "ticker": "RDW",
-      "iv30Percent": 84.7
+      "iv30Percent": 85.1
     },
     {
       "ticker": "REI",
@@ -3657,7 +3789,7 @@
     },
     {
       "ticker": "RF",
-      "iv30Percent": 31.9
+      "iv30Percent": 31
     },
     {
       "ticker": "RFL",
@@ -3665,131 +3797,131 @@
     },
     {
       "ticker": "RGR",
-      "iv30Percent": 31.2
+      "iv30Percent": 31.4
     },
     {
       "ticker": "RGTI",
-      "iv30Percent": 63
+      "iv30Percent": 64
     },
     {
       "ticker": "RH",
-      "iv30Percent": 57.8
+      "iv30Percent": 61
     },
     {
       "ticker": "RIG",
-      "iv30Percent": 47.7
+      "iv30Percent": 48.4
     },
     {
       "ticker": "RILY",
-      "iv30Percent": 67.1
+      "iv30Percent": 57.6
     },
     {
       "ticker": "RIO",
-      "iv30Percent": 29.2
+      "iv30Percent": 29.5
     },
     {
       "ticker": "RIOT",
-      "iv30Percent": 77.2
+      "iv30Percent": 76.6
     },
     {
       "ticker": "RITM",
-      "iv30Percent": 28.2
+      "iv30Percent": 28.5
     },
     {
       "ticker": "RIVN",
-      "iv30Percent": 62.5
+      "iv30Percent": 63
     },
     {
       "ticker": "RKLB",
-      "iv30Percent": 61.9
+      "iv30Percent": 60.8
     },
     {
       "ticker": "RKLX",
-      "iv30Percent": 129.1
+      "iv30Percent": 127.9
     },
     {
       "ticker": "RKLZ",
-      "iv30Percent": 124.5
+      "iv30Percent": 124.9
     },
     {
       "ticker": "RKT",
-      "iv30Percent": 69.5
+      "iv30Percent": 69
     },
     {
       "ticker": "RLMD",
-      "iv30Percent": 70.8
+      "iv30Percent": 64.5
     },
     {
       "ticker": "RMBS",
-      "iv30Percent": 68.1
+      "iv30Percent": 68.5
     },
     {
       "ticker": "RNG",
-      "iv30Percent": 69.3
+      "iv30Percent": 68.7
     },
     {
       "ticker": "ROBN",
-      "iv30Percent": 108.1
+      "iv30Percent": 107.6
     },
     {
       "ticker": "ROK",
-      "iv30Percent": 32.4
+      "iv30Percent": 32.5
     },
     {
       "ticker": "ROKU",
-      "iv30Percent": 16.8
+      "iv30Percent": 17
     },
     {
       "ticker": "ROL",
-      "iv30Percent": 31.8
+      "iv30Percent": 32.7
     },
     {
       "ticker": "ROST",
-      "iv30Percent": 24.7
+      "iv30Percent": 24.5
     },
     {
       "ticker": "RPD",
-      "iv30Percent": 79.8
+      "iv30Percent": 80.2
     },
     {
       "ticker": "RR",
-      "iv30Percent": 88.6
+      "iv30Percent": 87.7
     },
     {
       "ticker": "RSKD",
-      "iv30Percent": 62.3
+      "iv30Percent": 72.3
     },
     {
       "ticker": "RSP",
-      "iv30Percent": 11.8
+      "iv30Percent": 11.7
     },
     {
       "ticker": "RTX",
-      "iv30Percent": 30.6
+      "iv30Percent": 30.3
     },
     {
       "ticker": "RUM",
-      "iv30Percent": 77.5
+      "iv30Percent": 79.4
     },
     {
       "ticker": "RUN",
-      "iv30Percent": 86.2
+      "iv30Percent": 86
     },
     {
       "ticker": "RVMD",
-      "iv30Percent": 47.6
+      "iv30Percent": 49
     },
     {
       "ticker": "RXRX",
-      "iv30Percent": 89.8
+      "iv30Percent": 81.4
     },
     {
       "ticker": "RXT",
-      "iv30Percent": 103.1
+      "iv30Percent": 98.5
     },
     {
       "ticker": "RZLT",
-      "iv30Percent": 121.6
+      "iv30Percent": 115.2
     },
     {
       "ticker": "RZLV",
@@ -3797,51 +3929,51 @@
     },
     {
       "ticker": "S",
-      "iv30Percent": 45.3
-    },
-    {
-      "ticker": "SA",
-      "iv30Percent": 53
-    },
-    {
-      "ticker": "SAIL",
-      "iv30Percent": 68.2
-    },
-    {
-      "ticker": "SAP",
-      "iv30Percent": 40.9
-    },
-    {
-      "ticker": "SARO",
       "iv30Percent": 47
     },
     {
+      "ticker": "SA",
+      "iv30Percent": 51.6
+    },
+    {
+      "ticker": "SAIL",
+      "iv30Percent": 67.5
+    },
+    {
+      "ticker": "SAP",
+      "iv30Percent": 40.5
+    },
+    {
+      "ticker": "SARO",
+      "iv30Percent": 46.2
+    },
+    {
       "ticker": "SBAC",
-      "iv30Percent": 28.6
+      "iv30Percent": 30.2
     },
     {
       "ticker": "SBET",
-      "iv30Percent": 69.6
+      "iv30Percent": 70.5
     },
     {
       "ticker": "SBGI",
-      "iv30Percent": 40.4
+      "iv30Percent": 40.5
     },
     {
       "ticker": "SBLK",
-      "iv30Percent": 32.3
+      "iv30Percent": 32
     },
     {
       "ticker": "SBSW",
-      "iv30Percent": 47.2
+      "iv30Percent": 48.3
     },
     {
       "ticker": "SBUX",
-      "iv30Percent": 36.3
+      "iv30Percent": 36.7
     },
     {
       "ticker": "SCCO",
-      "iv30Percent": 44
+      "iv30Percent": 43.6
     },
     {
       "ticker": "SCHD",
@@ -3849,119 +3981,119 @@
     },
     {
       "ticker": "SCHW",
-      "iv30Percent": 28.8
+      "iv30Percent": 28.7
     },
     {
       "ticker": "SCO",
-      "iv30Percent": 59.6
+      "iv30Percent": 60.3
     },
     {
       "ticker": "SDGR",
-      "iv30Percent": 85.5
+      "iv30Percent": 83.5
     },
     {
       "ticker": "SE",
-      "iv30Percent": 43.3
+      "iv30Percent": 43.4
     },
     {
       "ticker": "SECZ",
-      "iv30Percent": 121.4
+      "iv30Percent": 121.9
     },
     {
       "ticker": "SEDG",
-      "iv30Percent": 89.3
+      "iv30Percent": 90.3
     },
     {
       "ticker": "SEI",
-      "iv30Percent": 68.9
+      "iv30Percent": 69.2
     },
     {
       "ticker": "SEIC",
-      "iv30Percent": 26.3
+      "iv30Percent": 26.9
     },
     {
       "ticker": "SERV",
-      "iv30Percent": 79.5
+      "iv30Percent": 79.3
     },
     {
       "ticker": "SEZL",
-      "iv30Percent": 71.3
+      "iv30Percent": 70.2
     },
     {
       "ticker": "SFM",
-      "iv30Percent": 46.8
+      "iv30Percent": 46.4
     },
     {
       "ticker": "SG",
-      "iv30Percent": 90.9
+      "iv30Percent": 90.5
     },
     {
       "ticker": "SGI",
-      "iv30Percent": 46.3
+      "iv30Percent": 47
     },
     {
       "ticker": "SGML",
-      "iv30Percent": 80.9
+      "iv30Percent": 81.2
     },
     {
       "ticker": "SH",
-      "iv30Percent": 11.8
+      "iv30Percent": 11.6
     },
     {
       "ticker": "SHAK",
-      "iv30Percent": 64.9
+      "iv30Percent": 65.7
     },
     {
       "ticker": "SHAZ",
-      "iv30Percent": 95.9
+      "iv30Percent": 97.4
     },
     {
       "ticker": "SHEL",
-      "iv30Percent": 24.4
+      "iv30Percent": 24
     },
     {
       "ticker": "SHLS",
-      "iv30Percent": 80.1
+      "iv30Percent": 80.8
     },
     {
       "ticker": "SHOE",
-      "iv30Percent": 71.3
+      "iv30Percent": 72.5
     },
     {
       "ticker": "SHOP",
-      "iv30Percent": 64
+      "iv30Percent": 65.6
     },
     {
       "ticker": "SIL",
-      "iv30Percent": 43.5
+      "iv30Percent": 44.8
     },
     {
       "ticker": "SILJ",
-      "iv30Percent": 47.8
+      "iv30Percent": 48.2
     },
     {
       "ticker": "SIMO",
-      "iv30Percent": 78.2
+      "iv30Percent": 78.4
     },
     {
       "ticker": "SIRI",
-      "iv30Percent": 34
+      "iv30Percent": 35.5
     },
     {
       "ticker": "SITM",
-      "iv30Percent": 76
+      "iv30Percent": 76.8
     },
     {
       "ticker": "SIVR",
-      "iv30Percent": 31.5
+      "iv30Percent": 32.3
     },
     {
       "ticker": "SKHY",
-      "iv30Percent": 53.5
+      "iv30Percent": 52.6
     },
     {
       "ticker": "SKM",
-      "iv30Percent": 50.4
+      "iv30Percent": 50
     },
     {
       "ticker": "SKYD",
@@ -3969,91 +4101,95 @@
     },
     {
       "ticker": "SLB",
-      "iv30Percent": 35.8
+      "iv30Percent": 35.9
     },
     {
       "ticker": "SLS",
-      "iv30Percent": 117.1
+      "iv30Percent": 117.9
     },
     {
       "ticker": "SLV",
-      "iv30Percent": 32.2
+      "iv30Percent": 32.3
     },
     {
       "ticker": "SM",
-      "iv30Percent": 47.8
+      "iv30Percent": 48.4
     },
     {
       "ticker": "SMCI",
-      "iv30Percent": 76.6
+      "iv30Percent": 76.9
     },
     {
       "ticker": "SMCX",
-      "iv30Percent": 134.3
+      "iv30Percent": 137.2
     },
     {
       "ticker": "SMH",
-      "iv30Percent": 31.6
+      "iv30Percent": 32
     },
     {
       "ticker": "SMMT",
-      "iv30Percent": 61.2
+      "iv30Percent": 61.4
     },
     {
       "ticker": "SMR",
-      "iv30Percent": 77
+      "iv30Percent": 78
     },
     {
       "ticker": "SMTC",
-      "iv30Percent": 73.7
+      "iv30Percent": 73.5
     },
     {
       "ticker": "SN",
-      "iv30Percent": 48.2
+      "iv30Percent": 48
     },
     {
       "ticker": "SNAP",
-      "iv30Percent": 76.4
+      "iv30Percent": 76.6
     },
     {
       "ticker": "SNDG",
-      "iv30Percent": 115.4
+      "iv30Percent": 120.5
     },
     {
       "ticker": "SNDK",
       "iv30Percent": 63.3
     },
     {
+      "ticker": "SNDQ",
+      "iv30Percent": 135.2
+    },
+    {
       "ticker": "SNDU",
-      "iv30Percent": 114.3
+      "iv30Percent": 112.6
     },
     {
       "ticker": "SNDX",
-      "iv30Percent": 61.4
+      "iv30Percent": 61
     },
     {
       "ticker": "SNOW",
-      "iv30Percent": 45.6
+      "iv30Percent": 46.2
     },
     {
       "ticker": "SNPS",
-      "iv30Percent": 38.5
+      "iv30Percent": 39.7
     },
     {
       "ticker": "SNXX",
-      "iv30Percent": 121.7
+      "iv30Percent": 125.7
     },
     {
       "ticker": "SNY",
-      "iv30Percent": 24.8
+      "iv30Percent": 25.1
     },
     {
       "ticker": "SO",
-      "iv30Percent": 18.5
+      "iv30Percent": 18.7
     },
     {
       "ticker": "SOC",
-      "iv30Percent": 95
+      "iv30Percent": 94.3
     },
     {
       "ticker": "SOFI",
@@ -4061,47 +4197,47 @@
     },
     {
       "ticker": "SOLV",
-      "iv30Percent": 29.1
+      "iv30Percent": 29
     },
     {
       "ticker": "SONY",
-      "iv30Percent": 38.4
+      "iv30Percent": 38
     },
     {
       "ticker": "SOUN",
-      "iv30Percent": 62.7
+      "iv30Percent": 63.8
     },
     {
       "ticker": "SOXL",
-      "iv30Percent": 104.7
+      "iv30Percent": 104.1
     },
     {
       "ticker": "SOXS",
-      "iv30Percent": 121.6
+      "iv30Percent": 122.9
     },
     {
       "ticker": "SOXX",
-      "iv30Percent": 36.8
+      "iv30Percent": 36.7
     },
     {
       "ticker": "SPAX",
-      "iv30Percent": 93.6
+      "iv30Percent": 91.3
     },
     {
       "ticker": "SPCE",
-      "iv30Percent": 70.9
+      "iv30Percent": 71
     },
     {
       "ticker": "SPCF",
-      "iv30Percent": 90.7
+      "iv30Percent": 92.1
     },
     {
       "ticker": "SPCH",
-      "iv30Percent": 93.5
+      "iv30Percent": 93.8
     },
     {
       "ticker": "SPCX",
-      "iv30Percent": 47.7
+      "iv30Percent": 47.4
     },
     {
       "ticker": "SPGI",
@@ -4109,31 +4245,31 @@
     },
     {
       "ticker": "SPMO",
-      "iv30Percent": 24
+      "iv30Percent": 24.2
     },
     {
       "ticker": "SPOT",
-      "iv30Percent": 52.9
+      "iv30Percent": 53
     },
     {
       "ticker": "SPXL",
-      "iv30Percent": 35.5
+      "iv30Percent": 34.9
     },
     {
       "ticker": "SPXS",
-      "iv30Percent": 35.9
+      "iv30Percent": 35.7
     },
     {
       "ticker": "SPY",
-      "iv30Percent": 11.9
+      "iv30Percent": 12
     },
     {
       "ticker": "SPYG",
-      "iv30Percent": 15.8
+      "iv30Percent": 15.7
     },
     {
       "ticker": "SPYI",
-      "iv30Percent": 7.4
+      "iv30Percent": 7.6
     },
     {
       "ticker": "SPYM",
@@ -4141,27 +4277,27 @@
     },
     {
       "ticker": "SQQQ",
-      "iv30Percent": 53.3
+      "iv30Percent": 53.1
     },
     {
       "ticker": "SRPT",
-      "iv30Percent": 71.4
+      "iv30Percent": 69.4
     },
     {
       "ticker": "SSO",
-      "iv30Percent": 22.6
+      "iv30Percent": 22
     },
     {
       "ticker": "SSPC",
-      "iv30Percent": 96.4
+      "iv30Percent": 95.8
     },
     {
       "ticker": "SSRM",
-      "iv30Percent": 52.4
+      "iv30Percent": 52.1
     },
     {
       "ticker": "STE",
-      "iv30Percent": 27.1
+      "iv30Percent": 26.4
     },
     {
       "ticker": "STLA",
@@ -4169,71 +4305,83 @@
     },
     {
       "ticker": "STLD",
-      "iv30Percent": 38.8
+      "iv30Percent": 38.9
     },
     {
       "ticker": "STM",
-      "iv30Percent": 64.3
-    },
-    {
-      "ticker": "STNE",
-      "iv30Percent": 55.8
-    },
-    {
-      "ticker": "STNG",
-      "iv30Percent": 40.5
-    },
-    {
-      "ticker": "STRL",
-      "iv30Percent": 68.1
-    },
-    {
-      "ticker": "STUB",
-      "iv30Percent": 63.9
-    },
-    {
-      "ticker": "STWD",
-      "iv30Percent": 25.2
-    },
-    {
-      "ticker": "STX",
       "iv30Percent": 63.5
     },
     {
+      "ticker": "STNE",
+      "iv30Percent": 55.5
+    },
+    {
+      "ticker": "STNG",
+      "iv30Percent": 39.7
+    },
+    {
+      "ticker": "STRL",
+      "iv30Percent": 68
+    },
+    {
+      "ticker": "STUB",
+      "iv30Percent": 63.7
+    },
+    {
+      "ticker": "STWD",
+      "iv30Percent": 25.3
+    },
+    {
+      "ticker": "STX",
+      "iv30Percent": 62.9
+    },
+    {
       "ticker": "STZ",
-      "iv30Percent": 27.3
+      "iv30Percent": 27.6
     },
     {
       "ticker": "SU",
-      "iv30Percent": 31.5
+      "iv30Percent": 31.4
+    },
+    {
+      "ticker": "SUIG",
+      "iv30Percent": 118.6
+    },
+    {
+      "ticker": "SVC",
+      "iv30Percent": 68.5
     },
     {
       "ticker": "SVIX",
-      "iv30Percent": 48.4
+      "iv30Percent": 47.6
+    },
+    {
+      "ticker": "SVM",
+      "iv30Percent": 56.7
     },
     {
       "ticker": "SVXY",
-      "iv30Percent": 23.9
+      "iv30Percent": 23.6
     },
     {
       "ticker": "SWKS",
-      "iv30Percent": 56.6
+      "iv30Percent": 56.7
     },
     {
       "ticker": "SYF",
-      "iv30Percent": 32.9
+      "iv30Percent": 32.1
     },
     {
       "ticker": "SYK",
-      "iv30Percent": 33
+      "iv30Percent": 32.9
     },
     {
       "ticker": "SYM",
-      "iv30Percent": 51.4
+      "iv30Percent": 52.3
     },
     {
       "ticker": "SYNA",
-      "iv30Percent": 7.2
+      "iv30Percent": 6.2
     },
     {
       "ticker": "T",
@@ -4241,79 +4389,87 @@
     },
     {
       "ticker": "TAL",
-      "iv30Percent": 41.2
+      "iv30Percent": 40.3
+    },
+    {
+      "ticker": "TBBB",
+      "iv30Percent": 35.1
     },
     {
       "ticker": "TCOM",
-      "iv30Percent": 31
+      "iv30Percent": 30.9
     },
     {
       "ticker": "TD",
-      "iv30Percent": 19.1
+      "iv30Percent": 19.2
     },
     {
       "ticker": "TDAY",
-      "iv30Percent": 57.8
+      "iv30Percent": 59.6
     },
     {
       "ticker": "TDOC",
-      "iv30Percent": 50.7
+      "iv30Percent": 52.6
     },
     {
       "ticker": "TE",
-      "iv30Percent": 93.5
+      "iv30Percent": 93
     },
     {
       "ticker": "TEAM",
-      "iv30Percent": 77.4
+      "iv30Percent": 77
+    },
+    {
+      "ticker": "TECK",
+      "iv30Percent": 46
     },
     {
       "ticker": "TECL",
-      "iv30Percent": 64.2
+      "iv30Percent": 64.3
     },
     {
       "ticker": "TEM",
-      "iv30Percent": 79.5
+      "iv30Percent": 80.5
     },
     {
       "ticker": "TENB",
-      "iv30Percent": 63.7
+      "iv30Percent": 65.7
     },
     {
       "ticker": "TER",
-      "iv30Percent": 74.3
+      "iv30Percent": 74.6
     },
     {
       "ticker": "TEVA",
-      "iv30Percent": 41.6
+      "iv30Percent": 42
     },
     {
       "ticker": "TFC",
-      "iv30Percent": 29.6
+      "iv30Percent": 29.5
     },
     {
       "ticker": "TGB",
-      "iv30Percent": 62.5
+      "iv30Percent": 63.8
     },
     {
       "ticker": "TGT",
-      "iv30Percent": 28.1
+      "iv30Percent": 29.2
     },
     {
       "ticker": "TGTX",
-      "iv30Percent": 54.8
+      "iv30Percent": 54.4
     },
     {
       "ticker": "THRM",
-      "iv30Percent": 44.9
+      "iv30Percent": 45.1
     },
     {
       "ticker": "TIGO",
-      "iv30Percent": 43.8
+      "iv30Percent": 45.7
     },
     {
       "ticker": "TIGR",
-      "iv30Percent": 46.1
+      "iv30Percent": 45.2
     },
     {
       "ticker": "TJX",
@@ -4321,15 +4477,15 @@
     },
     {
       "ticker": "TKR",
-      "iv30Percent": 37.9
+      "iv30Percent": 38.1
     },
     {
       "ticker": "TLN",
-      "iv30Percent": 59.5
+      "iv30Percent": 58
     },
     {
       "ticker": "TLRY",
-      "iv30Percent": 66.3
+      "iv30Percent": 65.1
     },
     {
       "ticker": "TLT",
@@ -4337,27 +4493,27 @@
     },
     {
       "ticker": "TMC",
-      "iv30Percent": 74.1
+      "iv30Percent": 75.8
     },
     {
       "ticker": "TMDX",
-      "iv30Percent": 77.9
+      "iv30Percent": 77.7
     },
     {
       "ticker": "TME",
-      "iv30Percent": 37.6
+      "iv30Percent": 39.6
     },
     {
       "ticker": "TMF",
-      "iv30Percent": 43
+      "iv30Percent": 42.9
     },
     {
       "ticker": "TMO",
-      "iv30Percent": 39.4
+      "iv30Percent": 38.9
     },
     {
       "ticker": "TMUS",
-      "iv30Percent": 41.6
+      "iv30Percent": 42.4
     },
     {
       "ticker": "TNA",
@@ -4365,59 +4521,59 @@
     },
     {
       "ticker": "TNGX",
-      "iv30Percent": 83.5
+      "iv30Percent": 96.2
     },
     {
       "ticker": "TOST",
-      "iv30Percent": 56.8
+      "iv30Percent": 48.7
     },
     {
       "ticker": "TPB",
-      "iv30Percent": 54
+      "iv30Percent": 54.1
     },
     {
       "ticker": "TQQQ",
-      "iv30Percent": 52
+      "iv30Percent": 52.4
     },
     {
       "ticker": "TREX",
-      "iv30Percent": 45.4
+      "iv30Percent": 45
     },
     {
       "ticker": "TRIP",
-      "iv30Percent": 59.8
+      "iv30Percent": 60.9
     },
     {
       "ticker": "TRLV",
-      "iv30Percent": 85.3
+      "iv30Percent": 85.5
     },
     {
       "ticker": "TRMD",
-      "iv30Percent": 43.4
+      "iv30Percent": 40.2
     },
     {
       "ticker": "TSCO",
-      "iv30Percent": 46.5
+      "iv30Percent": 46.1
     },
     {
       "ticker": "TSEM",
-      "iv30Percent": 68.9
+      "iv30Percent": 69.1
     },
     {
       "ticker": "TSLA",
-      "iv30Percent": 42.1
+      "iv30Percent": 41.9
     },
     {
       "ticker": "TSLL",
-      "iv30Percent": 81.9
+      "iv30Percent": 81.7
     },
     {
       "ticker": "TSLQ",
-      "iv30Percent": 77.4
+      "iv30Percent": 77.7
     },
     {
       "ticker": "TSLT",
-      "iv30Percent": 76.8
+      "iv30Percent": 76.1
     },
     {
       "ticker": "TSM",
@@ -4425,35 +4581,39 @@
     },
     {
       "ticker": "TSN",
-      "iv30Percent": 25.9
+      "iv30Percent": 25.8
     },
     {
       "ticker": "TSSI",
       "iv30Percent": 89.6
     },
     {
+      "ticker": "TT",
+      "iv30Percent": 30.2
+    },
+    {
       "ticker": "TTD",
-      "iv30Percent": 62
+      "iv30Percent": 63.8
     },
     {
       "ticker": "TTMI",
-      "iv30Percent": 78.9
+      "iv30Percent": 79.1
     },
     {
       "ticker": "TTWO",
-      "iv30Percent": 43.3
+      "iv30Percent": 43
     },
     {
       "ticker": "TWLO",
-      "iv30Percent": 77.3
+      "iv30Percent": 77.7
     },
     {
       "ticker": "TWST",
-      "iv30Percent": 85.3
+      "iv30Percent": 85.5
     },
     {
       "ticker": "TXG",
-      "iv30Percent": 90.3
+      "iv30Percent": 90.6
     },
     {
       "ticker": "TXN",
@@ -4461,83 +4621,91 @@
     },
     {
       "ticker": "TZA",
-      "iv30Percent": 53
+      "iv30Percent": 53.2
     },
     {
       "ticker": "U",
-      "iv30Percent": 63.1
+      "iv30Percent": 62.7
     },
     {
       "ticker": "UAA",
-      "iv30Percent": 53.3
+      "iv30Percent": 53.6
     },
     {
       "ticker": "UAL",
-      "iv30Percent": 46.2
+      "iv30Percent": 45.9
     },
     {
       "ticker": "UAMY",
-      "iv30Percent": 85.7
+      "iv30Percent": 85.6
     },
     {
       "ticker": "UBER",
-      "iv30Percent": 40.5
+      "iv30Percent": 40.7
+    },
+    {
+      "ticker": "UBS",
+      "iv30Percent": 28.9
     },
     {
       "ticker": "UCO",
-      "iv30Percent": 61.8
+      "iv30Percent": 62.3
+    },
+    {
+      "ticker": "UCTT",
+      "iv30Percent": 81.5
     },
     {
       "ticker": "UDOW",
-      "iv30Percent": 38
+      "iv30Percent": 37.6
     },
     {
       "ticker": "UEC",
-      "iv30Percent": 59.3
+      "iv30Percent": 59.9
     },
     {
       "ticker": "UGA",
-      "iv30Percent": 41.5
+      "iv30Percent": 41.1
     },
     {
       "ticker": "UGL",
-      "iv30Percent": 39
+      "iv30Percent": 39.7
     },
     {
       "ticker": "UL",
-      "iv30Percent": 20.1
+      "iv30Percent": 20.2
     },
     {
       "ticker": "ULS",
-      "iv30Percent": 36.7
+      "iv30Percent": 39.1
     },
     {
       "ticker": "ULTA",
-      "iv30Percent": 29.1
+      "iv30Percent": 29.7
     },
     {
       "ticker": "UMAC",
-      "iv30Percent": 88
+      "iv30Percent": 89.3
     },
     {
       "ticker": "UMC",
-      "iv30Percent": 55.7
+      "iv30Percent": 55.6
     },
     {
       "ticker": "UNG",
-      "iv30Percent": 49.2
+      "iv30Percent": 49.5
     },
     {
       "ticker": "UNH",
-      "iv30Percent": 39.9
+      "iv30Percent": 40.2
     },
     {
       "ticker": "UNHG",
-      "iv30Percent": 93.2
+      "iv30Percent": 93.8
     },
     {
       "ticker": "UNIT",
-      "iv30Percent": 63.3
+      "iv30Percent": 60
     },
     {
       "ticker": "UNM",
@@ -4553,67 +4721,71 @@
     },
     {
       "ticker": "UPS",
-      "iv30Percent": 35.2
-    },
-    {
-      "ticker": "UPST",
-      "iv30Percent": 75.3
-    },
-    {
-      "ticker": "UPXI",
-      "iv30Percent": 94
-    },
-    {
-      "ticker": "URA",
-      "iv30Percent": 40.5
-    },
-    {
-      "ticker": "URI",
-      "iv30Percent": 49.3
-    },
-    {
-      "ticker": "URNM",
-      "iv30Percent": 40
-    },
-    {
-      "ticker": "UROY",
-      "iv30Percent": 58.2
-    },
-    {
-      "ticker": "USAR",
-      "iv30Percent": 67.5
-    },
-    {
-      "ticker": "USAS",
-      "iv30Percent": 67.2
-    },
-    {
-      "ticker": "USB",
-      "iv30Percent": 26.5
-    },
-    {
-      "ticker": "USD",
-      "iv30Percent": 60.4
-    },
-    {
-      "ticker": "USO",
-      "iv30Percent": 45.6
-    },
-    {
-      "ticker": "UUUU",
-      "iv30Percent": 65.4
-    },
-    {
-      "ticker": "UVE",
       "iv30Percent": 35.3
     },
     {
+      "ticker": "UPST",
+      "iv30Percent": 73.3
+    },
+    {
+      "ticker": "UPWK",
+      "iv30Percent": 65.7
+    },
+    {
+      "ticker": "UPXI",
+      "iv30Percent": 94.4
+    },
+    {
+      "ticker": "URA",
+      "iv30Percent": 40.1
+    },
+    {
+      "ticker": "URI",
+      "iv30Percent": 49
+    },
+    {
+      "ticker": "URNM",
+      "iv30Percent": 40.1
+    },
+    {
+      "ticker": "UROY",
+      "iv30Percent": 58.5
+    },
+    {
+      "ticker": "USAR",
+      "iv30Percent": 68.2
+    },
+    {
+      "ticker": "USAS",
+      "iv30Percent": 69.1
+    },
+    {
+      "ticker": "USB",
+      "iv30Percent": 27.1
+    },
+    {
+      "ticker": "USD",
+      "iv30Percent": 60.9
+    },
+    {
+      "ticker": "USO",
+      "iv30Percent": 44.9
+    },
+    {
+      "ticker": "UUUU",
+      "iv30Percent": 65.9
+    },
+    {
+      "ticker": "UVE",
+      "iv30Percent": 36.1
+    },
+    {
       "ticker": "UVIX",
-      "iv30Percent": 100.3
+      "iv30Percent": 99.5
     },
     {
       "ticker": "UVXY",
-      "iv30Percent": 76.3
+      "iv30Percent": 75.3
     },
     {
       "ticker": "UWMC",
@@ -4621,39 +4793,39 @@
     },
     {
       "ticker": "V",
-      "iv30Percent": 23
+      "iv30Percent": 22.8
     },
     {
       "ticker": "VALE",
-      "iv30Percent": 35.1
+      "iv30Percent": 36
     },
     {
       "ticker": "VCX",
-      "iv30Percent": 54.4
+      "iv30Percent": 55.5
     },
     {
       "ticker": "VEEV",
-      "iv30Percent": 39.2
+      "iv30Percent": 38.7
     },
     {
       "ticker": "VELO",
-      "iv30Percent": 97.6
+      "iv30Percent": 98.4
     },
     {
       "ticker": "VERI",
-      "iv30Percent": 121.8
+      "iv30Percent": 120.3
     },
     {
       "ticker": "VFC",
-      "iv30Percent": 54.7
+      "iv30Percent": 53.4
     },
     {
       "ticker": "VG",
-      "iv30Percent": 56.9
+      "iv30Percent": 56.2
     },
     {
       "ticker": "VGT",
-      "iv30Percent": 21.3
+      "iv30Percent": 21.4
     },
     {
       "ticker": "VIAV",
@@ -4661,39 +4833,47 @@
     },
     {
       "ticker": "VICI",
-      "iv30Percent": 19.1
+      "iv30Percent": 19.2
     },
     {
       "ticker": "VICR",
-      "iv30Percent": 86.7
+      "iv30Percent": 85.2
     },
     {
       "ticker": "VIR",
-      "iv30Percent": 57.7
+      "iv30Percent": 59.7
+    },
+    {
+      "ticker": "VIST",
+      "iv30Percent": 46.3
+    },
+    {
+      "ticker": "VITL",
+      "iv30Percent": 69.7
     },
     {
       "ticker": "VIXY",
-      "iv30Percent": 48.2
+      "iv30Percent": 47.9
     },
     {
       "ticker": "VKTX",
-      "iv30Percent": 60.6
+      "iv30Percent": 59.7
     },
     {
       "ticker": "VLO",
-      "iv30Percent": 49.3
+      "iv30Percent": 49.4
     },
     {
       "ticker": "VMC",
-      "iv30Percent": 30.4
+      "iv30Percent": 30.9
     },
     {
       "ticker": "VNET",
-      "iv30Percent": 73.9
+      "iv30Percent": 74.5
     },
     {
       "ticker": "VOD",
-      "iv30Percent": 29.6
+      "iv30Percent": 28.6
     },
     {
       "ticker": "VOO",
@@ -4701,7 +4881,7 @@
     },
     {
       "ticker": "VOYA",
-      "iv30Percent": 29.6
+      "iv30Percent": 30.3
     },
     {
       "ticker": "VOYG",
@@ -4709,11 +4889,11 @@
     },
     {
       "ticker": "VRNS",
-      "iv30Percent": 52.7
+      "iv30Percent": 52.6
     },
     {
       "ticker": "VRSK",
-      "iv30Percent": 34.8
+      "iv30Percent": 34.6
     },
     {
       "ticker": "VRT",
@@ -4721,23 +4901,23 @@
     },
     {
       "ticker": "VRTX",
-      "iv30Percent": 32.8
+      "iv30Percent": 33
     },
     {
       "ticker": "VSAT",
-      "iv30Percent": 76.1
+      "iv30Percent": 76.5
     },
     {
       "ticker": "VSH",
-      "iv30Percent": 69.9
+      "iv30Percent": 69.8
     },
     {
       "ticker": "VST",
-      "iv30Percent": 52.6
+      "iv30Percent": 52.1
     },
     {
       "ticker": "VSTM",
-      "iv30Percent": 165.5
+      "iv30Percent": 177.9
     },
     {
       "ticker": "VTEB",
@@ -4745,47 +4925,47 @@
     },
     {
       "ticker": "VTI",
-      "iv30Percent": 11.5
+      "iv30Percent": 11.6
     },
     {
       "ticker": "VTRS",
-      "iv30Percent": 32.1
+      "iv30Percent": 32.2
     },
     {
       "ticker": "VXX",
-      "iv30Percent": 50.3
+      "iv30Percent": 50.1
     },
     {
       "ticker": "VZ",
-      "iv30Percent": 30.5
+      "iv30Percent": 30.3
     },
     {
       "ticker": "VZLA",
-      "iv30Percent": 58.5
+      "iv30Percent": 58.6
     },
     {
       "ticker": "W",
-      "iv30Percent": 73.8
+      "iv30Percent": 73.9
     },
     {
       "ticker": "WDAY",
-      "iv30Percent": 49.6
+      "iv30Percent": 49.8
     },
     {
       "ticker": "WDC",
-      "iv30Percent": 60.8
+      "iv30Percent": 61.4
     },
     {
       "ticker": "WDCX",
-      "iv30Percent": 109.8
+      "iv30Percent": 111.2
     },
     {
       "ticker": "WEAT",
-      "iv30Percent": 21.9
+      "iv30Percent": 22.3
     },
     {
       "ticker": "WELL",
-      "iv30Percent": 24.1
+      "iv30Percent": 24.2
     },
     {
       "ticker": "WEN",
@@ -4793,39 +4973,39 @@
     },
     {
       "ticker": "WFC",
-      "iv30Percent": 29.5
+      "iv30Percent": 29.8
     },
     {
       "ticker": "WGS",
-      "iv30Percent": 108.2
+      "iv30Percent": 110.1
     },
     {
       "ticker": "WHR",
-      "iv30Percent": 60.5
+      "iv30Percent": 60.8
     },
     {
       "ticker": "WING",
-      "iv30Percent": 65.3
+      "iv30Percent": 64.7
     },
     {
       "ticker": "WM",
-      "iv30Percent": 21.3
+      "iv30Percent": 21.5
     },
     {
       "ticker": "WMB",
-      "iv30Percent": 29.7
+      "iv30Percent": 29.8
     },
     {
       "ticker": "WMT",
-      "iv30Percent": 21.6
+      "iv30Percent": 21.3
     },
     {
       "ticker": "WOLF",
-      "iv30Percent": 99.2
+      "iv30Percent": 99.5
     },
     {
       "ticker": "WPC",
-      "iv30Percent": 18.1
+      "iv30Percent": 18.2
     },
     {
       "ticker": "WPM",
@@ -4833,59 +5013,59 @@
     },
     {
       "ticker": "WRBY",
-      "iv30Percent": 82
+      "iv30Percent": 86.3
     },
     {
       "ticker": "WU",
-      "iv30Percent": 42.2
+      "iv30Percent": 41.1
     },
     {
       "ticker": "WULF",
-      "iv30Percent": 76.9
+      "iv30Percent": 76.6
     },
     {
       "ticker": "WVE",
-      "iv30Percent": 115.4
+      "iv30Percent": 113.4
     },
     {
       "ticker": "WY",
-      "iv30Percent": 31.1
+      "iv30Percent": 31
     },
     {
       "ticker": "WYFI",
-      "iv30Percent": 94.6
+      "iv30Percent": 95.7
     },
     {
       "ticker": "WYNN",
-      "iv30Percent": 41.9
+      "iv30Percent": 42.6
     },
     {
       "ticker": "XBI",
-      "iv30Percent": 30.9
+      "iv30Percent": 30.8
     },
     {
       "ticker": "XE",
-      "iv30Percent": 77.7
+      "iv30Percent": 77
     },
     {
       "ticker": "XEL",
-      "iv30Percent": 25.2
+      "iv30Percent": 24.7
     },
     {
       "ticker": "XFOR",
-      "iv30Percent": 61.7
+      "iv30Percent": 62.2
     },
     {
       "ticker": "XHB",
-      "iv30Percent": 29.7
+      "iv30Percent": 29.6
     },
     {
       "ticker": "XLB",
-      "iv30Percent": 19.5
+      "iv30Percent": 19.6
     },
     {
       "ticker": "XLC",
-      "iv30Percent": 17.9
+      "iv30Percent": 18
     },
     {
       "ticker": "XLE",
@@ -4893,63 +5073,63 @@
     },
     {
       "ticker": "XLF",
-      "iv30Percent": 17.1
+      "iv30Percent": 16.9
     },
     {
       "ticker": "XLI",
-      "iv30Percent": 18.2
+      "iv30Percent": 18.3
     },
     {
       "ticker": "XLK",
-      "iv30Percent": 23.1
+      "iv30Percent": 23.2
     },
     {
       "ticker": "XLP",
-      "iv30Percent": 14.1
+      "iv30Percent": 14.2
     },
     {
       "ticker": "XLRE",
-      "iv30Percent": 15.7
+      "iv30Percent": 15.8
     },
     {
       "ticker": "XLU",
-      "iv30Percent": 16.8
+      "iv30Percent": 17.4
     },
     {
       "ticker": "XLV",
-      "iv30Percent": 18
+      "iv30Percent": 18.1
     },
     {
       "ticker": "XLY",
-      "iv30Percent": 18.8
+      "iv30Percent": 18.9
     },
     {
       "ticker": "XNDU",
-      "iv30Percent": 103.2
+      "iv30Percent": 102.5
     },
     {
       "ticker": "XOM",
-      "iv30Percent": 27.8
+      "iv30Percent": 28
     },
     {
       "ticker": "XOP",
-      "iv30Percent": 30
+      "iv30Percent": 30.2
     },
     {
       "ticker": "XP",
-      "iv30Percent": 65.4
+      "iv30Percent": 66.4
     },
     {
       "ticker": "XPEV",
-      "iv30Percent": 45.8
+      "iv30Percent": 45.5
     },
     {
       "ticker": "XRP",
-      "iv30Percent": 68.3
+      "iv30Percent": 68.6
     },
     {
       "ticker": "XRPN",
-      "iv30Percent": 192.8
+      "iv30Percent": 196.4
     },
     {
       "ticker": "XRT",
@@ -4961,19 +5141,19 @@
     },
     {
       "ticker": "XXI",
-      "iv30Percent": 67.9
+      "iv30Percent": 68.2
     },
     {
       "ticker": "XYZ",
-      "iv30Percent": 53
+      "iv30Percent": 52
     },
     {
       "ticker": "YANG",
-      "iv30Percent": 57
+      "iv30Percent": 54.8
     },
     {
       "ticker": "YELP",
-      "iv30Percent": 49.1
+      "iv30Percent": 50.4
     },
     {
       "ticker": "YINN",
@@ -4981,15 +5161,15 @@
     },
     {
       "ticker": "YPF",
-      "iv30Percent": 39.1
+      "iv30Percent": 39.5
     },
     {
       "ticker": "YSS",
-      "iv30Percent": 97
+      "iv30Percent": 97.6
     },
     {
       "ticker": "Z",
-      "iv30Percent": 59.7
+      "iv30Percent": 59
     },
     {
       "ticker": "ZENA",
@@ -4997,31 +5177,35 @@
     },
     {
       "ticker": "ZETA",
-      "iv30Percent": 67.8
+      "iv30Percent": 70.9
     },
     {
       "ticker": "ZIM",
-      "iv30Percent": 28
+      "iv30Percent": 29
     },
     {
       "ticker": "ZLAB",
-      "iv30Percent": 38.4
+      "iv30Percent": 37.3
     },
     {
       "ticker": "ZM",
-      "iv30Percent": 37.7
+      "iv30Percent": 38.4
     },
     {
       "ticker": "ZS",
-      "iv30Percent": 49.9
+      "iv30Percent": 49.5
+    },
+    {
+      "ticker": "ZSL",
+      "iv30Percent": 61.5
     },
     {
       "ticker": "ZTS",
-      "iv30Percent": 39.2
+      "iv30Percent": 39.4
     },
     {
       "ticker": "ZURA",
-      "iv30Percent": 109
+      "iv30Percent": 110.7
     },
     {
       "ticker": "ZVIA",
@@ -5029,11 +5213,11 @@
     },
     {
       "ticker": "ZVRA",
-      "iv30Percent": 43.1
+      "iv30Percent": 44
     },
     {
       "ticker": "ZYME",
-      "iv30Percent": 39.9
+      "iv30Percent": 38.2
     }
   ]
 }
