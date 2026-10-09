@@ -36,6 +36,35 @@
 .iv-assumptions legend { padding: 0 .4rem; font-size: .88rem; }
 .iv-panel button:disabled { opacity: .55; cursor: not-allowed; }
 .iv-panel :is(button,input,select,summary,a):focus-visible { outline: 2px solid var(--accent-color); outline-offset: 3px; }
+.iv-table-toolbar { padding: .8rem 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; flex-wrap: wrap; gap: .6rem 1rem; }
+.iv-table-toolbar p { margin: 0; font-size: .82rem; line-height: 1.6; }
+.iv-table-toolbar .iv-note { flex-basis: 100%; }
+.table-container table { min-width: 1380px; }
+.table-container .col-company { width: 150px; }
+.table-container .col-action { width: 100px; }
+.col-iv-term { width: 140px; cursor: default; }
+.col-iv-term small { display: block; font-size: .7rem; font-weight: 400; margin-top: .3rem; }
+#tableBody td.iv-stock-cell { cursor: default; }
+.iv-term-cell { display: flex; flex-direction: column; gap: .45rem; width: 100%; text-align: left; font-variant-numeric: tabular-nums; }
+.iv-cell-line { display: flex; align-items: flex-start; justify-content: space-between; gap: .35rem; }
+.iv-cell-line > span { font-size: .7rem; color: var(--text-secondary); white-space: nowrap; }
+.iv-cell-line > div { text-align: right; }
+.iv-cell-line strong { font-size: .82rem; }
+.iv-term-cell small { display: block; font-size: .65rem; color: var(--text-secondary); line-height: 1.4; }
+.iv-cell-note { font-size: .7rem; color: var(--text-secondary); }
+.iv-term-cell .iv-quality-stale { color: var(--danger-color); }
+.iv-chain-link { color: var(--accent-color); text-decoration: none; font-size: .75rem; }
+.iv-chain-link:hover { text-decoration: underline; }
+#ivQueryGuide { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,320px),1fr)); gap: .7rem; }
+.iv-query-card { border: 1px solid var(--border-color); border-radius: .5rem; padding: .75rem; }
+.iv-query-card a { font-weight: 650; }
+.iv-query-card p { margin: .5rem 0; }
+.iv-query-card small { color: var(--text-secondary); }
+@media (max-width: 768px) {
+  .table-container table { min-width: 0; }
+  .table-container td[data-label="公司名稱"]::before { flex-basis: auto; }
+  .iv-stock-cell .iv-term-cell { max-width: 190px; }
+}
 @media (max-width: 600px) {
   .iv-panel { padding: .8rem; }
   .iv-panel summary span { display: block; margin: .4rem 0 0; }

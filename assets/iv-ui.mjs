@@ -1,10 +1,12 @@
-import {summarizeSurface, validateSnapshot} from './iv-engine.mjs';
+import {validateSnapshot} from './iv-engine.mjs';
 import {CSV_TEMPLATE, importSnapshots} from './iv-import.mjs';
 import {validateHistory, summarizeHistoricalVolatility} from './historical-volatility.mjs';
 import {historyFailure, historyRetrySeconds} from './history-errors.mjs';
+import {IV_MONTHS, buildTermSummaries, renderTermCell, optionsChainUrl, queryTargets, validLevels} from './iv-table.mjs';
 
 const $ = id => document.getElementById(id);
 const snapshots = new Map(), histories = new Map(), labels = new Map();
+let tableTerms = new Map();
 let simulation = null, generation = 0, report = null, fetching = false;
 let fetchEpoch = 0, fetchController = null;
 let historyRetryAt = 0, historyRetryTimer = null;
@@ -26,7 +28,6 @@ function updateMode() {
   const estimated = historicalMode();
   $('historyControls').hidden = !estimated; $('marketControls').hidden = estimated;
   $('marketApiControls').hidden = estimated; $('ivRhoField').hidden = estimated;
-  $('ivColumnLabel').textContent = estimated ? '估計波動率' : 'ATM IV';
   $('ivModelNote').textContent = estimated
     ? '歷史估計使用各天期預測波動率與共同日期的歷史相關性；高波動情境另提高相關性。以風險中立模型計算票息，沒有把歷史資料變成市場 IV。利率及股息是你的輸入假設，未含財報跳躍、離散股息與銀行成本。'
     : '模型使用各股票該天期 ATM IV 的固定波動率與共同相關係數，未校準整個偏斜曲面、財報跳躍、離散股息或尾端相關性。利率、股息及相關係數都是你的輸入假設，並非即時市場資料。';
@@ -54,13 +55,14 @@ function estimateCell(estimate) {
   return `${percent(estimate.iv)}<small>${estimate.method === 'quoted' ? '合約 IV' : '插值 IV'} · ${qualityText[estimate.quality]}</small>`;
 }
 function renderSurface() {
-  if (historicalMode()) return renderHistorical();
   const params = context(), now = new Date();
+  tableTerms = buildTermSummaries(snapshots, params, now);
+  renderQueryGuide(params, now);
+  if (historicalMode()) return renderHistorical();
   labels.clear();
-  $('ivColumnTenor').textContent = `${params.months}M`;
   for (const [ticker, snapshot] of snapshots) {
     try {
-      const summary = summarizeSurface(snapshot, {...params, now});
+      const summary = tableTerms.get(ticker)?.get(params.months);
       labels.set(ticker, summary.atm ? `${percent(summary.atm.iv)} · ${qualityText[summary.atm.quality]}` : '缺資料');
     } catch { labels.set(ticker, '資料不符'); }
   }
@@ -78,7 +80,8 @@ function renderSurface() {
     }
     for (const months of [3, 4, 5, 6]) {
       try {
-        const summary = summarizeSurface(snapshot, {...params, months, now});
+        const summary = tableTerms.get(ticker)?.get(months);
+        if (!summary) throw new Error(validLevels(params) ? '資料不符或無覆蓋' : '條件不符：需 0 < KI ≤ K ≤ 100%，且 K ≤ KO ≤ 200%');
         summaries.push(summary);
         const skew = summary.ki && summary.atm ? `${((summary.ki.iv - summary.atm.iv) * 100).toFixed(2)} pp` : '缺資料';
         rows.push(`<tr><td>${escape(ticker)}</td><td>${months} 個月<small>${summary.targetDate}</small></td><td>$${snapshot.spot.toFixed(2)}</td><td>${estimateCell(summary.atm)}</td><td>${estimateCell(summary.k)}</td><td>${estimateCell(summary.ki)}</td><td>${estimateCell(summary.ko)}</td><td>${skew}</td><td>${qualityText[summary.quality.status]}<small>${summary.quality.complete ? '四個價位皆有覆蓋' : '部分價位缺資料'}</small></td></tr>`);
@@ -96,7 +99,7 @@ function renderSurface() {
 }
 function renderHistorical() {
   const params = context(), now = new Date();
-  labels.clear(); $('ivColumnTenor').textContent = `${params.months}M`;
+  labels.clear();
   for (const [ticker, history] of histories) {
     try { const s = summarizeHistoricalVolatility(history, {...params,now}); labels.set(ticker, `${percent(s.forecastVolatility)} · 歷史估計`); }
     catch { labels.set(ticker, '歷史資料受限'); }
@@ -122,6 +125,26 @@ function renderHistorical() {
 }
 window.fcnIvLabel = ticker => labels.get(ticker) || (historicalMode() ? '未取得歷史股價' : '未匯入');
 window.fcnVolatilityTitle = () => historicalMode() ? '估計波動率' : 'ATM IV';
+window.fcnIvTermCell = (ticker, months) => renderTermCell(tableTerms.get(ticker)?.get(months), context(), snapshots.has(ticker));
+window.fcnOptionsChainUrl = optionsChainUrl;
+
+function renderQueryGuide(params, now) {
+  let selected;
+  try { selected = tickers(); } catch { selected = []; }
+  // A snapshot reference takes precedence over the scanner's newer stock quote,
+  // so changing K/KI never silently changes the imported smile's moneyness.
+  $('ivQueryGuide').innerHTML = selected.length ? selected.map(ticker => {
+    const snapshot = snapshots.get(ticker), quote = window.getFcnStockQuote(ticker);
+    const spot = snapshot?.spot ?? quote?.spot;
+    const targets = queryTargets(spot, params, now);
+    return `<div class="iv-query-card"><a href="${escape(optionsChainUrl(ticker, quote?.exchange))}" target="_blank" rel="noopener noreferrer">${escape(ticker)} ↗ TradingView 選擇權</a>${targets ? `<p>參考股價 $${spot.toFixed(2)} · ${snapshot ? '匯入快照' : '掃描行情，僅供查詢定位'}${snapshot ? ` · ${escape(snapshot.spotAsOf)}` : ''}<br>ATM $${targets.atm.toFixed(2)} ／ K ${escape(params.kPct)}% $${targets.k.toFixed(2)} ／ KI ${escape(params.kiPct)}% $${targets.ki.toFixed(2)}</p><p>${targets.dates.map(d=>`${d.months} 個月 <b>${d.date}</b>`).join(' · ')}</p>` : '<p>請匯入股價快照或載入股票行情，並填入有效 K／KI／KO，才能換算查詢價位。</p>'}${quote?.exchange ? '' : '<small>未確認交易所：在 TradingView 搜尋此代碼。</small>'}</div>`;
+  }).join('') : '<p class="iv-note">勾選股票或輸入研究代碼後，這裡會列出查詢入口、目標到期日與 ATM／K／KI 履約價。</p>';
+}
+$('ivOpenImport').addEventListener('click', () => {
+  $('ivResearchPanel').open = true;
+  $('ivMode').value = 'market-iv'; updateMode(); invalidate();
+  $('marketControls').scrollIntoView({behavior:'smooth', block:'center'});
+});
 
 function cancel(message = '已停止計算。') {
   generation++;
