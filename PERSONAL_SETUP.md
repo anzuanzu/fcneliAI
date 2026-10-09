@@ -56,10 +56,10 @@ npx wrangler@4 secret put HISTORY_ACCESS_KEY
 第一項填資料帳戶 API key；第二項填自行產生的長且隨機的個人查詢密碼。兩者必須不同，妥善保存在自己的密碼管理器。若首次尚無 Worker，Wrangler 可能提示建立 Worker；核對帳戶與名稱再繼續。然後發布新版程式：
 
 ```bash
-npx wrangler@4 deploy
+npx wrangler@4 deploy --keep-vars
 ```
 
-也可在 Cloudflare 控制台選擇自己的 Worker → Settings → Variables and Secrets，新增兩個 **Secret**，以及確認變數（文字值 `true`），儲存／部署。使用 CLI 時以根目錄設定為準，避免下一次部署覆寫控制台的普通變數。[Cloudflare secret 設定](https://developers.cloudflare.com/workers/configuration/secrets/)。
+也可在 Cloudflare 控制台選擇自己的 Worker → Settings → Variables and Secrets，新增兩個 **Secret**，以及確認變數（文字值 `true`），儲存／部署。從控制台新增普通變數後，CLI 部署使用 `--keep-vars`，保留已保存的用途確認變數；設定檔中同名的變數仍會更新，需先核對。Secrets 不會因一般程式部署而刪除。[Cloudflare secret 設定](https://developers.cloudflare.com/workers/configuration/secrets/)。
 
 沒有資料金鑰時，不填假的 key：保留該 secret 缺項即可。現有股票掃描與手動 IV 匯入不依賴這個金鑰。
 

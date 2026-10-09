@@ -134,10 +134,10 @@ node --test tests/worker-options.test.mjs
 ```bash
 npx wrangler secret put TWELVE_DATA_API_KEY
 npx wrangler secret put HISTORY_ACCESS_KEY
-npx wrangler deploy
+npx wrangler deploy --keep-vars
 ```
 
-核對帳戶個人使用與私人展示範圍後，在 Worker 的 Wrangler `[vars]` 或 Cloudflare 環境變數設定 `HISTORY_DISPLAY_LICENSE_CONFIRMED = "true"`。API key 與私人存取密碼仍須用 secrets，不能放進 `[vars]`。未確認授權時保持接口關閉，仍可查看程式及用 mock 測試。
+核對帳戶個人使用與私人展示範圍後，在 Worker 的 Wrangler `[vars]` 或 Cloudflare 環境變數設定 `HISTORY_DISPLAY_LICENSE_CONFIRMED = "true"`。API key 與私人存取密碼仍須用 secrets，不能放進 `[vars]`。若從控制台設定普通變數，CLI 部署使用 `--keep-vars` 保留它們；設定檔中同名變數仍會更新。未確認授權時保持接口關閉，仍可查看程式及用 mock 測試。
 
 `TWELVE_DATA_API_KEY` 僅保留在 Worker secret，由固定上游 `https://api.twelvedata.com/time_series` 的 `Authorization: apikey ...` header 使用，不進網址、HTML、瀏覽器或 GitHub。`HISTORY_ACCESS_KEY` 是另外自行產生的私人研究密碼；瀏覽器透過 `X-History-Key` header 傳送。若未設定 `HISTORY_ACCESS_KEY`，接口可沿用已設定的 `OPTIONS_ACCESS_KEY`，但 header 仍是 `X-History-Key`。若兩者都有，僅接受 `HISTORY_ACCESS_KEY`。前端存取密碼不得永久儲存；勿將 provider key 輸入網頁。
 
