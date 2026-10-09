@@ -155,6 +155,8 @@ npx wrangler deploy --keep-vars
 
 Provider fetch 使用 `redirect: 'manual'`，收到 3xx 時以 `HISTORY_UPSTREAM_REDIRECT` 或 `OPTIONS_UPSTREAM_REDIRECT` 拒絕，不追蹤 `Location`、不轉送 Authorization。Cloudflare workerd 不支援 Node fetch 可接受的 `redirect: 'error'`，會在送出請求前拋出 TypeError。CI 除 Node 測試外，另在真實 workerd 執行 `npm run test:worker`，使用合成資料及攔截所有外連，驗證取價、快取與重新導向保護。測試執行前安裝 `miniflare@4.20260730.0`；已有模組時也可設定 `MINIFLARE_MODULE_PATH` 為其入口路徑。
 
+日線查詢截止設為當日美東日期，因供應商的 date-only cutoff 會在午夜截止；以昨日日期查詢會漏掉昨日收盤。正規化仍獨立排除當日 candle。快取版本 `twelve-history-splits-v2` 避免繼續讀到舊截止規則的資料。公開 demo 對照：截止 2026-10-08 的最後一筆為 2026-10-07；截止 2026-10-09 的最後一筆為 2026-10-08。
+
 `GET /api/history/status` 回傳 schemaVersion 1、kind `history-configuration` 與設定布林值：`providerConfigured`、`accessConfigured`、`usageConfirmed`、`configurationReady`。`accessVerified` 在未提供 `X-History-Key` 時為 null，提供時表示密碼是否相符。不回傳任何 secret、股票資料或來源錯誤，不查供應商或快取；瀏覽器不快取回應。只接受 GET 與無參數網址，遵守 `ALLOWED_ORIGIN`。
 
 這僅表示設定存在，**不是金鑰有效、授權合格、資料覆蓋或真實連線通過**；`providerConnectionTested` 固定為 false。前端「檢查 Worker 設定」列出缺項，404 提示部署新版，填錯密碼或網址時給出原因。

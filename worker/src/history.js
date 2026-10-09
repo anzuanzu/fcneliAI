@@ -1,7 +1,7 @@
 // Private historical-price research. No options IV or public redistribution.
 // https://support.twelvedata.com/en/articles/5179064-are-the-prices-adjusted
 const PROVIDER_URL = 'https://api.twelvedata.com/time_series';
-const SCHEMA = 'twelve-history-splits-v1';
+const SCHEMA = 'twelve-history-splits-v2';
 const MAX_BARS = 600;
 const MAX_BYTES = 1024 * 1024;
 const CACHE_SECONDS = 21600;
@@ -49,7 +49,9 @@ function marketDate(now) {
 }
 function dateRange(now) {
   const today = marketDate(now);
-  const endDate = new Date(Date.parse(today) - 86400000).toISOString().slice(0, 10);
+  // A date-only provider cutoff is midnight: yesterday would omit yesterday's candle.
+  // Request through today's cutoff; normalization independently excludes any current session.
+  const endDate = today;
   // ACT-day range accommodates leap years and stays within MAX_BARS weekdays.
   const startDate = new Date(Date.parse(today) - 731 * 86400000).toISOString().slice(0, 10);
   return { today, startDate, endDate };

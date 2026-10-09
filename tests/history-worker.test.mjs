@@ -165,6 +165,9 @@ test('fixed provider request uses header credentials and returns ascending split
     assert.equal(url.searchParams.get('outputsize'), '600');
     assert.equal(url.searchParams.get('adjust'), 'splits');
     assert.equal(url.searchParams.get('country'), 'United States');
+    assert.equal(url.searchParams.get('end_date'), new Intl.DateTimeFormat('sv-SE', {
+      timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'
+    }).format(new Date()));
     assert.equal(init.headers.Authorization, 'apikey provider-secret');
     assert.equal(init.redirect, 'manual');
     assert.ok(!url.toString().includes('secret'));
@@ -177,7 +180,7 @@ test('fixed provider request uses header credentials and returns ascending split
     assert.equal(mock.entries.size, 1);
     const cacheKey = [...mock.entries.keys()][0];
     assert.ok(!cacheKey.includes('provider-secret'));
-    assert.ok(cacheKey.includes('schema=twelve-history-splits-v1'));
+    assert.ok(cacheKey.includes('schema=twelve-history-splits-v2'));
     assert.equal(mock.entries.get(cacheKey).headers.get('Cache-Control'), 'public, max-age=21600');
   } finally { mock.restore(); }
 });
