@@ -51,15 +51,33 @@ try {
   await page.waitForFunction(() => !!window.getFcnResearchContext && !!window.fcnIvLabel);
   await page.evaluate(() => { document.getElementById('dailyFocusModal')?.classList.remove('open'); });
   await page.locator('#ivResearchPanel summary').first().click();
-  await page.waitForSelector('#tableBody td[data-label="估計波動率"]');
-  await page.locator('#ivMode').selectOption('market-iv');
-  assert.equal(await page.locator('#tableBody td[data-label="ATM IV"]').count(),4);
+  await page.waitForSelector('#tableBody td[data-label="3 個月 IV"]');
+  assert.equal(await page.locator('#inputK').inputValue(),'70');
+  assert.equal(await page.locator('#inputKI').inputValue(),'60');
+  assert.equal(await page.locator('.table-container thead th').count(),12);
+  assert.doesNotMatch(await page.locator('.table-container thead').innerText(),/估計波動率|板塊\/產業/);
+  await page.locator('#ivOpenImport').click();
+  assert.equal(await page.locator('#ivMode').inputValue(),'market-iv');
+  for (const months of [3,4,5,6]) assert.equal(await page.locator(`#tableBody td[data-label="${months} 個月 IV"]`).count(),4);
+  assert.match(await page.locator('#tableBody').innerText(),/尚未匯入/);
+  assert.equal(await page.locator('#tableBody a.iv-chain-link').first().getAttribute('href'),'https://www.tradingview.com/symbols/NASDAQ-AAPL/options-chain/');
   await page.locator('#ivTickers').fill('AAPL, MSFT');
-  await page.locator('#ivImport').setInputFiles({name:'synthetic-fixture.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify([fixture('AAPL'),fixture('MSFT')]))});
+  await page.locator('#ivImport').setInputFiles({name:'synthetic-fixture.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify([fixture('AAPL'),fixture('MSFT',200)]))});
   await page.waitForFunction(() => document.getElementById('ivStatus').textContent.includes('已匯入 2'));
   assert.equal(await page.locator('#ivSurface tbody tr').count(),8);
   assert.match(await page.locator('#ivSurface').innerText(),/四個價位皆有覆蓋/);
   assert.match(await page.locator('#tableBody').innerText(),/40\.00%/);
+  for (const months of [3,4,5,6]) {
+    const cell = page.locator(`#tableBody td[data-label="${months} 個月 IV"]`).first();
+    assert.match(await cell.innerText(),/K 70%\s+43\.00%/);
+    assert.match(await cell.innerText(),/KI 60%\s+44\.00%/);
+    assert.match(await cell.getAttribute('title') || await cell.locator('.iv-term-cell').getAttribute('title'),/快照/);
+  }
+  assert.match(await page.locator('#ivQueryGuide').innerText(),/K 70% \$70\.00.*KI 60% \$60\.00/);
+  assert.match(await page.locator('#ivQueryGuide').innerText(),/K 70% \$140\.00.*KI 60% \$120\.00/,'query guide uses imported snapshot spot instead of scanner spot');
+  await page.locator('#ivMode').selectOption('historical-estimate');
+  assert.match(await page.locator('#tableBody td[data-label="6 個月 IV"]').first().innerText(),/KI 60%\s+44\.00%/,'mode switch preserves real imported IV in the stock table');
+  await page.locator('#ivMode').selectOption('market-iv');
   await page.locator('#ivPaths').selectOption('5000');
   await page.locator('#ivCompare').click();
   await page.waitForFunction(() => document.getElementById('ivSimulationStatus').textContent.includes('比較完成'),{timeout:30000});
@@ -71,10 +89,12 @@ try {
   if (screenshotDir) {
     await mkdir(screenshotDir,{recursive:true});
     await page.locator('#ivResearchPanel').screenshot({path:screenshotDir+'/iv-desktop.png'});
+    await page.locator('.table-container').screenshot({path:screenshotDir+'/iv-terms-desktop.png'});
     await page.setViewportSize({width:390,height:844});
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth<=innerWidth+1),true,'mobile page should not overflow');
     assert.equal(await page.locator('#ivSurface thead').evaluate(e=>getComputedStyle(e).display),'table-header-group');
     await page.locator('#ivResearchPanel').screenshot({path:screenshotDir+'/iv-mobile.png'});
+    await page.locator('#tableBody tr').first().screenshot({path:screenshotDir+'/iv-terms-mobile.png'});
     await page.locator('#themeToggle').click();
     await page.setViewportSize({width:700,height:1000});
     assert.equal(await page.locator('#ivSurface thead tr').evaluate(e=>getComputedStyle(e).position),'static','tablet table header should remain visible');
@@ -83,6 +103,14 @@ try {
     await page.setViewportSize({width:1440,height:1100});
   }
   await page.locator('#inputK').fill('85');
+  await page.locator('#inputKI').fill('65');
+  for (const months of [3,4,5,6]) {
+    const cell = page.locator(`#tableBody td[data-label="${months} 個月 IV"]`).first();
+    assert.match(await cell.innerText(),/K 85%/);
+    assert.match(await cell.innerText(),/KI 65%\s+43\.50%/);
+    assert.doesNotMatch(await cell.innerText(),/K 70%|KI 60%/);
+  }
+  assert.match(await page.locator('#ivQueryGuide').innerText(),/K 85% \$85\.00.*KI 65% \$65\.00/);
   assert.equal(await page.locator('#ivComparisons tbody tr').count(),0);
   assert.equal(await page.locator('#ivExport').isEnabled(),false);
   await page.locator('#ivLockout').fill('6');
@@ -116,6 +144,7 @@ try {
   await page.locator('#ivTickers').fill('AAPL');
   await page.locator('#ivImport').setInputFiles({name:'missing-ki.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(sparse))});
   await page.waitForFunction(() => document.getElementById('ivStatus').textContent.includes('已匯入 1'));
+  for (const months of [3,4,5,6]) assert.match(await page.locator(`#tableBody td[data-label="${months} 個月 IV"]`).first().innerText(),/KI 65%\s+—\s+缺資料/);
   await page.locator('#ivCompare').click();
   await page.waitForFunction(() => document.getElementById('ivSimulationStatus').textContent.includes('比較完成'));
   assert.match(await page.locator('#ivComparisons').innerText(),/無法估算/);
@@ -171,6 +200,7 @@ try {
   assert.equal(await page.locator('#ivSurface tbody tr').count(),8);
   assert.match(await page.locator('#ivSurface').innerText(),/基準預測波動率/);
   assert.doesNotMatch(await page.locator('#ivSurface').innerText(),/ATM IV|合約 IV/);
+  assert.doesNotMatch(await page.locator('#tableBody').innerText(),/歷史估計|EWMA|基準預測波動率/,'historical mode must not populate market IV columns');
   await page.locator('#ivPaths').selectOption('5000');
   await page.locator('#ivCompare').click();
   await page.waitForFunction(()=>document.getElementById('ivSimulationStatus').textContent.includes('比較完成'),{timeout:30000});
@@ -216,12 +246,17 @@ try {
   assert.match(await page.locator('#ivSurface').innerText(),/尚未取得歷史股價/);
   assert.equal(await page.locator('#historyFetch').isEnabled(),true);
   await page.unroute('**/api/history/status');
+  let finishSetupCheck;
+  const setupCheckGate = new Promise(resolve => { finishSetupCheck = resolve; });
   await page.route('**/api/history/status',async route=>{
-    await new Promise(r=>setTimeout(r,250));
+    await setupCheckGate;
     try {await route.fulfill({json:setup});} catch {}
   });
+  const setupCheckRequest = page.waitForRequest('**/api/history/status');
   await page.locator('#historyCheck').click();
+  await setupCheckRequest;
   await page.locator('#historyClear').click();
+  finishSetupCheck();
   await page.waitForTimeout(350);
   assert.match(await page.locator('#historySetupStatus').innerText(),/已取消/);
   assert.equal(await page.locator('#historyCheck').isEnabled(),true);
