@@ -1,10 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FCN 標的雷達</title>
+    <link rel="stylesheet" href="assets/iv-research.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -2239,9 +2240,101 @@
             <div>
                 <p class="eyebrow">US equity-linked notes</p>
                 <h1>FCN 標的雷達</h1>
-                <p class="subtitle">即時行情、快速篩選與關鍵價位試算</p>
+                <p class="subtitle">股票篩選、選擇權 IV 與商品條件研究</p>
             </div>
         </header>
+                <div class="fcn-bar glass-panel" style="margin-bottom:1rem">
+                    <div class="fcn-bar-title"><strong>FCN 試算</strong><span>已選 <b id="selectedCount">0</b> 檔</span></div>
+                    <div class="fcn-inputs">
+                        <div class="input-group">
+                            <label for="fcnTenor">天期 (Tenor)</label>
+                            <select id="fcnTenor"
+                                style="padding: 0.2rem; border-radius: 0.25rem; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-primary); font-size: 0.85rem;">
+                                <option value="3">3 個月</option>
+                                <option value="4">4 個月</option>
+                                <option value="5">5 個月</option>
+                                <option value="6">6 個月</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="inputKO">KO%</label>
+                            <input type="number" id="inputKO" value="100" style="width: 80px;">
+                        </div>
+                        <div class="input-group">
+                            <label for="inputK">K%</label>
+                            <input type="number" id="inputK" value="80" style="width: 80px;">
+                        </div>
+                        <div class="input-group">
+                            <label for="inputKI">KI%</label>
+                            <input type="number" id="inputKI" value="65" style="width: 80px;">
+                        </div>
+                    </div>
+                    <div class="fcn-actions">
+                        <button class="button" onclick="calculateSelected()">價位試算</button>
+                        <button class="button secondary" id="quoteSystemBtn" onclick="openQuoteSystem()" disabled>🧾 送詢價系統</button>
+                        <button class="button secondary" onclick="clearAllSelections()"
+                            style="padding: 0.4rem 0.75rem; font-size: 0.8rem;" title="取消所有已勾選個股">取消全部勾選</button>
+                        <div class="watchlist-dropdown" id="watchlistDropdown"><button class="button secondary"
+                                onclick="toggleWatchlistDropdown()" id="addToWatchlistBtn" disabled>➕ 加入觀察名單</button>
+                            <div class="watchlist-dropdown-menu" id="watchlistDropdownMenu"></div>
+                        </div>
+                    </div>
+                    <div class="selected-tickers" id="selectedTickers" aria-label="已勾選個股" aria-live="polite">
+                        <span class="selected-tickers-empty">尚未勾選個股</span>
+                    </div>
+                </div>
+
+<details id="ivResearchPanel" class="iv-panel glass-panel">
+  <summary>波動率與商品條件研究 <span>歷史股價估計／市場 IV · 3–6 個月 · 多檔最差表現</span></summary>
+  <div class="iv-content">
+    <p class="iv-note">可自動取得歷史股價，估計波動率並比較商品條件；也可使用選擇權市場 IV。估計波動率沒有經市場校準，不代表 IV。資料只保留於本次頁面，重新整理後須重新取得或匯入。</p>
+    <div class="iv-controls">
+      <label for="ivMode">研究方式<select id="ivMode"><option value="historical-estimate">歷史波動率估計（自動取價）</option><option value="market-iv">選擇權市場 IV</option></select></label>
+      <label class="iv-field" for="ivTickers">研究股票（逗號分隔；空白時使用勾選個股）<input id="ivTickers" type="text" placeholder="例如 AAPL, MSFT, NVDA" autocomplete="off" spellcheck="false"></label>
+    </div>
+    <div class="iv-actions"><button id="ivUseSelection" class="button secondary" type="button">使用勾選個股</button><a href="IV_RESEARCH.md" target="_blank" rel="noopener">資料格式與模型說明</a></div>
+    <div id="historyControls">
+      <p class="iv-note">供個人研究使用。自動取價需自己的 Twelve Data 帳戶金鑰與 Worker，無須券商帳戶。可先從免費帳戶確認美股日收盤資料；帳戶的私人展示權利與股票覆蓋仍需核對。每次最多 6 檔，不會批次抓取全站；金鑰只放在 Worker。</p>
+      <div class="iv-controls"><label class="iv-field" for="historyEndpoint">歷史股價 API 網址<input id="historyEndpoint" type="url" autocomplete="off"></label><label for="historyAccessKey">個人查詢密碼（僅本次頁面）<input id="historyAccessKey" type="password" autocomplete="off"></label></div>
+      <div class="iv-actions"><button id="historyCheck" class="button secondary" type="button">檢查 Worker 設定</button><button id="historyFetch" class="button" type="button">自動取得研究股票的歷史股價</button><button id="historyClear" class="button secondary" type="button">清除歷史股價</button><a href="PERSONAL_SETUP.md" target="_blank" rel="noopener">個人使用設定指引</a></div>
+      <p id="historySetupStatus" class="iv-status" role="status" aria-live="polite">第一次使用：建立資料帳戶 → 設定 Worker 金鑰與個人查詢密碼 → 部署後檢查設定。此檢查不耗行情額度。</p>
+      <p id="historyStatus" class="iv-status" role="status" aria-live="polite">尚未取得歷史股價。設定 Worker 後，輸入股票代碼即可查詢。</p>
+      <p class="iv-note">模型初始參考價採各股票最近完成收盤，K／KO／KI 依此價位比例設定；上方「價位試算」另依掃描行情換算。歷史價格已調整拆股，未保證調整現金股息，至少需 126 筆日報酬。EWMA 與均值回歸參數為固定研究假設；低／基準／高波動為敏感度情境，不是信賴區間，沒有建立 K／KI／KO 的市場偏斜曲面。</p>
+    </div>
+    <div id="marketControls" hidden><div class="iv-actions">
+      <label class="iv-import-label button secondary">匯入 CSV／JSON <input id="ivImport" type="file" accept=".csv,.json,text/csv,application/json" aria-label="匯入選擇權 CSV 或 JSON"></label>
+      <button id="ivTemplate" class="button secondary" type="button">下載 CSV 空白範本</button>
+      <button id="ivClear" class="button secondary" type="button">清除匯入資料</button>
+    </div>
+    <p id="ivStatus" class="iv-status" role="status" aria-live="polite">尚未匯入選擇權資料。沒有有效資料時不會產生 IV 或票息。</p>
+    </div>
+    <div id="ivSurface" class="iv-table-wrap" aria-label="IV 天期與價位比較"></div>
+    <div id="ivDataDetails"></div>
+    <fieldset class="iv-assumptions">
+      <legend>商品支付條款與研究假設</legend>
+      <p class="iv-note">K／KO／KI 使用上方 FCN 欄位。固定票息按存續期間累計，於提前贖回或到期一次支付；每月全部股票達到 KO 才提前贖回。到期若已 KI 且最差股價低於 K，本金依最差股價／K 結算。這是本頁試算的特定條款，需與銀行條款逐項核對。</p>
+      <div class="iv-controls">
+        <label for="ivKiObservation">KI 觀察<select id="ivKiObservation"><option value="daily-close">每日觀察（日步長近似收盤）</option><option value="maturity">僅到期觀察</option></select></label>
+        <label for="ivLockout">首個 KO 觀察月<input id="ivLockout" type="number" min="1" max="6" step="1" value="1"></label>
+        <label id="ivRhoField" for="ivRho">共同相關係數（市場 IV 模式假設）<input id="ivRho" type="number" min="0" max="0.95" step="0.05" value="0.6"></label>
+        <label for="ivRate">年化利率假設 (%)<input id="ivRate" type="number" min="-5" max="25" step="0.1" value="0"></label>
+        <label for="ivDividend">所有股票的年化股息率假設 (%)<input id="ivDividend" type="number" min="0" max="30" step="0.1" value="0"></label>
+        <label for="ivPaths">模擬路徑數<select id="ivPaths"><option value="5000">5,000</option><option value="20000" selected>20,000</option><option value="50000">50,000</option></select></label>
+      </div>
+      <p id="ivModelNote" class="iv-note">歷史估計使用各天期預測波動率與共同日期的歷史相關性；高波動情境另提高相關性。以風險中立模型計算票息，沒有把歷史資料變成市場 IV。利率及股息是你的輸入假設，未含財報跳躍、離散股息與銀行成本。</p>
+      <div class="iv-actions"><button id="ivCompare" class="button" type="button">比較 3–6 個月條件</button><button id="ivCancel" class="button secondary" type="button" hidden>停止計算</button><button id="ivExport" class="button secondary" type="button" disabled>匯出本次研究</button></div>
+    </fieldset>
+    <p id="ivSimulationStatus" class="iv-note" role="status" aria-live="polite">取得各股票有效的歷史股價後，即可比較三種波動情境與 3–6 個月條件。</p>
+    <div id="ivComparisons" class="iv-table-wrap"></div>
+    <p class="iv-note">票息是簡化模型估值，不是銀行可成交報價。KO／KI／本金損失機率屬風險中立模型（Q），不能視為真實發生機率；模擬誤差也不包含資料及模型誤差。模型未含發行人信用、資金利差、費用與銀行避險成本。</p>
+    <details id="marketApiControls" class="iv-data-detail" hidden><summary>日後啟用自動查詢</summary>
+      <p class="iv-note">目前沒有券商帳戶也能使用手動匯入。自動查詢需另行設定 Worker 與資料授權。</p>
+      <div class="iv-controls"><label class="iv-field" for="ivEndpoint">選擇權 API 網址<input id="ivEndpoint" type="url" autocomplete="off"></label><label for="ivAccessKey">個人查詢密碼（僅本次頁面使用）<input id="ivAccessKey" type="password" autocomplete="off"></label></div>
+      <button id="ivFetch" class="button secondary" type="button">查詢研究股票</button>
+    </details>
+  </div>
+</details>
+
         <main id="mainView">
             <details class="ai-search-disclosure">
                 <summary>✨ 用一句話設定篩選條件 <span>選填</span></summary>
@@ -2272,44 +2365,6 @@
                         <button class="button secondary" id="themeToggle" onclick="toggleTheme()">☀️ 一般模式</button>
                         <button class="button secondary" onclick="openSettingsModal()"
                             style="border-color: #a855f7; color: #a855f7;">⚙️ AI 設定</button>
-                    </div>
-                </div>
-                <div class="fcn-bar">
-                    <div class="fcn-bar-title"><strong>FCN 試算</strong><span>已選 <b id="selectedCount">0</b> 檔</span></div>
-                    <div class="fcn-inputs">
-                        <div class="input-group">
-                            <label for="fcnTenor">天期 (Tenor)</label>
-                            <select id="fcnTenor"
-                                style="padding: 0.2rem; border-radius: 0.25rem; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-primary); font-size: 0.85rem;">
-                                <option value="3">3 個月 (3x ATR)</option>
-                                <option value="6">6 個月 (4x ATR)</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label for="inputKO">KO%</label>
-                            <input type="number" id="inputKO" value="100" style="width: 80px;">
-                        </div>
-                        <div class="input-group">
-                            <label for="inputK">K%</label>
-                            <input type="number" id="inputK" value="80" style="width: 80px;">
-                        </div>
-                        <div class="input-group">
-                            <label for="inputKI">KI%</label>
-                            <input type="number" id="inputKI" value="65" style="width: 80px;">
-                        </div>
-                    </div>
-                    <div class="fcn-actions">
-                        <button class="button" onclick="calculateSelected()">開始試算</button>
-                        <button class="button secondary" id="quoteSystemBtn" onclick="openQuoteSystem()" disabled>🧾 送詢價系統</button>
-                        <button class="button secondary" onclick="clearAllSelections()"
-                            style="padding: 0.4rem 0.75rem; font-size: 0.8rem;" title="取消所有已勾選個股">取消全部勾選</button>
-                        <div class="watchlist-dropdown" id="watchlistDropdown"><button class="button secondary"
-                                onclick="toggleWatchlistDropdown()" id="addToWatchlistBtn" disabled>➕ 加入觀察名單</button>
-                            <div class="watchlist-dropdown-menu" id="watchlistDropdownMenu"></div>
-                        </div>
-                    </div>
-                    <div class="selected-tickers" id="selectedTickers" aria-label="已勾選個股" aria-live="polite">
-                        <span class="selected-tickers-empty">尚未勾選個股</span>
                     </div>
                 </div>
                 <div id="filterPanel" class="filter-panel">
@@ -2392,7 +2447,7 @@
                                 type="number" id="perfMonthMax" class="range-input" placeholder="Max %" step="0.1"
                                 oninput="debouncedUpdate()"></div>
                     </div>
-                    <div class="filter-section"><label class="filter-label">周波動率 (Volatility %)</label>
+                    <div class="filter-section"><label class="filter-label">近週平均日振幅 (Volatility %)</label>
                         <div class="range-inputs"><input type="number" id="volMin" class="range-input"
                                 placeholder="Min %" step="0.1" oninput="debouncedUpdate()"><span>-</span><input
                                 type="number" id="volMax" class="range-input" placeholder="Max %" step="0.1"
@@ -2458,8 +2513,9 @@
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-compact" data-key="Perf Week" onclick="handleSort('Perf Week')"><span>績效 <span
                                             class="sort-icon">↕</span></span></th>
-                                <th class="col-compact" data-key="Volatility W" onclick="handleSort('Volatility W')"><span>波動/趨勢 <span
+                                <th class="col-compact" data-key="Volatility W" onclick="handleSort('Volatility W')"><span>日振幅/趨勢 <span
                                             class="sort-icon">↕</span></span></th>
+                                <th class="col-compact"><span><span id="ivColumnLabel">估計波動率</span> <span id="ivColumnTenor">3M</span></span></th>
                                 <th class="col-compact" data-key="Market Cap" onclick="handleSort('Market Cap')"><span>市值 <span
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-sector" data-key="Sector" onclick="handleSort('Sector')"><span>板塊/產業 <span
@@ -2469,7 +2525,7 @@
                         </thead>
                         <tbody id="tableBody">
                             <tr>
-                                <td colspan="9" class="loading">載入中...</td>
+                                <td colspan="10" class="loading">載入中...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -3259,7 +3315,6 @@
                     case 'Debt/Eq': valA = a._debtEq; valB = b._debtEq; break;
                     case 'Beta': valA = a._beta; valB = b._beta; break;
                     case 'ATR': valA = a._atr; valB = b._atr; break;
-                    case 'VaR': valA = a._var; valB = b._var; break;
                     case 'P/FCF': valA = a._fcfYield; valB = b._fcfYield; break;
                     default: valA = (a[key] || '').toString().toLowerCase(); valB = (b[key] || '').toString().toLowerCase();
                 }
@@ -3299,7 +3354,6 @@
                     _debtEq: parseFloat(item["Debt/Eq"]) || null,
                     _pfcf: parseFloat(item["P/FCF"]) || null,
                     _fcfYield: (parseFloat(item["P/FCF"]) ? (100 / parseFloat(item["P/FCF"])) : null),
-                    _var: (() => { const vol = parseFloat(item["Volatility W"]?.replace('%', '')) || 0; const p = parseFloat(item.Price) || 0; const tenorEl = document.getElementById('fcnTenor'); const weeks = tenorEl && parseInt(tenorEl.value) === 6 ? 26 : 13; return vol && p ? p * 2.326 * (vol / 100) * Math.sqrt(weeks) : 0; })(),
                     _sma20: item.SMA20Raw,
                     _sma50: item.SMA50Raw,
                     _sma150: item.SMA150Raw,
@@ -3327,22 +3381,12 @@
             updateDisplay();
         }
 
-        // Recalculate VaR for all items when tenor changes
-        function recalcVarForTenor() {
-            const tenorEl = document.getElementById('fcnTenor');
-            const weeks = tenorEl && parseInt(tenorEl.value) === 6 ? 26 : 13;
-            rawData.forEach(item => {
-                const vol = item._volatility;
-                const p = item._price;
-                item._var = vol && p ? p * 2.326 * (vol / 100) * Math.sqrt(weeks) : 0;
-            });
-            updateDisplay();
-        }
-
-        // Listen for tenor changes to update table VaR
         document.addEventListener('DOMContentLoaded', function () {
             const tenorEl = document.getElementById('fcnTenor');
-            if (tenorEl) tenorEl.addEventListener('change', recalcVarForTenor);
+            if (tenorEl) tenorEl.addEventListener('change', function () {
+                updateDisplay(false);
+                document.dispatchEvent(new Event('fcn-context-change'));
+            });
             bindWatchlistCreateEvents();
         });
 
@@ -3386,6 +3430,7 @@
             updateAddToWatchlistBtn();
             const quoteButton = document.getElementById('quoteSystemBtn');
             if (quoteButton) quoteButton.disabled = selectedStocks.size === 0;
+            document.dispatchEvent(new Event("fcn-context-change"));
         }
 
         function openQuoteSystem() {
@@ -3430,79 +3475,30 @@
                 <div class="stock-focus-grid">
                     <div class="stock-focus-item"><span class="stock-focus-label">市場</span><div class="stock-focus-value">${escapeHtml(indexText)}</div></div>
                     <div class="stock-focus-item"><span class="stock-focus-label">市值</span><div class="stock-focus-value">${escapeHtml(item["Market Cap"] || '-')}</div></div>
-                    <div class="stock-focus-item"><span class="stock-focus-label">波動風險</span><div class="stock-focus-value">Beta ${escapeHtml(beta)}｜ATR ${escapeHtml(atr)}｜週波動 ${escapeHtml(item["Volatility W"] || '-')}</div></div>
+                    <div class="stock-focus-item"><span class="stock-focus-label">波動風險</span><div class="stock-focus-value">Beta ${escapeHtml(beta)}｜ATR ${escapeHtml(atr)}｜近週平均日振幅 ${escapeHtml(item["Volatility W"] || '-')}</div></div>
                     <div class="stock-focus-item"><span class="stock-focus-label">趨勢/績效</span><div class="stock-focus-value">SMA200 ${escapeHtml(item.SMA200 || '-')}｜週 ${escapeHtml(item["Perf Week"] || '-')}｜月 ${escapeHtml(item["Perf Month"] || '-')}</div></div>
                     <div class="stock-focus-item stock-focus-wide"><span class="stock-focus-label">板塊 / 產業</span><div class="stock-focus-value">${escapeHtml(sectorIndustry)}</div></div>
                 </div>
             </div>`;
         }
 
-        // Calculation Logic
+        // Barrier price conversion only; option research is handled separately.
         function calculateSelected() {
-            if (selectedStocks.size === 0) {
-                alert('請至少選擇一檔個股');
-                return;
+            if (selectedStocks.size === 0) { alert('請至少選擇一檔個股'); return; }
+            const params = window.getFcnResearchContext();
+            if (![params.kPct, params.kiPct, params.koPct].every(v => Number.isFinite(v) && v > 0 && v <= 200)) {
+                alert('K、KO、KI 必須是大於 0 且不超過 200 的百分比'); return;
             }
-
-            const koPct = parseFloat(document.getElementById('inputKO').value) || 100;
-            const kPct = parseFloat(document.getElementById('inputK').value) || 80;
-            const kiPct = parseFloat(document.getElementById('inputKI').value) || 65;
-
-            const resultsContainer = document.getElementById('resultsContainer');
-            resultsContainer.innerHTML = '';
-
-            const selectedData = rawData.filter(d => selectedStocks.has(d.Ticker));
-
-            selectedData.forEach(item => {
-                const price = item._price;
-                const koPrice = (price * koPct / 100).toFixed(2);
-                const kPrice = (price * kPct / 100).toFixed(2);
-                const kiPrice = (price * kiPct / 100).toFixed(2);
-
-                // Construct Chart URL
-                const chartUrl = `https://charts2-node.finviz.com/chart.ashx?cs=&t=${item.Ticker}&tf=d&s=linear&pm=240&am=1200&ct=candle_stick&o[0][ot]=sma&o[0][op]=50&o[0][oc]=FF8F33C6&o[1][ot]=sma&o[1][op]=200&o[1][oc]=DCB3326D&o[2][ot]=patterns&o[2][op]=&o[2][oc]=000&sf=2`;
-
-                const isBullish = item._sma200 > 0;
-                const trendClass = isBullish ? 'trend-bullish' : 'trend-bearish';
-                const compactTrendText = isBullish ? '多' : '空';
-                const trendText = isBullish ? '多頭' : '空頭';
-
-                // ATR KI Calculation (Price - ATR * Multiplier)
-                const tenorSelect = document.getElementById('fcnTenor');
-                const selectedTenor = tenorSelect ? parseInt(tenorSelect.value) : 3;
-
-                let atrKIDisplay = '<span style="color: var(--text-secondary); font-size: 0.85em;">(缺乏ATR資料)</span>';
-                if (item._atr) {
-                    const atrMultiplier = selectedTenor === 6 ? 4 : 3;
-                    const calculatedAtrKI = price - (atrMultiplier * item._atr);
-                    const atrKIPct = ((calculatedAtrKI / price) * 100).toFixed(1);
-                    atrKIDisplay = `<span style="color: var(--warning-color); font-weight: 600;">$${calculatedAtrKI.toFixed(2)} (${atrKIPct}%)</span> <span style="font-size: 0.8em; color: var(--text-secondary);">[基於 ${atrMultiplier}x ATR]</span>`;
-                }
-
-                // VaR Calculation (Parametric Method, 99% Confidence)
-                const weeks = selectedTenor === 6 ? 26 : 13;
-                const zScore99 = 2.326; // 99% confidence
-                let varDisplay = '<span style="color: var(--text-secondary); font-size: 0.85em;">(缺乏波動率資料)</span>';
-                let varKIDisplay = '';
-                if (item._volatility) {
-                    const weeklyVol = item._volatility / 100; // Convert % to decimal
-                    const varAmount = price * zScore99 * weeklyVol * Math.sqrt(weeks);
-                    const varPct = (varAmount / price * 100).toFixed(1);
-                    const varKIPrice = price - varAmount;
-                    const varKIPct = (varKIPrice / price * 100).toFixed(1);
-                    varDisplay = `<span style="color: #f59e0b; font-weight: 600;">-$${varAmount.toFixed(2)} (-${varPct}%)</span> <span style="font-size: 0.8em; color: var(--text-secondary);">[99% / ${selectedTenor}個月]</span>`;
-                    varKIDisplay = `<span style="color: #f59e0b; font-weight: 600;">$${varKIPrice.toFixed(2)} (${varKIPct}%)</span>`;
-                }
-
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '';
+            rawData.filter(item => selectedStocks.has(item.Ticker)).forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'result-card glass-panel';
-
-                card.innerHTML = ` <div class="result-header" style="display: flex; justify-content: space-between; align-items: flex-start;"> <div> <div class="result-title" >${item.Ticker} </div> <div class="result-stats" > <div class="result-stat-item" >最新股價: <strong>$${item.Price} </strong></div> <div class="result-stat-item" >趨勢: <span class="trend-badge ${trendClass}" >${trendText} (${item.SMA200})</span></div> <div class="result-stat-item" >周波動率: <strong>${item["Volatility W"]} </strong></div> <div class="result-stat-item" >ATR: <strong>${item.ATR || '-'} </strong></div> <div class="result-stat-item" >Beta: <strong>${item.Beta || '-'} </strong></div> </div> </div> <button class="button ai-insight-btn" onclick="fetchCardAIInsight('${item.Ticker}')" style="margin-left: auto; padding: 0.4rem 0.8rem; font-size: 0.85rem;" id="ai-btn-${item.Ticker}">✨ AI 深度解析</button> </div> <div class="result-body" > <div class="chart-container" > <img src="${chartUrl}" alt="${item.Ticker} Chart" loading="lazy" > </div> <div class="calc-info" > <div class="calc-row" > <span class="calc-label" >KO (${koPct} %)</span> <span class="calc-value" style="color: var(--success-color)" >$${koPrice} </span> </div> <div class="calc-row" > <span class="calc-label" >K (${kPct} %)</span> <span class="calc-value" style="color: var(--accent-color)" >$${kPrice} </span> </div> <div class="calc-row" > <span class="calc-label" >KI (${kiPct} %)</span> <span class="calc-value" style="color: var(--danger-color)" >$${kiPrice} </span> </div> <div class="calc-row" style="background: rgba(168, 85, 247, 0.1); padding: 0.75rem 0.75rem 0 0.75rem; border-radius: 0.5rem 0.5rem 0 0; margin-top: 0.5rem; border-bottom: none;"> <span class="calc-label" style="color: #a855f7; font-weight: 600;">🛡️ 建議避險底線 (ATR KI)</span> <span class="calc-value" >${atrKIDisplay} </span> </div> <div style="background: rgba(168, 85, 247, 0.1); padding: 0 0.75rem 0.75rem 0.75rem; border-radius: 0 0 0.5rem 0.5rem; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; text-align: left;"> <div style="margin-top: 0.25rem; border-top: 1px dashed rgba(168, 85, 247, 0.3); padding-top: 0.5rem; width: 100%;">📝 <strong>說明：</strong>將個股納入近期的真實波動幅度（依據天期選擇 3 倍或 4 倍 ATR）。<strong>您設定的 KI (紅色) 建議要「低於或等於」這個 ATR KI 價格</strong>，才能有效避開日常的股價震盪被輕易敲響。</div> </div> <div class="calc-row" style="background: rgba(245, 158, 11, 0.1); padding: 0.75rem 0.75rem 0 0.75rem; border-radius: 0.5rem 0.5rem 0 0; margin-top: 0.5rem; border-bottom: none;"> <span class="calc-label" style="color: #f59e0b; font-weight: 600;">📊 VaR 最大預估跌幅</span> <span class="calc-value" >${varDisplay} </span> </div> <div class="calc-row" style="background: rgba(245, 158, 11, 0.1); padding: 0 0.75rem 0 0.75rem; border-bottom: none;"> <span class="calc-label" style="color: #f59e0b; font-weight: 600;">📉 VaR 建議 KI 價格</span> <span class="calc-value" >${varKIDisplay || '<span style="color: var(--text-secondary); font-size: 0.85em;">(缺乏資料)</span>'} </span> </div> <div style="background: rgba(245, 158, 11, 0.1); padding: 0 0.75rem 0.75rem 0.75rem; border-radius: 0 0 0.5rem 0.5rem; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; text-align: left;"> <div style="margin-top: 0.25rem; border-top: 1px dashed rgba(245, 158, 11, 0.3); padding-top: 0.5rem; width: 100%;">📝 <strong>說明：</strong>使用參數法 VaR（99% 信心水準），估算在 ${selectedTenor} 個月合約期間內的最大預期跌幅。<strong>VaR KI 是第二道防線</strong>，代表統計上僅有 1% 的機率跌破此價位。建議將 KI 設在 ATR KI 與 VaR KI 兩者中<strong>較低者</strong>的附近，以獲得更穩健的保護。</div> </div> </div> </div> <div id="ai-insight-box-${item.Ticker}" style="display: none; margin-top: 1rem; padding: 1rem; border-radius: 0.5rem; background: rgba(56, 189, 248, 0.05); border: 1px solid rgba(56, 189, 248, 0.2); font-size: 0.9rem; line-height: 1.6; color: var(--text-primary);"></div> `;
-                const resultBody = card.querySelector('.result-body');
-                if (resultBody) resultBody.insertAdjacentHTML('beforeend', renderStockFocus(item));
-                resultsContainer.appendChild(card);
+                const rows = [['KO', params.koPct], ['K', params.kPct], ['KI', params.kiPct]]
+                    .map(([name, pct]) => `<div class="calc-row"><span>${name} (${pct}%)</span><strong>$${(item._price * pct / 100).toFixed(2)}</strong></div>`).join('');
+                card.innerHTML = `<div class="result-header"><div class="result-title">${escapeHtml(item.Ticker)}</div><p>參考股價 $${escapeHtml(item.Price)}</p></div><div class="calc-info">${rows}<p class="iv-note">${params.months} 個月 · 僅換算參考價位。初始定價日股價及實際支付條款仍需確認；ATR 與日振幅不代表 IV 或敲入機率。</p><button class="button secondary" type="button" onclick="document.getElementById('ivResearchPanel').open=true;document.getElementById('ivResearchPanel').scrollIntoView({behavior:'smooth'})">查看 IV 與商品條件研究</button></div>${renderStockFocus(item)}`;
+                container.appendChild(card);
             });
-
             document.getElementById('mainView').style.display = 'none';
             document.getElementById('resultsView').style.display = 'block';
             window.scrollTo(0, 0);
@@ -3516,8 +3512,7 @@
         const COL_HELP_DATA = {
             debtEq: { title: '負債比 (Debt/Equity)', content: '衡量公司負債與股東權益的比率。<br><strong>• < 0.5：</strong>財務穩健，適合 FCN 標的<br><strong>• 0.5~1.0：</strong>適中<br><strong>• > 1.0：</strong>負債較高，需注意下行風險' },
             beta: { title: 'Beta (系統性風險)', content: '衡量個股相對於大盤的波動程度。<br><strong>• < 1.0：</strong>波動低於大盤，較穩定<br><strong>• = 1.0：</strong>與大盤同步<br><strong>• > 1.5：</strong>高波動，可提供較高票息但風險也較大' },
-            atr: { title: 'ATR (平均真實波幅)', content: '衡量股價每日的平均波動幅度（美元）。<br>• 用於計算 <strong>ATR KI 建議價格</strong>：現價 - (3~4 × ATR)<br>• ATR 越大表示日常波動越劇烈，KI 應設得更保守' },
-            var: { title: 'VaR 99% (風險價值)', content: '使用參數法估算在 <strong>99% 信心水準</strong> 下，3 個月內的最大預期跌幅。<br>• 公式：現價 × 2.326 × 周波動率 × √週數<br>• 僅 1% 機率跌超過此金額<br>• 可作為 KI 設定的第二道防線參考' },
+            atr: { title: 'ATR (平均真實波幅)', content: '歷史價格振幅指標，單位為美元。可輔助觀察近期走勢；不等於隱含波動率，亦不能保證 KI 保護或推算敲入機率。' },
             fcf: { title: 'FCF Yield (自由現金流收益率)', content: '衡量公司產生自由現金流的能力（= 100 / P/FCF）。<br><strong>• > 5%：</strong>現金流充沛，較能抵禦下跌壓力<br><strong>• 3~5%：</strong>適中<br><strong>• < 3%：</strong>現金流較弱，需搭配其他指標評估' }
         };
 
@@ -3690,12 +3685,12 @@ ${JSON.stringify(stockData, null, 2)}
         }
 
         function formatNumber(value, digits = 2) {
-            const number = Number(value);
+            const number = value === null || value === undefined || value === '' ? NaN : Number(value);
             return Number.isFinite(number) ? number.toFixed(digits) : '-';
         }
 
         function formatPercent(value) {
-            const number = Number(value);
+            const number = value === null || value === undefined || value === '' ? NaN : Number(value);
             return Number.isFinite(number) ? `${number.toFixed(2)}%` : '-';
         }
 
@@ -3775,7 +3770,7 @@ ${JSON.stringify(stockData, null, 2)}
                 statusEl.innerHTML = '<span style="color: var(--success-color)">TradingView 即時行情已更新</span>';
             } catch (error) {
                 console.error('Error fetching market data:', error);
-                tbody.innerHTML = ` <tr><td colspan="9" class="loading" style="color: var(--danger-color)"><strong>讀取數據失敗</strong><br><span style="font-size: 0.9em; opacity: 0.8">無法取得即時行情。<br>錯誤訊息: ${escapeHtml(error.message)} </span></td></tr>`;
+                tbody.innerHTML = ` <tr><td colspan="10" class="loading" style="color: var(--danger-color)"><strong>讀取數據失敗</strong><br><span style="font-size: 0.9em; opacity: 0.8">無法取得即時行情。<br>錯誤訊息: ${escapeHtml(error.message)} </span></td></tr>`;
                 statusEl.innerHTML = '<span style="color: var(--danger-color)">讀取失敗</span>';
             } finally {
                 clearTimeout(timeoutId);
@@ -3877,7 +3872,7 @@ ${JSON.stringify(stockData, null, 2)}
 
             const focusStocks = getDailyFocusStocks();
             let html = `<div class="daily-focus-summary">
-                <strong>條件</strong>：周波動率大於 3%、SMA200 多頭趨勢、被核心 13F 持有，並排除 0.00% 已出清部位。
+                <strong>條件</strong>：近週平均日振幅大於 3%、SMA200 多頭趨勢、被核心 13F 持有，並排除 0.00% 已出清部位。
                 <br><strong>今日名單</strong>：${focusStocks.length} 檔
             </div>`;
 
@@ -3908,7 +3903,7 @@ ${JSON.stringify(stockData, null, 2)}
                         <div class="daily-focus-price">$${escapeHtml(item.Price || '-')}</div>
                     </div>
                     <div class="daily-focus-meta">
-                        <div>周波動率 <strong>${escapeHtml(item["Volatility W"] || '-')}</strong></div>
+                        <div>近週平均日振幅 <strong>${escapeHtml(item["Volatility W"] || '-')}</strong></div>
                         <div>SMA200 <strong>${escapeHtml(item.SMA200 || '-')}</strong></div>
                         <div>指數 <strong>${escapeHtml(item.Index || '-')}</strong></div>
                         <div>13F 報告日 <strong>${escapeHtml(item["Core 13F Report Date"] || '-')}</strong></div>
@@ -3985,7 +3980,7 @@ ${JSON.stringify(stockData, null, 2)}
             const tbody = document.getElementById('tableBody');
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" class="loading">沒有找到符合的資料</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="10" class="loading">沒有找到符合的資料</td></tr>';
                 return;
             }
 
@@ -4000,7 +3995,8 @@ ${JSON.stringify(stockData, null, 2)}
                     <td data-label="公司名稱"><div class="cell-stack"><strong class="truncate-2">${escapeHtml(item.Company || '-')}</strong><span class="muted-text truncate-2">${escapeHtml(item.Industry || '-')}</span></div></td>
                     <td class="price" data-label="價格">$${escapeHtml(item.Price || '-')}</td>
                     <td data-label="績效"><div class="cell-stack"><div class="cell-line"><span class="cell-label">週</span><span class="perf-number ${item._perfWeek >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Week"] || '-')}</span></div><div class="cell-line"><span class="cell-label">月</span><span class="perf-number ${item._perfMonth >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Month"] || '-')}</span></div></div></td>
-                    <td data-label="波動/趨勢"><div class="cell-stack"><div class="cell-line"><span class="cell-label">波動</span><strong>${escapeHtml(item["Volatility W"] || '-')}</strong></div><span class="trend-text ${isBullish ? 'trend-positive' : 'trend-negative'}">${escapeHtml(item.SMA200 || '-')} (${compactTrendText})</span></div></td>
+                    <td data-label="日振幅/趨勢"><div class="cell-stack"><div class="cell-line"><span class="cell-label">日振幅</span><strong>${escapeHtml(item["Volatility W"] || '-')}</strong></div><span class="trend-text ${isBullish ? 'trend-positive' : 'trend-negative'}">${escapeHtml(item.SMA200 || '-')} (${compactTrendText})</span></div></td>
+                    <td data-label="${escapeHtml(window.fcnVolatilityTitle ? window.fcnVolatilityTitle() : '波動率')}">${escapeHtml(window.fcnIvLabel ? window.fcnIvLabel(item.Ticker) : "未匯入")}</td>
                     <td data-label="市值">${escapeHtml(item["Market Cap"] || '-')}</td>
                     <td data-label="板塊/產業"><div class="cell-stack"><strong>${escapeHtml(item.Sector || '-')}</strong><span class="muted-text truncate-2">${escapeHtml(item.Industry || '-')}</span></div></td>
                     <td data-label="財報與評等"><a href="https://finviz.com/quote.ashx?t=${item.Ticker}&p=d&b=1&ty=ea" target="_blank" rel="noopener" style="color: var(--accent-color); text-decoration: none; font-weight: 600; font-size: 0.85rem;">查看</a></td>
@@ -4050,7 +4046,6 @@ ${JSON.stringify(stockData, null, 2)}
                 'Debt/Eq': 'debtEqMin',
                 Beta: 'betaMin',
                 ATR: 'atrMin',
-                VaR: 'betaMin',
                 'P/FCF': 'fcfYieldMin',
                 Sector: 'sectorList',
                 Industry: 'industryList'
@@ -4186,7 +4181,7 @@ ${JSON.stringify(stockData, null, 2)}
             if (document.getElementById('volMin').value || document.getElementById('volMax').value) {
                 var vMin = document.getElementById('volMin').value || '0';
                 var vMax = document.getElementById('volMax').value || '∞';
-                chips.push(makeChip('波動率: ' + vMin + '%-' + vMax + '%', function () { document.getElementById('volMin').value = ''; document.getElementById('volMax').value = ''; updateDisplay(); }));
+                chips.push(makeChip('日振幅: ' + vMin + '%-' + vMax + '%', function () { document.getElementById('volMin').value = ''; document.getElementById('volMax').value = ''; updateDisplay(); }));
             }
             if (smaFilter !== 'all') {
                 const label = smaFilter === 'bullish' ? '多頭' : '空頭';
@@ -4659,7 +4654,7 @@ ${JSON.stringify(stockData, null, 2)}
             html += '<div class="preset-field"><label>SMA200 趨勢</label><select id="pe_sma"><option value="all"' + (p.sma === 'all' ? ' selected' : '') + '>全部</option><option value="bullish"' + (p.sma === 'bullish' ? ' selected' : '') + '>多頭 (>0%)</option><option value="bearish"' + (p.sma === 'bearish' ? ' selected' : '') + '>空頭 (<0%)</option></select></div>';
             html += '<div class="preset-field"><label>周績效 (%)</label><div class="range-row"><input type="number" id="pe_pwMin" placeholder="Min" step="0.1" value="' + (p.perfWeekMin || '') + '"><span>~</span><input type="number" id="pe_pwMax" placeholder="Max" step="0.1" value="' + (p.perfWeekMax || '') + '"></div></div>';
             html += '<div class="preset-field"><label>月績效 (%)</label><div class="range-row"><input type="number" id="pe_pmMin" placeholder="Min" step="0.1" value="' + (p.perfMonthMin || '') + '"><span>~</span><input type="number" id="pe_pmMax" placeholder="Max" step="0.1" value="' + (p.perfMonthMax || '') + '"></div></div>';
-            html += '<div class="preset-field"><label>周波動率 (%)</label><div class="range-row"><input type="number" id="pe_volMin" placeholder="Min" step="0.1" value="' + (p.volMin || '') + '"><span>~</span><input type="number" id="pe_volMax" placeholder="Max" step="0.1" value="' + (p.volMax || '') + '"></div></div>';
+            html += '<div class="preset-field"><label>近週平均日振幅 (%)</label><div class="range-row"><input type="number" id="pe_volMin" placeholder="Min" step="0.1" value="' + (p.volMin || '') + '"><span>~</span><input type="number" id="pe_volMax" placeholder="Max" step="0.1" value="' + (p.volMax || '') + '"></div></div>';
             html += '<div class="preset-field"><label>市場</label><select id="pe_indexFilter"><option value="all"' + ((p.indexFilter || 'all') === 'all' ? ' selected' : '') + '>全部</option><option value="any"' + (p.indexFilter === 'any' ? ' selected' : '') + '>任一主要指數</option><option value="sp500"' + (p.indexFilter === 'sp500' ? ' selected' : '') + '>S&P 500</option><option value="nasdaq100"' + (p.indexFilter === 'nasdaq100' ? ' selected' : '') + '>NASDAQ 100</option><option value="djia"' + (p.indexFilter === 'djia' ? ' selected' : '') + '>DJIA</option><option value="none"' + (p.indexFilter === 'none' ? ' selected' : '') + '>非主要指數</option></select></div>';
             body.innerHTML = html;
         }
@@ -5138,6 +5133,15 @@ ${JSON.stringify(stockData, null, 2)}
         }
 
         // Initialize
+        window.getFcnResearchContext = () => ({
+            tickers: Array.from(selectedStocks),
+            months: Number(document.getElementById('fcnTenor').value),
+            kPct: Number(document.getElementById('inputK').value),
+            kiPct: Number(document.getElementById('inputKI').value),
+            koPct: Number(document.getElementById('inputKO').value)
+        });
+        window.refreshFcnTable = () => { if (rawData.length) updateDisplay(false); };
+        ['inputK', 'inputKI', 'inputKO'].forEach(id => document.getElementById(id).addEventListener('input', () => document.dispatchEvent(new Event('fcn-context-change'))));
         fetchData();
     </script>
 
@@ -5318,7 +5322,7 @@ ${JSON.stringify(stockData, null, 2)}
                     `大約價格：$${stockData.Price}\n` +
                     `近一週績效：${stockData['Perf Week']}，近一月績效：${stockData['Perf Month']}\n` +
                     `年線SMA200趨勢：${stockData.SMA200}\n` +
-                    `週波動率：${stockData['Volatility W']}\n`;
+                    `近週平均日振幅：${stockData['Volatility W']}\n`;
             }
 
             const prompt = `你是一個專業的美股分析師。請根據以下股票的基本狀態，並「務必使用Google搜尋」查詢該公司最新發布的財報表現、近期基本面展望，以及近期的分析師評等等新聞。請輸出一段結構清晰、專業且易讀的分析報告。內容應包含：\n1. 近期營運與財報亮點\n2. 分析師與市場評價\n3. 作為股權連結商品(FCN)標的的下檔風險評估\n\n請適度使用條列式或粗體來突顯重點（使用 Markdown 格式）。\n\n股票代碼: ${currentTooltipTicker}\n${contextStr}\n請用繁體中文回答，口吻客觀專業。`;
@@ -5435,7 +5439,7 @@ ${JSON.stringify(stockData, null, 2)}
                 "capMin": "", "capMax": "", // 市值區間(單位是十億 B) (數字字串，例如 100B 寫 "100")
                 "perfWeekMin": "", "perfWeekMax": "", // 周績效 (%) (數字字串，例如跌5%以上寫 max:"-5")
                 "perfMonthMin": "", "perfMonthMax": "", // 月績效 (%) (數字字串)
-                "volMin": "", "volMax": "", // 周波動率 (%) (數字字串)
+                "volMin": "", "volMax": "", // 近週平均日振幅 (%) (數字字串)
                 "debtEqMin": "", "debtEqMax": "", // 負債比 (Debt/Eq) (數字字串)
                 "betaMin": "", "betaMax": "", // 貝塔值 (Beta) (數字字串)
                 "atrMin": "", "atrMax": "", // 平均真實波幅 (ATR) (數字字串)
@@ -5593,7 +5597,7 @@ ${JSON.stringify(stockData, null, 2)}
             updateDisplay();
         }
     </script>
+    <script type="module" src="assets/iv-ui.mjs"></script>
 </body>
 
 </html>
-
