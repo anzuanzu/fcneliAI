@@ -12,6 +12,7 @@ const messages = {
   HISTORY_UPSTREAM_FORMAT: '資料來源回傳格式或股票資料不符；需檢查來源回應',
   HISTORY_RESPONSE_TOO_LARGE: '資料來源回應超過大小上限',
   HISTORY_UPSTREAM_TIMEOUT: 'Twelve Data 回應逾時；本次批次已停止',
+  HISTORY_UPSTREAM_REDIRECT: 'Twelve Data 回傳重新導向；為保護 API 金鑰已停止連線',
   HISTORY_UPSTREAM_FAILED: 'Twelve Data 連線或服務失敗；本次批次已停止',
   HISTORY_NOT_CONFIGURED: '請在 Worker 設定 TWELVE_DATA_API_KEY secret',
   HISTORY_ACCESS_NOT_CONFIGURED: '請在 Worker 設定 HISTORY_ACCESS_KEY secret',
