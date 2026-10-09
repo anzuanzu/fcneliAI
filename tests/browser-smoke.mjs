@@ -227,6 +227,49 @@ try {
   assert.equal(await page.locator('#historyCheck').isEnabled(),true);
   await page.locator('#ivCompare').click();
   assert.match(await page.locator('#ivSimulationStatus').innerText(),/所有研究股票的歷史股價/);
+  // Fatal provider credentials stop the batch instead of spending credits for each symbol.
+  await page.unroute('**/api/history?*');
+  let historyCalls = [];
+  await page.locator('#ivTickers').fill('NVDA,AAPL,GOOG,MSFT,AMZN,SPCX');
+  await page.route('**/api/history?*',route=>{
+    historyCalls.push(new URL(route.request().url()).searchParams.get('ticker'));
+    return route.fulfill({status:502,json:{code:'HISTORY_PROVIDER_AUTH',error:'must-never-display-secret'}});
+  });
+  await page.locator('#historyFetch').click();
+  await page.waitForFunction(()=>document.getElementById('historyStatus').textContent.includes('API 金鑰被拒絕'));
+  assert.deepEqual(historyCalls,['NVDA']);
+  assert.match(await page.locator('#historyStatus').innerText(),/未查詢：AAPL、GOOG、MSFT、AMZN、SPCX/);
+  assert.doesNotMatch(await page.locator('#historyStatus').innerText(),/must-never-display-secret/);
+  // A missing symbol is a per-ticker issue, not an undeployed Worker.
+  await page.unroute('**/api/history?*'); historyCalls = [];
+  await page.locator('#ivTickers').fill('SPCX,MSFT');
+  await page.route('**/api/history?*',route=>{
+    const ticker = new URL(route.request().url()).searchParams.get('ticker'); historyCalls.push(ticker);
+    return route.fulfill(ticker==='SPCX' ? {status:404,json:{code:'HISTORY_UNAVAILABLE'}} : {json:historyFixture(ticker)});
+  });
+  await page.locator('#historyFetch').click();
+  await page.waitForFunction(()=>document.getElementById('historyStatus').textContent.includes('已取得 1'));
+  assert.deepEqual(historyCalls,['SPCX','MSFT']);
+  assert.doesNotMatch(await page.locator('#historyStatus').innerText(),/部署新版/);
+  // Stop on quota, commit earlier successes, retain cooldown across clear/condition changes,
+  // leave the metadata check usable and never schedule an automatic provider retry.
+  await page.unroute('**/api/history?*'); historyCalls = [];
+  await page.locator('#ivTickers').fill('AAPL,NVDA,GOOG,MSFT,AMZN,SPCX');
+  await page.route('**/api/history?*',route=>{
+    const ticker = new URL(route.request().url()).searchParams.get('ticker'); historyCalls.push(ticker);
+    return route.fulfill(ticker==='AAPL' ? {json:historyFixture(ticker)}
+      : {status:429,json:{code:'HISTORY_UPSTREAM_RATE_LIMIT',retryAfterSeconds:2}});
+  });
+  await page.locator('#historyFetch').click();
+  await page.waitForFunction(()=>document.getElementById('historyStatus').textContent.includes('HISTORY_UPSTREAM_RATE_LIMIT'));
+  assert.deepEqual(historyCalls,['AAPL','NVDA']);
+  assert.match(await page.locator('#historyStatus').innerText(),/已取得 1.*未查詢：GOOG、MSFT、AMZN、SPCX/);
+  assert.equal(await page.locator('#historyFetch').isEnabled(),false);
+  assert.equal(await page.locator('#historyCheck').isEnabled(),true);
+  await page.locator('#historyClear').click();
+  assert.equal(await page.locator('#historyFetch').isEnabled(),false);
+  await page.waitForFunction(()=>!document.getElementById('historyFetch').disabled);
+  assert.deepEqual(historyCalls,['AAPL','NVDA'],'countdown must not make automatic requests');
   await page.setViewportSize({width:390,height:844});
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth<=innerWidth+1),true,'mobile page should not overflow');
   assert.deepEqual(errors,[]);

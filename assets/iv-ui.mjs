@@ -1,11 +1,21 @@
 import {summarizeSurface, validateSnapshot} from './iv-engine.mjs';
 import {CSV_TEMPLATE, importSnapshots} from './iv-import.mjs';
 import {validateHistory, summarizeHistoricalVolatility} from './historical-volatility.mjs';
+import {historyFailure, historyRetrySeconds} from './history-errors.mjs';
 
 const $ = id => document.getElementById(id);
 const snapshots = new Map(), histories = new Map(), labels = new Map();
 let simulation = null, generation = 0, report = null, fetching = false;
 let fetchEpoch = 0, fetchController = null;
+let historyRetryAt = 0, historyRetryTimer = null;
+const historyFetchLabel = $('historyFetch').textContent;
+function updateHistoryFetch() {
+  clearTimeout(historyRetryTimer);
+  const seconds = Math.max(0, Math.ceil((historyRetryAt - Date.now()) / 1000));
+  $('historyFetch').disabled = fetching || seconds > 0;
+  $('historyFetch').textContent = seconds > 0 ? `請等待 ${seconds} 秒再查詢` : historyFetchLabel;
+  if (seconds > 0) historyRetryTimer = setTimeout(updateHistoryFetch, 1000);
+}
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const percent = value => Number.isFinite(value) ? `${(value * 100).toFixed(2)}%` : '缺資料';
 const qualityText = {good: '資料可用', limited: '資料受限', stale: '資料過期', missing: '缺資料'};
@@ -126,7 +136,7 @@ function stopFetch() {
   fetchEpoch++;
   fetchController?.abort(); fetchController = null;
   fetching = false; $('ivFetch').disabled = false;
-  $('historyFetch').disabled = false;
+  updateHistoryFetch();
   $('historyCheck').disabled = false;
 }
 function invalidate() {
@@ -309,7 +319,7 @@ $('historyCheck').addEventListener('click', async () => {
   } finally { if (requestEpoch === fetchEpoch) stopFetch(); }
 });
 $('historyFetch').addEventListener('click', async () => {
-  if (fetching) return;
+  if (fetching || historyRetryAt > Date.now()) return;
   let requestEpoch; const pending = new Map(), errors = [];
   try {
     const selected = tickers();
@@ -328,16 +338,31 @@ $('historyFetch').addEventListener('click', async () => {
         if (requestEpoch !== fetchEpoch) return;
         let body; try { body = await response.json(); } catch { throw new Error('歷史股價接口尚未部署或未回傳 JSON'); }
         if (!response.ok) {
-          if (body.code === 'HISTORY_LICENSE_NOT_CONFIRMED') throw new Error('尚未確認帳戶個人研究與展示授權，請參照個人使用設定指引');
-          if (response.status === 503 || response.status === 404) throw new Error('請先部署新版 Worker 並設定 Twelve Data 金鑰與個人查詢密碼');
-          if (response.status === 401 || response.status === 403) throw new Error('查詢未授權，請確認個人查詢密碼與資料方案');
-          if (response.status === 429) throw new Error('已達查詢額度，稍後再試；不要重複批次查詢');
-          throw new Error(`股價來源回應失敗 (${response.status})`);
+          const failure = historyFailure(body, response.status);
+          if (failure.rateLimited) {
+            const seconds = historyRetrySeconds(body, response.headers.get('Retry-After'));
+            historyRetryAt = Date.now() + seconds * 1000;
+            failure.message += `；至少等待 ${seconds} 秒（不會自動重試）`;
+            updateHistoryFetch();
+          }
+          errors.push(`${ticker}：${failure.message}`);
+          if (failure.stopBatch) {
+            const remaining = selected.slice(selected.indexOf(ticker) + 1);
+            if (remaining.length) errors.push(`本次批次已停止；未查詢：${remaining.join('、')}`);
+            break;
+          }
+          continue;
         }
         const history = validateHistory(body);
         if (history.ticker.replaceAll('.', '/') !== ticker.replaceAll('.', '/')) throw new Error('回傳股票代碼不符');
         pending.set(ticker,{...history,ticker});
-      } catch(error) { if (requestEpoch !== fetchEpoch) return; errors.push(`${ticker}：${error.message}`); }
+      } catch(error) {
+        if (requestEpoch !== fetchEpoch) return;
+        errors.push(`${ticker}：${error.message}`);
+        const remaining = selected.slice(selected.indexOf(ticker) + 1);
+        if (remaining.length) errors.push(`本次批次已停止；未查詢：${remaining.join('、')}`);
+        break;
+      }
     }
     if (requestEpoch !== fetchEpoch) return;
     for (const [ticker,history] of pending) histories.set(ticker,history);

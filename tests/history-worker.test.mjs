@@ -215,6 +215,11 @@ test('normalization excludes current-session candles and rejects corrupt, future
 test('provider HTTP and JSON errors remain sanitized and uncached', async () => {
   for (const [providerResponse, expectedStatus, code] of [
     [() => json({ message: 'provider-secret' }, 401), 502, 'HISTORY_PROVIDER_AUTH'],
+    [() => json({ message: 'plan denied provider-secret' }, 403), 502, 'HISTORY_PROVIDER_PERMISSION'],
+    [() => json({ status: 'error', code: 403, message: 'provider-secret' }), 502, 'HISTORY_PROVIDER_PERMISSION'],
+    [() => json({ status: 'error', code: 400, message: 'invalid symbol provider-secret' }), 404, 'HISTORY_UNAVAILABLE'],
+    [() => json({ message: 'invalid interval provider-secret' }, 400), 502, 'HISTORY_PROVIDER_REQUEST'],
+    [() => new Response('private provider-secret error page', {status:503}), 502, 'HISTORY_UPSTREAM_FAILED'],
     [() => json({ status: 'error', code: 429, message: 'provider-secret' }), 429, 'HISTORY_UPSTREAM_RATE_LIMIT'],
     [() => json({ status: 'error', code: 404, message: 'provider-secret' }), 404, 'HISTORY_UNAVAILABLE'],
     [() => new Response('{broken'), 502, 'HISTORY_UPSTREAM_FORMAT'],
@@ -255,19 +260,56 @@ test('same-ticker requests coalesce and limit new concurrent ticker refreshes', 
 });
 
 test('seven isolate-local starts per minute stop additional provider calls', async () => {
-  const handle = await freshHandler(), mock = mocks(() => json({ status: 'error', code: 429 }));
+  const handle = await freshHandler(), mock = mocks(() => json({ status: 'error', code: 500 }));
   try {
     for (let index = 0; index < 7; index++) {
       const result = await handle(request(`STOCK${index}`), env, mock.ctx, {});
-      assert.equal(result.status, 429);
-      assert.equal((await result.json()).code, 'HISTORY_UPSTREAM_RATE_LIMIT');
+      assert.equal(result.status, 502);
+      assert.equal((await result.json()).code, 'HISTORY_UPSTREAM_FAILED');
     }
     const blocked = await handle(request('STOCK7'), env, mock.ctx, {});
     assert.equal(blocked.status, 429);
     assert.equal(blocked.headers.get('Retry-After'), '60');
-    assert.equal((await blocked.json()).code, 'HISTORY_BUSY');
+    assert.equal((await blocked.json()).code, 'HISTORY_LOCAL_RATE_LIMIT');
     assert.equal(mock.calls.length, 7);
   } finally { mock.restore(); }
+});
+
+test('provider limits pause new symbols, keep cache usable and expire without leaking provider messages', async () => {
+  const savedNow = Date.now;
+  let now = Date.parse('2026-10-09T16:30:00Z');
+  Date.now = () => now;
+  try {
+    for (const daily of [false, true]) {
+      const handle = await freshHandler();
+      let limited = false;
+      const mock = mocks(url => limited
+        ? json({status:'error',code:429,message:`${daily ? 'You have run out of API credits for the day.' : 'minute quota exhausted'} provider-secret`},429)
+        : json(fixture(url.searchParams.get('symbol'))));
+      try {
+        assert.equal((await handle(request('AAPL'),env,mock.ctx,{})).status,200);
+        await mock.flush(); limited = true;
+        const rejected = await handle(request('NVDA'),env,mock.ctx,{});
+        const expectedCode = daily ? 'HISTORY_UPSTREAM_DAILY_LIMIT' : 'HISTORY_UPSTREAM_RATE_LIMIT';
+        const body = await rejected.json();
+        assert.equal(body.code,expectedCode);
+        assert.ok(!JSON.stringify(body).includes('provider-secret'));
+        const wait = Number(rejected.headers.get('Retry-After'));
+        assert.equal(wait,daily ? 27000 : 60);
+        assert.equal(body.retryAfterSeconds,wait);
+        assert.equal((await (await handle(request('MSFT'),env,mock.ctx,{})).json()).code,expectedCode);
+        assert.equal((await handle(request('AAPL'),env,mock.ctx,{})).status,200);
+        assert.equal(mock.calls.length,2,'cache hits and cooldown must not spend credits');
+        // A new provider key has its own cooldown and cache scope.
+        limited = false;
+        assert.equal((await handle(request('GOOG'),{...env,TWELVE_DATA_API_KEY:'new-secret'},mock.ctx,{})).status,200);
+        now += wait * 1000;
+        assert.equal((await handle(request('MSFT'),env,mock.ctx,{})).status,200);
+        assert.equal(mock.calls.length,4);
+      } finally { mock.restore(); }
+      now = Date.parse('2026-10-09T16:30:00Z');
+    }
+  } finally { Date.now = savedNow; }
 });
 
 test('upstream timeout aborts, fails explicitly and does not cache', async () => {
