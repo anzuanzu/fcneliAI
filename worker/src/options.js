@@ -117,8 +117,10 @@ async function providerGet(path, params, token, deadline) {
     const upstream = await fetch(url.toString(), {
       headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
       signal: controller.signal,
-      redirect: 'error'
+      redirect: 'manual'
     });
+    if (upstream.status >= 300 && upstream.status < 400)
+      throw new ProviderError('OPTIONS_UPSTREAM_REDIRECT');
     if (!upstream.ok) {
       // Never forward provider error bodies (they can contain credentials/details).
       throw new ProviderError(upstream.status === 429 ? 'OPTIONS_UPSTREAM_RATE_LIMIT' :

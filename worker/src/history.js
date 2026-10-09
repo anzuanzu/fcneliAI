@@ -146,8 +146,12 @@ async function loadHistory(ticker, token, now) {
   try {
     const upstream = await fetch(url.toString(), {
       headers: { Accept: 'application/json', Authorization: `apikey ${token}` },
-      signal: controller.signal, redirect: 'error'
+      // Workers rejects redirect: 'error' before sending the request.
+      // Return redirects untouched and refuse them, so Authorization never follows Location.
+      signal: controller.signal, redirect: 'manual'
     });
+    if (upstream.status >= 300 && upstream.status < 400)
+      throw new HistoryError('HISTORY_UPSTREAM_REDIRECT');
     // Do not forward provider error text or URLs; credentials remain server-side.
     if (!upstream.ok) {
       let errorData;

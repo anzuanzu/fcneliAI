@@ -108,7 +108,7 @@ test('normalizes actual decimal IV, preserves ambiguous provider timestamp, and 
     for (const call of mock.calls) {
       assert.equal(call.url.hostname, 'api.tradier.com');
       assert.equal(call.init.headers.Authorization, 'Bearer broker-secret');
-      assert.equal(call.init.redirect, 'error');
+      assert.equal(call.init.redirect, 'manual');
       assert.ok(!call.url.toString().includes('broker-secret'));
     }
     assert.equal(mock.calls.find(call => call.url.pathname.endsWith('/chains')).url.searchParams.get('greeks'), 'true');
@@ -132,6 +132,20 @@ test('provider authentication errors are sanitized and not cached', async () => 
     assert.ok(body.includes('OPTIONS_PROVIDER_AUTH'));
     assert.ok(!body.includes('broker-secret'));
     assert.equal(mock.entries.size, 0);
+  } finally { mock.restore(); }
+});
+
+test('option provider redirects are refused without contacting the Location host', async () => {
+  const { handleOptions } = await import('../worker/src/options.js?redirect-test');
+  const mock = installMocks(() => new Response(null,{status:307,headers:{Location:'https://other.example/?key=broker-secret'}}));
+  try {
+    const result = await handleOptions(request(),env,mock.ctx,{});
+    assert.equal(result.status,502);
+    const body = await result.text();
+    assert.ok(body.includes('OPTIONS_UPSTREAM_REDIRECT'));
+    assert.ok(!body.includes('broker-secret'));
+    assert.ok(mock.calls.every(call=>call.url.origin==='https://api.tradier.com' && call.init.redirect==='manual'));
+    assert.equal(mock.entries.size,0);
   } finally { mock.restore(); }
 });
 

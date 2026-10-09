@@ -166,7 +166,7 @@ test('fixed provider request uses header credentials and returns ascending split
     assert.equal(url.searchParams.get('adjust'), 'splits');
     assert.equal(url.searchParams.get('country'), 'United States');
     assert.equal(init.headers.Authorization, 'apikey provider-secret');
-    assert.equal(init.redirect, 'error');
+    assert.equal(init.redirect, 'manual');
     assert.ok(!url.toString().includes('secret'));
     assert.ok(!url.searchParams.has('apikey'));
     await mock.flush();
@@ -220,6 +220,7 @@ test('provider HTTP and JSON errors remain sanitized and uncached', async () => 
     [() => json({ status: 'error', code: 400, message: 'invalid symbol provider-secret' }), 404, 'HISTORY_UNAVAILABLE'],
     [() => json({ message: 'invalid interval provider-secret' }, 400), 502, 'HISTORY_PROVIDER_REQUEST'],
     [() => new Response('private provider-secret error page', {status:503}), 502, 'HISTORY_UPSTREAM_FAILED'],
+    [() => new Response(null,{status:302,headers:{Location:'https://other.example/?key=provider-secret'}}),502,'HISTORY_UPSTREAM_REDIRECT'],
     [() => json({ status: 'error', code: 429, message: 'provider-secret' }), 429, 'HISTORY_UPSTREAM_RATE_LIMIT'],
     [() => json({ status: 'error', code: 404, message: 'provider-secret' }), 404, 'HISTORY_UNAVAILABLE'],
     [() => new Response('{broken'), 502, 'HISTORY_UPSTREAM_FORMAT'],
