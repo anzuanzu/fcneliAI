@@ -4,6 +4,7 @@ on:
     branches: [feat/scheduled-iv30-refresh]
     paths:
       - .github/workflows/iv30-source-probe.yml
+      - scripts/market-chameleon-iv30.mjs
 permissions:
   contents: read
 jobs:
