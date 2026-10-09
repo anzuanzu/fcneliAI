@@ -51,37 +51,34 @@ try {
   await page.waitForFunction(() => !!window.getFcnResearchContext && !!window.fcnIvLabel);
   await page.evaluate(() => { document.getElementById('dailyFocusModal')?.classList.remove('open'); });
   await page.locator('#ivResearchPanel summary').first().click();
-  await page.waitForSelector('#tableBody td[data-label="3 個月歷史估計"]');
-  assert.match(await page.locator('.table-container thead').innerText(),/歷史估計/);
-  assert.match(await page.locator('#tableBody').innerText(),/尚未取得歷史股價/);
-  await page.locator('#historyQuickFetch').click();
-  assert.match(await page.locator('#historySetupStatus').innerText(),/既有的 Worker 個人查詢密碼/);
-  await page.locator('#ivMode').selectOption('market-iv');
+  await page.waitForSelector('#tableBody td[data-label="Current IV30"]');
   assert.equal(await page.locator('#inputK').inputValue(),'70');
   assert.equal(await page.locator('#inputKI').inputValue(),'60');
-  assert.equal(await page.locator('.table-container thead th').count(),12);
+  assert.equal(await page.locator('.table-container thead th').count(),9);
   assert.doesNotMatch(await page.locator('.table-container thead').innerText(),/估計波動率|板塊\/產業/);
   await page.locator('#ivOpenImport').click();
   assert.equal(await page.locator('#ivMode').inputValue(),'market-iv');
-  for (const months of [3,4,5,6]) assert.equal(await page.locator(`#tableBody td[data-label="${months} 個月 IV"]`).count(),4);
-  assert.match(await page.locator('#tableBody').innerText(),/尚未匯入/);
-  assert.equal(await page.locator('#tableBody a.iv-chain-link').first().getAttribute('href'),'https://www.tradingview.com/symbols/NASDAQ-AAPL/options-chain/');
+  assert.equal(await page.locator('#tableBody td[data-label="Current IV30"]').count(),4);
+  assert.doesNotMatch(await page.locator('.table-container thead').innerText(),/[3-6] 個月 IV/);
+  const iv30Cell = page.locator('#tableBody td[data-label="Current IV30"]').first();
+  const sourceLookup = page.locator('#tableBody a[aria-label="AAPL Market Chameleon IV30 查詢"]');
+  assert.match(await iv30Cell.innerText(),/—\s+尚未接入/);
+  assert.equal(await sourceLookup.getAttribute('href'),'https://marketchameleon.com/Overview/AAPL/IV/');
+  assert.equal(await sourceLookup.getAttribute('target'),'_blank');
+  assert.equal(await page.locator('#tableBody a[aria-label="BRK.B Market Chameleon IV30 查詢"]').getAttribute('href'),'https://marketchameleon.com/volReports/VolatilityRankings');
+  assert.match(await page.locator('.iv-table-toolbar').innerText(),/尚未接入.*不是 IV30 % Rank/);
+  assert.equal(await page.locator('#tableBody td[data-label="查詢連結"] a.iv-chain-link').first().getAttribute('href'),'https://www.tradingview.com/symbols/NASDAQ-AAPL/options-chain/');
   await page.locator('#ivTickers').fill('AAPL, MSFT');
   await page.locator('#ivImport').setInputFiles({name:'synthetic-fixture.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify([fixture('AAPL'),fixture('MSFT',200)]))});
   await page.waitForFunction(() => document.getElementById('ivStatus').textContent.includes('已匯入 2'));
   assert.equal(await page.locator('#ivSurface tbody tr').count(),8);
   assert.match(await page.locator('#ivSurface').innerText(),/四個價位皆有覆蓋/);
-  assert.match(await page.locator('#tableBody').innerText(),/40\.00%/);
-  for (const months of [3,4,5,6]) {
-    const cell = page.locator(`#tableBody td[data-label="${months} 個月 IV"]`).first();
-    assert.match(await cell.innerText(),/K 70%\s+43\.00%/);
-    assert.match(await cell.innerText(),/KI 60%\s+44\.00%/);
-    assert.match(await cell.getAttribute('title') || await cell.locator('.iv-term-cell').getAttribute('title'),/快照/);
-  }
+  assert.match(await iv30Cell.innerText(),/尚未接入/,'option imports do not fabricate Market Chameleon IV30');
+  assert.doesNotMatch(await iv30Cell.innerText(),/40\.00%|43\.00%|44\.00%/);
   assert.match(await page.locator('#ivQueryGuide').innerText(),/K 70% \$70\.00.*KI 60% \$60\.00/);
   assert.match(await page.locator('#ivQueryGuide').innerText(),/K 70% \$140\.00.*KI 60% \$120\.00/,'query guide uses imported snapshot spot instead of scanner spot');
   await page.locator('#ivMode').selectOption('historical-estimate');
-  assert.match(await page.locator('#tableBody td[data-label="6 個月歷史估計"]').first().innerText(),/尚未取得歷史股價/,'historical mode cannot display an imported IV as historical data');
+  assert.match(await iv30Cell.innerText(),/尚未接入/,'mode switch leaves the source-only IV30 column unchanged');
   await page.locator('#ivMode').selectOption('market-iv');
   await page.locator('#ivPaths').selectOption('5000');
   await page.locator('#ivCompare').click();
@@ -109,12 +106,9 @@ try {
   }
   await page.locator('#inputK').fill('85');
   await page.locator('#inputKI').fill('65');
-  for (const months of [3,4,5,6]) {
-    const cell = page.locator(`#tableBody td[data-label="${months} 個月 IV"]`).first();
-    assert.match(await cell.innerText(),/K 85%/);
-    assert.match(await cell.innerText(),/KI 65%\s+43\.50%/);
-    assert.doesNotMatch(await cell.innerText(),/K 70%|KI 60%/);
-  }
+  assert.match(await page.locator('#ivSurface thead').innerText(),/K 85%.*KI 65%/);
+  assert.match(await page.locator('#ivSurface tbody tr').first().innerText(),/43\.50%/);
+  assert.match(await iv30Cell.innerText(),/尚未接入/,'barrier edits do not change source-only IV30');
   assert.match(await page.locator('#ivQueryGuide').innerText(),/K 85% \$85\.00.*KI 65% \$65\.00/);
   assert.equal(await page.locator('#ivComparisons tbody tr').count(),0);
   assert.equal(await page.locator('#ivExport').isEnabled(),false);
@@ -149,7 +143,8 @@ try {
   await page.locator('#ivTickers').fill('AAPL');
   await page.locator('#ivImport').setInputFiles({name:'missing-ki.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(sparse))});
   await page.waitForFunction(() => document.getElementById('ivStatus').textContent.includes('已匯入 1'));
-  for (const months of [3,4,5,6]) assert.match(await page.locator(`#tableBody td[data-label="${months} 個月 IV"]`).first().innerText(),/KI 65%\s+—\s+缺資料/);
+  assert.match(await page.locator('#ivSurface tbody tr').first().innerText(),/缺資料/);
+  assert.match(await iv30Cell.innerText(),/尚未接入/);
   await page.locator('#ivCompare').click();
   await page.waitForFunction(() => document.getElementById('ivSimulationStatus').textContent.includes('比較完成'));
   assert.match(await page.locator('#ivComparisons').innerText(),/無法估算/);
@@ -159,7 +154,6 @@ try {
   await page.reload();
   await page.waitForFunction(() => !!window.fcnIvLabel);
   await page.locator('#ivResearchPanel summary').first().click();
-  await page.locator('#ivMode').selectOption('market-iv');
   await page.locator('#ivImport').setInputFiles({name:'standalone.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(fixture('AAPL')))});
   await page.waitForFunction(() => document.getElementById('ivStatus').textContent.includes('已匯入 1'));
   assert.equal(await page.locator('#ivSurface tbody tr').count(),4);
@@ -201,27 +195,12 @@ try {
     const ticker = new URL(route.request().url()).searchParams.get('ticker');
     return route.fulfill({json:historyFixture(ticker,ticker==='MSFT' ? .9 : 0)});
   });
-  await page.unroute('**/api/scan*');
-  await page.evaluate(()=>fetchData());
-  await page.locator('#historyQuickFetch').click();
+  await page.locator('#historyFetch').click();
   await page.waitForFunction(()=>document.getElementById('historyStatus').textContent.includes('已取得 2'));
   assert.equal(await page.locator('#ivSurface tbody tr').count(),8);
   assert.match(await page.locator('#ivSurface').innerText(),/基準預測波動率/);
   assert.doesNotMatch(await page.locator('#ivSurface').innerText(),/ATM IV|合約 IV/);
-  for (const months of [3,4,5,6]) {
-    const cell = page.locator(`#tableBody td[data-label="${months} 個月歷史估計"]`).first();
-    assert.match(await cell.innerText(),/歷史估計 · 可用/);
-    assert.match(await cell.innerText(),/K 70%|K 85%/);
-    assert.doesNotMatch(await cell.innerText(),/ATM|合約|插值|尚未匯入/);
-  }
-  const historyCellBefore = await page.locator('.iv-history-value').first().innerText();
-  await page.locator('#inputK').fill('70'); await page.locator('#inputKI').fill('60');
-  assert.equal(await page.locator('.iv-history-value').first().innerText(),historyCellBefore,'barrier changes do not manufacture a historical smile');
-  assert.match(await page.locator('#tableBody').innerText(),/K 70%/);
-  assert.match(await page.locator('#tableBody').innerText(),/KI 60%/);
-  await page.locator('#ivMode').selectOption('market-iv');
-  assert.match(await page.locator('#tableBody td[data-label="3 個月 IV"]').first().innerText(),/40\.00%/,'real option snapshot retained separately');
-  await page.locator('#ivMode').selectOption('historical-estimate');
+  assert.doesNotMatch(await page.locator('#tableBody').innerText(),/歷史估計|EWMA|基準預測波動率/,'historical mode must not populate Current IV30');
   await page.locator('#ivPaths').selectOption('5000');
   await page.locator('#ivCompare').click();
   await page.waitForFunction(()=>document.getElementById('ivSimulationStatus').textContent.includes('比較完成'),{timeout:30000});
@@ -237,14 +216,16 @@ try {
   assert.equal(exported.results.length,12);
   assert.equal(JSON.stringify(exported).includes('synthetic-history-private-key'),false);
   assert.equal(await page.evaluate(()=>JSON.stringify(localStorage).includes('synthetic-history-private-key')),false);
+  await page.unroute('**/api/scan*');
+  await page.evaluate(() => fetchData());
+  await page.waitForSelector('#tableBody td[data-label="Current IV30"]');
+  assert.match(await iv30Cell.innerText(),/尚未接入/,'historical fetch does not fabricate IV30');
   if (screenshotDir) {
     await page.setViewportSize({width:1440,height:1100});
     await page.locator('#ivResearchPanel').screenshot({path:screenshotDir+'/history-desktop.png'});
-    await page.locator('.table-container').screenshot({path:screenshotDir+'/history-terms-desktop.png'});
     await page.setViewportSize({width:390,height:844});
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
     await page.locator('#ivResearchPanel').screenshot({path:screenshotDir+'/history-mobile.png'});
-    await page.locator('#tableBody tr').first().screenshot({path:screenshotDir+'/history-terms-mobile.png'});
   }
   await page.locator('#inputKO').fill('105');
   assert.equal(await page.locator('#ivComparisons tbody tr').count(),0);
@@ -323,7 +304,6 @@ try {
   assert.deepEqual(historyCalls,['AAPL','NVDA']);
   assert.match(await page.locator('#historyStatus').innerText(),/已取得 1.*未查詢：GOOG、MSFT、AMZN、SPCX/);
   assert.equal(await page.locator('#historyFetch').isEnabled(),false);
-  assert.equal(await page.locator('#historyQuickFetch').isEnabled(),false);
   assert.equal(await page.locator('#historyCheck').isEnabled(),true);
   await page.locator('#historyClear').click();
   assert.equal(await page.locator('#historyFetch').isEnabled(),false);
@@ -331,18 +311,20 @@ try {
   assert.deepEqual(historyCalls,['AAPL','NVDA'],'countdown must not make automatic requests');
   await page.setViewportSize({width:390,height:844});
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth<=innerWidth+1),true,'mobile page should not overflow');
-  assert.deepEqual(errors,[]);
+  // Source lookup remains available when the optional research module fails.
   const failedPage = await browser.newPage();
-  await failedPage.route('**/*',route=>{
+  await failedPage.route('**/*', route => {
     const url = new URL(route.request().url());
-    if (url.pathname.includes('iv-ui.mjs')) return route.abort();
-    if (url.pathname==='/api/scan') return route.fulfill({json:scan});
-    return url.origin===base ? route.continue() : route.abort();
+    if (url.pathname === '/api/scan') return route.fulfill({json:scan});
+    if (url.pathname.endsWith('/iv-ui.mjs') || url.origin !== base) return route.abort();
+    return route.continue();
   });
   await failedPage.goto(base);
-  await failedPage.waitForFunction(()=>document.querySelector('#tableBody').textContent.includes('波動率模組載入失敗'));
-  assert.equal(await failedPage.locator('#historyQuickFetch').isEnabled(),false);
-  assert.doesNotMatch(await failedPage.locator('#tableBody').innerText(),/載入波動率模組…/,'failed module must not look like an indefinite load');
+  await failedPage.waitForSelector('#tableBody td[data-label="Current IV30"]');
+  await failedPage.waitForFunction(()=>document.getElementById('ivOpenImport').disabled);
+  assert.match(await failedPage.locator('#tableBody td[data-label="Current IV30"]').first().innerText(),/尚未接入/);
+  assert.equal(await failedPage.locator('#tableBody a[aria-label="AAPL Market Chameleon IV30 查詢"]').getAttribute('href'),'https://marketchameleon.com/Overview/AAPL/IV/');
   await failedPage.close();
+  assert.deepEqual(errors,[]);
   console.log('Browser smoke passed: IV regression; Worker setup checks, missing settings/password/old deployment/unsafe URL/cancellation; historical fetch, 12 scenario comparisons, source/labels, export/key privacy, unavailable license, mismatched ticker, missing history, scan outage, mobile.');
 } finally { if (browser) await browser.close(); await new Promise(resolve => server.close(resolve)); }
