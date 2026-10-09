@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FCN 標的雷達</title>
-    <link rel="stylesheet" href="assets/iv-research.css?v=iv30-lookup-v1">
+    <link rel="stylesheet" href="assets/iv-research.css?v=iv30-snapshot-v1">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -2509,8 +2509,10 @@
                 <div class="iv-table-toolbar">
                     <p><strong>Current IV30</strong> · Market Chameleon</p>
                     <a class="button secondary" href="https://marketchameleon.com/volReports/VolatilityRankings" target="_blank" rel="noopener noreferrer">開啟 IV30 排行榜 ↗</a>
+                    <button id="iv30Reload" type="button" class="button secondary">重新讀取 IV30</button>
                     <button id="ivOpenImport" type="button" class="button secondary">商品研究／IV 查詢指引</button>
-                    <p class="iv-note">尚未接入 Market Chameleon 資料供應；每檔可開啟來源查詢。Current IV30 是 30 天隱含波動率的年化值，不是 IV30 % Rank，也不是 3–6 個月 IV。來源行情延遲 15 分鐘，排行榜僅涵蓋符合成交量門檻的標的。</p>
+                    <p id="iv30Status" class="iv-note" aria-live="polite">載入 IV30 快照…</p>
+                    <p class="iv-note">Current IV30 是 30 天隱含波動率的年化值，不是 IV30 % Rank，也不是 3–6 個月 IV。數值依股票代碼比對來源快照，未覆蓋時顯示缺資料。來源行情延遲 15 分鐘；取得時間不是報價更新時間。「重新讀取」載入已發布快照，不會即時爬取原站。</p>
                 </div>
                 <div class="table-container">
                     <table>
@@ -2527,7 +2529,7 @@
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-compact" data-key="Volatility W" onclick="handleSort('Volatility W')"><span>日振幅/趨勢 <span
                                             class="sort-icon">↕</span></span></th>
-                                <th class="col-iv30" title="Market Chameleon 30 天隱含波動率，年化百分比；尚未接入數值資料"><span>Current IV30</span><small>Market Chameleon</small></th>
+                                <th class="col-iv30" data-key="Current IV30" onclick="handleSort('Current IV30')" title="30 天隱含波動率，年化百分比；點擊依快照數值排序"><span>Current IV30 <span class="sort-icon">↕</span></span><small>Market Chameleon</small></th>
                                 <th class="col-compact" data-key="Market Cap" onclick="handleSort('Market Cap')"><span>市值 <span
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-action"><span>連結</span></th>
@@ -3315,6 +3317,7 @@
             processedData.sort((a, b) => {
                 let valA, valB;
                 const { key, direction } = currentSort;
+                if (key === 'Current IV30') return window.fcnCompareIv30 ? window.fcnCompareIv30(window.fcnCurrentIv30Value(a.Ticker),window.fcnCurrentIv30Value(b.Ticker),direction) : 0;
                 switch (key) {
                     case 'Price': valA = a._price; valB = b._price; break;
                     case 'SMA200': valA = a._sma200; valB = b._sma200; break;
@@ -4014,7 +4017,7 @@ ${JSON.stringify(stockData, null, 2)}
                     <td class="price" data-label="價格">$${escapeHtml(item.Price || '-')}</td>
                     <td data-label="績效"><div class="cell-stack"><div class="cell-line"><span class="cell-label">週</span><span class="perf-number ${item._perfWeek >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Week"] || '-')}</span></div><div class="cell-line"><span class="cell-label">月</span><span class="perf-number ${item._perfMonth >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Month"] || '-')}</span></div></div></td>
                     <td data-label="日振幅/趨勢"><div class="cell-stack"><div class="cell-line"><span class="cell-label">日振幅</span><strong>${escapeHtml(item["Volatility W"] || '-')}</strong></div><span class="trend-text ${isBullish ? 'trend-positive' : 'trend-negative'}">${escapeHtml(item.SMA200 || '-')} (${compactTrendText})</span></div></td>
-                    <td class="iv-stock-cell" data-label="Current IV30"><div class="iv30-cell"><strong>—</strong><small>尚未接入</small><a href="${escapeHtml(marketChameleonIvUrl(item.Ticker))}" target="_blank" rel="noopener noreferrer" class="iv-chain-link" aria-label="${escapeHtml(item.Ticker)} Market Chameleon IV30 查詢">查詢 IV30 ↗</a></div></td>
+                    <td class="iv-stock-cell" data-label="Current IV30">${window.fcnCurrentIv30Cell ? window.fcnCurrentIv30Cell(item.Ticker, marketChameleonIvUrl(item.Ticker)) : '<div class="iv30-cell"><strong>—</strong><small>載入 IV30…</small></div>'}</td>
                     <td data-label="市值">${escapeHtml(item["Market Cap"] || '-')}</td>
                     <td data-label="查詢連結"><div class="cell-stack"><a href="${escapeHtml(window.fcnOptionsChainUrl ? window.fcnOptionsChainUrl(item.Ticker, item.Index) : 'https://www.tradingview.com/options/')}" target="_blank" rel="noopener noreferrer" class="iv-chain-link">選擇權 ↗</a><a href="https://finviz.com/quote.ashx?t=${encodeURIComponent(item.Ticker)}&p=d&b=1&ty=ea" target="_blank" rel="noopener" class="iv-chain-link">財報 ↗</a></div></td>
                 </tr> `;
@@ -5619,7 +5622,13 @@ ${JSON.stringify(stockData, null, 2)}
         }
     </script>
     <script type="module">
-        import('./assets/iv-ui.mjs?v=iv30-lookup-v1').catch(() => {
+        import('./assets/current-iv30.mjs?v=iv30-snapshot-v1').catch(() => {
+            window.fcnCurrentIv30Cell = () => '<div class="iv30-cell"><strong>—</strong><small>IV30 模組載入失敗</small></div>';
+            document.getElementById('iv30Status').textContent = 'IV30 模組載入失敗，請重新整理。';
+            document.getElementById('iv30Reload').disabled = true;
+            window.refreshFcnTable?.();
+        });
+        import('./assets/iv-ui.mjs?v=iv30-snapshot-v1').catch(() => {
             const button = document.getElementById('ivOpenImport');
             button.disabled = true;
             button.textContent = '研究模組載入失敗，請重新整理';

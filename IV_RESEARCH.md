@@ -29,9 +29,23 @@
 
 主表已將 3／4／5／6 個月 ATM／K／KI 四欄替換為單一 **Current IV30** 欄。這是 Market Chameleon 的 30 天隱含波動率年化值，不能用 IV30 % Rank、52-Week Position、歷史估計或長天期 IV 代替。
 
-目前僅提供來源查詢入口，**沒有接入 Current IV30 數值**，每檔顯示「—／尚未接入」。一般代碼開啟個股 IV 頁，特殊／不同股別代碼開啟排行榜後自行搜尋，避免猜錯代碼。匯入其他選擇權快照、取得歷史股價或修改 K／KI 都不會填入此欄；尚無數值時也不提供 IV30 排序。研究面板仍保留四種天期、K／KI 重算與商品模擬。
+主表自動讀取 `assets/current-iv30.json`，依 **完全一致的股票代碼** 比對。數值單位為年化百分比，例如 37.8 直接顯示 37.8%，不再乘 100。可點欄名由高至低排序，缺值在升冪／降冪皆排最後；來源未覆蓋或缺值時不填零，也不以歷史估計、其他選擇權匯入、IV30 % Rank 或 52-Week Position 代替。
 
-Market Chameleon [官方開發者說明](https://marketchameleon.com/Home/Developer)表示網站為人工瀏覽用途，沒有公開 Web/REST API，自動抓取違反其使用條款；自動接入需另行申請[正式資料供應](https://marketchameleon.com/DataFeed/SubscriberSpecified)，由供應商確認價格、Current IV30 定義／單位、股票覆蓋、報價更新時間及個人使用授權。免費[Widgets](https://marketchameleon.com/DataFeed/Widgets)目前列出財報、股息及市場漲跌，未提供 IV30 排行榜 widget。網站不會自動抓取排行榜或複製截圖數值。[來源排行榜](https://marketchameleon.com/volReports/VolatilityRankings)標示行情延遲 15 分鐘，且僅包含符合成交量門檻的標的。
+本次快照由正常瀏覽器公開表格逐頁擷取，共 1,257 檔。`observedAt` 是取得時間，`sourceAsOf:null` 表示原站未提供個股報價時間；取得時間不代表報價已更新。超過 24 個 UTC 平日時數的快照標示過期（簡化平日判定，未涵蓋交易所假日）。「重新讀取 IV30」只讀取已發布的快照，不會在每次點擊時爬取外站。研究面板保留四種天期、K／KI 重算與商品模擬，IV30 不作為 3–6 個月的模型輸入。
+
+### 爬蟲及更新
+
+`scripts/market-chameleon-iv30.mjs` 使用標準 Playwright 瀏覽器讀取公開表格，最多每頁 100 筆，完整遍歷分頁，只輸出股票代碼及 Current IV30；核對標題、單位、總筆數、重複代碼及完整性後原子替換快照。遇到 HTTP 拒絕、登入／驗證、連線逾時、表格變動、重複代碼或不完整分頁時停止，保留上次檔案，不使用隱藏介面、stealth、代理輪替或驗證繞過。
+
+```sh
+npm ci
+npx playwright install chrome
+npm run refresh:iv30
+```
+
+也可設定 `BROWSER_CHANNEL=chromium` 並安裝 Chromium。無 GUI 的 Linux 執行環境可使用 `npx playwright install --with-deps chromium`。爬蟲停用 HTTP/2 是針對此環境觀察到的 HTTP/2 協定錯誤，未改寫 User-Agent 或瀏覽器指紋。更新成功後需將快照發布到網站，頁面才會顯示新資料；本次沒有設定定時執行，也未宣稱已驗證 GitHub Actions／Cloudflare 環境可穩定爬取。本機獨立命令列爬蟲對真實來源逾時，本次真實資料是經正常瀏覽器逐頁讀取並使用相同欄位解析器驗證。
+
+Market Chameleon [官方開發者說明](https://marketchameleon.com/Home/Developer)明確禁止自動抓取，沒有公開 Web/REST API；這份爬蟲程式不代表取得來源授權，也無法保證來源未來允許存取。正式資料供應可向[資料服務](https://marketchameleon.com/DataFeed/SubscriberSpecified)申請。[來源排行榜](https://marketchameleon.com/volReports/VolatilityRankings)標示行情延遲 15 分鐘，且僅包含符合成交量門檻的標的。
 
 股票列的「選擇權 ↗」連至 TradingView 選擇權鏈。「商品研究／IV 查詢指引」可直接切換市場 IV 模式。勾選／輸入研究股票後，指引列出各天期的日曆到期目標，以及 ATM、K、KI 目標履約價；有匯入快照時以快照股價換算，否則掃描行情僅供查詢定位。修改比例不會把舊快照改成新股價。沒有交易所資訊時開啟通用查詢入口，需自行搜尋代碼；個股也可能沒有掛牌選擇權。
 
