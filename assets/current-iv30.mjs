@@ -12,6 +12,7 @@ export function validateIV30(raw, now = new Date()) {
     if (r.iv30Percent!==null && (!Number.isFinite(r.iv30Percent) || r.iv30Percent<=0 || r.iv30Percent>1000)) throw new Error('IV30_VALUE_INVALID');
     byTicker.set(r.ticker,r.iv30Percent);
   }
+  if (![...byTicker.values()].some(Number.isFinite)) throw new Error('IV30_EMPTY_VALUES');
   // This is snapshot age, not quote age: the public table provides no quote timestamp.
   return {byTicker,observedAt:raw.observedAt,stale:weekdayHoursBetween(raw.observedAt,now)>24};
 }

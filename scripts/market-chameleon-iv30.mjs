@@ -26,6 +26,7 @@ export function parseRows(headers, rows) {
 export async function collectIV30(page, sourceUrl = SOURCE_URL) {
   const response = await page.goto(sourceUrl, {waitUntil:'domcontentloaded',timeout:30000});
   if (!response?.ok()) throw new Error(`IV30_SOURCE_HTTP_${response?.status() ?? 'FAILED'}`);
+  if (new URL(page.url()).origin!==new URL(sourceUrl).origin) throw new Error('IV30_SOURCE_REDIRECT');
   await page.locator('#iv_rankings_report_tbl tbody tr').first().waitFor({timeout:25000});
   const initialInfo = await page.locator('#iv_rankings_report_tbl_wrapper').innerText();
   const initialTotal = Number(initialInfo.match(/of\s+([\d,]+)\s+entries/)?.[1]?.replaceAll(',',''));

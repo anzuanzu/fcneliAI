@@ -21,6 +21,7 @@ test('IV30 validates explicit percent units, source, observation clock and uniqu
   for (const change of [{ivUnit:'annualized-decimal'},{source:'historical estimate'},{observedAt:'2026-10-09T22:00:00'},{observedAt:'2026-10-10T22:00:00Z'},{sourceAsOf:'2026-10-09T22:00:00Z'}]) assert.throws(()=>validateIV30({...raw,...change},now));
   assert.throws(()=>validateIV30({...raw,records:[...raw.records,raw.records[0]]},now),/SYMBOL/);
   assert.throws(()=>validateIV30({...raw,records:[{ticker:'NVDA',iv30Percent:'29.4'}]},now),/VALUE/);
+  assert.throws(()=>validateIV30({...raw,records:[{ticker:'NVDA',iv30Percent:null}]},now),/EMPTY_VALUES/);
 });
 test('snapshot freshness does not invent a quote timestamp, and missing coverage is not zero',()=>{
   const snapshot=validateIV30(fixture(),now);
