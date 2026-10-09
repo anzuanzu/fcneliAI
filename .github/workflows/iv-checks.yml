@@ -12,7 +12,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - run: npm ci
       - run: npm run check
       - run: npm test
       - run: npm install --no-save --package-lock=false miniflare@4.20260730.0
       - run: npm run test:worker
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:iv30-crawler
+        env:
+          BROWSER_CHANNEL: chromium

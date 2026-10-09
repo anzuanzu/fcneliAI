@@ -2,7 +2,7 @@ import {validateSnapshot} from './iv-engine.mjs';
 import {CSV_TEMPLATE, importSnapshots} from './iv-import.mjs';
 import {validateHistory, summarizeHistoricalVolatility} from './historical-volatility.mjs';
 import {historyFailure, historyRetrySeconds} from './history-errors.mjs';
-import {IV_MONTHS, buildTermSummaries, renderTermCell, optionsChainUrl, queryTargets, validLevels} from './iv-table.mjs';
+import {IV_MONTHS, buildTermSummaries, optionsChainUrl, queryTargets, validLevels} from './iv-table.mjs';
 
 const $ = id => document.getElementById(id);
 const snapshots = new Map(), histories = new Map(), labels = new Map();
@@ -125,7 +125,6 @@ function renderHistorical() {
 }
 window.fcnIvLabel = ticker => labels.get(ticker) || (historicalMode() ? '未取得歷史股價' : '未匯入');
 window.fcnVolatilityTitle = () => historicalMode() ? '估計波動率' : 'ATM IV';
-window.fcnIvTermCell = (ticker, months) => renderTermCell(tableTerms.get(ticker)?.get(months), context(), snapshots.has(ticker));
 window.fcnOptionsChainUrl = optionsChainUrl;
 
 function renderQueryGuide(params, now) {
