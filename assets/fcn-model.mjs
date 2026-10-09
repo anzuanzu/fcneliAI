@@ -1,4 +1,5 @@
 import {addCalendarMonths, summarizeSurface} from './iv-engine.mjs';
+import {estimateBasket} from './historical-volatility.mjs';
 
 const DAY = 86400000;
 const YEAR = 365 * DAY;
@@ -26,23 +27,27 @@ function previousWeekday(value) {
 // Uniform positive correlation is PSD for any supported basket size:
 // Z_i = sqrt(rho) Z_common + sqrt(1-rho) Z_idiosyncratic,i.
 export function validateFcnParameters(input) {
-  const {snapshots, months, kPct = 80, kiPct = 65, koPct = 100,
+  const {snapshots, histories, mode = 'market-iv', scenario = 'base', months, kPct = 80, kiPct = 65, koPct = 100,
     rho = 0.5, rate = 0.04, lockoutMonths = 1, paths = 10000,
     seed = 20261009, kiObservation = 'daily-close', dividendYields} = input || {};
-  if (!Array.isArray(snapshots) || snapshots.length < 1 || snapshots.length > 8) throw new Error('Select between 1 and 8 IV snapshots');
+  if (!['market-iv', 'historical-estimate'].includes(mode)) throw new Error('Unsupported FCN model mode');
+  const underlyings = mode === 'historical-estimate' ? histories : snapshots;
+  const limit = mode === 'historical-estimate' ? 6 : 8;
+  if (!Array.isArray(underlyings) || underlyings.length < 1 || underlyings.length > limit) throw new Error(mode === 'historical-estimate' ? 'Select between 1 and 6 price histories' : 'Select between 1 and 8 IV snapshots');
+  if (mode === 'historical-estimate' && !['low', 'base', 'high'].includes(scenario)) throw new Error('Historical scenario must be low, base, or high');
   if (!Number.isInteger(months) || months < 3 || months > 6) throw new Error('months must be 3, 4, 5, or 6');
   if (!finite(kPct) || kPct <= 0 || kPct > 100 || !finite(kiPct) || kiPct <= 0 || kiPct > kPct || !finite(koPct) || koPct < kPct || koPct > 200) throw new Error('Require 0 < KI <= K <= 100 and K <= KO <= 200 (percent of each initial price)');
-  if (!finite(rho) || rho < 0 || rho > 0.95) throw new Error('Uniform correlation rho must be between 0 and 0.95');
+  if (mode === 'market-iv' && (!finite(rho) || rho < 0 || rho > 0.95)) throw new Error('Uniform correlation rho must be between 0 and 0.95');
   if (!finite(rate) || rate < -0.1 || rate > 0.5) throw new Error('rate must be an annualized decimal between -0.1 and 0.5');
   if (!Number.isInteger(lockoutMonths) || lockoutMonths < 0 || lockoutMonths > 6) throw new Error('lockoutMonths must be an integer between 0 and 6; values at or beyond tenor disable KO');
   if (!Number.isInteger(paths) || paths < 200 || paths > 50000) throw new Error('paths must be an integer between 200 and 50000');
   if (!Number.isSafeInteger(seed) || seed < 0 || seed > 0xffffffff) throw new Error('seed must be an unsigned 32-bit integer');
   if (!['daily-close', 'maturity'].includes(kiObservation)) throw new Error('kiObservation must be daily-close or maturity');
-  const yields = dividendYields ?? snapshots.map(() => 0);
-  if (!Array.isArray(yields) || yields.length !== snapshots.length || yields.some(v => !finite(v) || v < 0 || v > 0.5)) throw new Error('dividendYields must contain one annualized decimal in [0, 0.5] per underlying');
-  const tickers = snapshots.map(s => s?.ticker?.toUpperCase());
+  const yields = dividendYields ?? underlyings.map(() => 0);
+  if (!Array.isArray(yields) || yields.length !== underlyings.length || yields.some(v => !finite(v) || v < 0 || v > 0.5)) throw new Error('dividendYields must contain one annualized decimal in [0, 0.5] per underlying');
+  const tickers = underlyings.map(s => s?.ticker?.toUpperCase()?.replace(/\//g, '.'));
   if (new Set(tickers).size !== tickers.length) throw new Error('Duplicate basket tickers are not allowed');
-  return {snapshots, months, kPct, kiPct, koPct, rho, rate, lockoutMonths, paths, seed, kiObservation, dividendYields: [...yields]};
+  return {snapshots, histories, mode, scenario, months, kPct, kiPct, koPct, rho: mode === 'market-iv' ? rho : undefined, rate, lockoutMonths, paths, seed, kiObservation, dividendYields: [...yields]};
 }
 
 export function buildObservationSchedule(nowValue, months, lockoutMonths = 1) {
@@ -120,12 +125,14 @@ export async function simulateFcn(input) {
   const p = validateFcnParameters(input);
   const now = input.now === undefined ? new Date() : new Date(input.now);
   if (!Number.isFinite(+now)) throw new Error('now must be a valid date');
-  const surfaces = p.snapshots.map(s => summarizeSurface(s, {months: p.months, now, kPct: p.kPct, kiPct: p.kiPct, koPct: p.koPct}));
+  const historical = p.mode === 'historical-estimate';
+  const basket = historical ? estimateBasket(p.histories, {months: p.months, now, scenario: p.scenario}) : null;
+  const surfaces = historical ? [] : p.snapshots.map(s => summarizeSurface(s, {months: p.months, now, kPct: p.kPct, kiPct: p.kiPct, koPct: p.koPct}));
   for (const s of surfaces) for (const key of ['atm', 'k', 'ki', 'ko']) {
     if (!s[key]) throw new Error(`${s.ticker}: ${key.toUpperCase()} IV has no coverage; simulation disabled`);
     if (s[key].quality !== 'good') throw new Error(`${s.ticker}: ${key.toUpperCase()} IV quality is ${s[key].quality}; trustworthy current IV is required`);
   }
-  const volatilities = surfaces.map(s => s.atm.iv);
+  const volatilities = historical ? basket.summaries.map(summary => summary.forecastVolatility) : surfaces.map(s => s.atm.iv);
   const schedule = buildObservationSchedule(now, p.months, p.lockoutMonths);
   const commonScale = Math.sqrt(p.rho), independentScale = Math.sqrt(1 - p.rho);
   let sumR = 0, sumA = 0, sumR2 = 0, sumA2 = 0, sumRA = 0;
@@ -134,14 +141,15 @@ export async function simulateFcn(input) {
   for (let path = 0; path < p.paths; path++) {
     if (input.signal?.aborted) throw new Error('Simulation cancelled');
     const normal = normalGenerator(pathSeed(p.seed, path));
-    const prices = p.snapshots.map(() => 1);
+    const prices = volatilities.map(() => 1);
     let knockedIn = false, knockedOut = false, redemption = 1;
     let life = (+schedule.maturity - +schedule.start) / YEAR;
     for (const step of schedule.steps) {
-      const common = normal();
+      const common = historical ? null : normal();
+      const independent = historical ? prices.map(() => normal()) : null;
       for (let index = 0; index < prices.length; index++) {
         const sigma = volatilities[index];
-        const z = commonScale * common + independentScale * normal();
+        const z = historical ? basket.cholesky[index].reduce((sum, coefficient, j) => sum + coefficient * independent[j], 0) : commonScale * common + independentScale * normal();
         prices[index] *= Math.exp((p.rate - p.dividendYields[index] - sigma * sigma / 2) * step.dt + sigma * Math.sqrt(step.dt) * z);
       }
       const worst = Math.min(...prices);
@@ -185,11 +193,22 @@ export async function simulateFcn(input) {
     expectedLifeYears: sumTime / n, expectedRedemption: sumRedemption / n,
     expectedPrincipalLossQ: 1 - sumRedemption / n, probabilitiesQ, probabilitySE, probabilityConfidence95Q,
     seCouponAnnual, confidence95CouponAnnual: [fairCouponAnnual - 1.96 * seCouponAnnual, fairCouponAnnual + 1.96 * seCouponAnnual],
-    paths: n, seed: p.seed, model: 'risk-neutral-constant-ATM-IV-correlated-GBM',
-    surfaces, input: {...p, snapshots: undefined, now: schedule.start.toISOString(), volatilities,
+    paths: n, seed: p.seed, mode: p.mode, scenario: historical ? p.scenario : undefined,
+    estimatedModel: historical,
+    model: historical ? 'historical-input-Q-correlated-GBM' : 'risk-neutral-constant-ATM-IV-correlated-GBM',
+    surfaces, estimates: basket?.summaries, historicalAssumptions: basket?.assumptions,
+    input: {...p, snapshots: undefined, histories: undefined, now: schedule.start.toISOString(), volatilities,
+      correlationMatrix: basket?.correlationMatrix, correlationObservations: basket?.correlationObservations,
       couponRule: 'unconditional-accrued-payable-at-redemption', dayCount: 'ACT/365',
       firstKoMonth: p.lockoutMonths < p.months ? p.lockoutMonths + 1 : null},
-    limitations: [...LIMITATIONS, ...(input.dividendYields === undefined ? ['Dividend yields default to zero and must be supplied for a different assumption.'] : [])]};
+    limitations: [...(historical ? LIMITATIONS.filter(line => !line.includes('constant maturity ATM')) : LIMITATIONS),
+      ...(historical ? [
+        'Estimated model coupon uses historical volatility and historical correlation proxies with a risk-neutral (Q) pricing drift. These are assumed Q inputs, not market implied volatility, calibrated option prices, real-world forecasts, or an executable dealer quote.',
+        'Low/base/high are assumption sensitivity scenarios (volatility multipliers 0.8/1/1.25), not confidence intervals or calibrated forecasts. High also blends 20% common-factor correlation.',
+        'Tenor forecast averages mean-reverting EWMA variance using 21 trading days per month and a 126-trading-day half-life. The simulation holds this average annual volatility constant over ACT/365 calendar time; holidays and time-varying variance are approximated.',
+        'Historical data cannot infer strike-dependent implied skew, jump tails, stochastic volatility, or stress-dependent market implied correlation.',
+        ...basket.warnings,
+      ] : []), ...(input.dividendYields === undefined ? ['Dividend yields default to zero and must be supplied for a different assumption.'] : [])]};
 }
 
 export async function compareFcnTerms(input) {

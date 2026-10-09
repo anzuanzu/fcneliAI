@@ -11,6 +11,37 @@ function snapshot(ticker = 'ABC', iv = 0.3) {
 }
 function params(extra = {}) { return {snapshots: [snapshot(), snapshot('XYZ')], months: 3, paths: 200, now, seed: 12345, ...extra}; }
 
+function history() {
+  const dates = [], date = new Date('2026-10-08T00:00:00Z');
+  while (dates.length < 301) {
+    if (![0, 6].includes(date.getUTCDay())) dates.push(date.toISOString().slice(0, 10));
+    date.setUTCDate(date.getUTCDate() - 1);
+  }
+  return {schemaVersion: 1, ticker: 'ABC', source: 'synthetic-test-only', adjustment: 'splits',
+    currency: 'USD', timezone: 'America/New_York', asOf: '2026-10-09T12:00:00Z',
+    bars: dates.reverse().map((date, i) => ({date, close: i % 2 ? 100 * Math.exp(0.03) : 100}))};
+}
+
+test('historical estimates have separate inputs and explicit model assumptions, with increasing volatility sensitivity', async () => {
+  const input = {mode: 'historical-estimate', histories: [history()],
+    now: '2026-10-09T12:00:00Z', months: 6, paths: 1000, seed: 77, kPct: 80, kiPct: 80,
+    koPct: 200, lockoutMonths: 6, kiObservation: 'maturity'};
+  const low = await simulateFcn({...input, scenario: 'low'}), high = await simulateFcn({...input, scenario: 'high'});
+  assert.equal(low.model, 'historical-input-Q-correlated-GBM');
+  assert.equal(low.estimatedModel, true);
+  assert.equal(low.surfaces.length, 0);
+  assert.equal(low.estimates[0].source, 'synthetic-test-only');
+  assert.ok(high.fairCouponAnnual > low.fairCouponAnnual);
+  assert.ok(high.input.volatilities[0] > low.input.volatilities[0]);
+  assert.ok(low.limitations.some(line => line.includes('assumed Q inputs')));
+  assert.ok(low.limitations.some(line => line.includes('not confidence intervals')));
+  assert.deepEqual(low.input.correlationMatrix, [[1]]);
+  assert.equal(low.input.rho, undefined);
+  assert.equal(low.input.histories, undefined);
+  await assert.rejects(simulateFcn({...input, histories: undefined, snapshots: [snapshot()]}), /price histories/);
+  await assert.rejects(simulateFcn({...input, mode: 'market-iv', snapshots: []}), /IV snapshots/);
+});
+
 test('valid uniform correlation is bounded for PSD common-factor construction', () => {
   for (const rho of [-0.1, 1, NaN]) assert.throws(() => validateFcnParameters(params({rho})), /rho/);
   assert.equal(validateFcnParameters(params({rho: 0.95})).rho, 0.95);

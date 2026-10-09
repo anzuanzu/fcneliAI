@@ -1,4 +1,5 @@
 import { handleOptions } from './options.js';
+import { handleHistory } from './history.js';
 
 const TRADINGVIEW_SCAN_URL = 'https://scanner.tradingview.com/america/scan';
 
@@ -26,7 +27,7 @@ function corsHeaders(request, env) {
   return {
     'Access-Control-Allow-Origin': allowedOrigin,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-Options-Key',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Options-Key, X-History-Key',
     'Vary': 'Origin'
   };
 }
@@ -45,6 +46,7 @@ export default {
 
     if (request.method === 'OPTIONS') return new Response(null, { headers });
     if (url.pathname === '/api/options') return handleOptions(request, env, ctx, headers);
+    if (url.pathname === '/api/history') return handleHistory(request, env, ctx, headers);
     if (url.pathname !== '/api/scan') return jsonResponse({ error: 'Not found' }, 404, headers);
     if (request.method !== 'POST') return jsonResponse({ error: 'Method not allowed' }, 405, headers);
 

@@ -2285,20 +2285,28 @@
                 </div>
 
 <details id="ivResearchPanel" class="iv-panel glass-panel">
-  <summary>IV 與商品條件研究 <span>手動匯入 · 3–6 個月 · 多檔最差表現</span></summary>
+  <summary>波動率與商品條件研究 <span>歷史股價估計／市場 IV · 3–6 個月 · 多檔最差表現</span></summary>
   <div class="iv-content">
-    <p class="iv-note">匯入選擇權買賣報價及年化 IV，檢查不同天期與 K／KO／KI 價位的資料覆蓋。近週平均日振幅與 ATR 不等於 IV。匯入檔案只在此瀏覽器處理，不會上傳；重新整理後須重新匯入。</p>
+    <p class="iv-note">可自動取得歷史股價，估計波動率並比較商品條件；也可使用選擇權市場 IV。估計波動率沒有經市場校準，不代表 IV。資料只保留於本次頁面，重新整理後須重新取得或匯入。</p>
     <div class="iv-controls">
+      <label for="ivMode">研究方式<select id="ivMode"><option value="historical-estimate">歷史波動率估計（自動取價）</option><option value="market-iv">選擇權市場 IV</option></select></label>
       <label class="iv-field" for="ivTickers">研究股票（逗號分隔；空白時使用勾選個股）<input id="ivTickers" type="text" placeholder="例如 AAPL, MSFT, NVDA" autocomplete="off" spellcheck="false"></label>
     </div>
-    <div class="iv-actions">
+    <div class="iv-actions"><button id="ivUseSelection" class="button secondary" type="button">使用勾選個股</button><a href="IV_RESEARCH.md" target="_blank" rel="noopener">資料格式與模型說明</a></div>
+    <div id="historyControls">
+      <p class="iv-note">自動取價需設定 Twelve Data 資料帳戶金鑰與 Worker，無須券商帳戶。免費 Basic 每分鐘 8、每日 800 API credits，但僅允許內部非展示用途；本頁需另有內部網頁展示授權或適用方案。每次查詢最多 6 檔，不會批次抓取全站。介面預設關閉取價，實際市場覆蓋依資料方案。</p>
+      <div class="iv-controls"><label class="iv-field" for="historyEndpoint">歷史股價 API 網址<input id="historyEndpoint" type="url" autocomplete="off"></label><label for="historyAccessKey">個人查詢密碼（僅本次頁面）<input id="historyAccessKey" type="password" autocomplete="off"></label></div>
+      <div class="iv-actions"><button id="historyFetch" class="button" type="button">自動取得研究股票的歷史股價</button><button id="historyClear" class="button secondary" type="button">清除歷史股價</button><a href="DEPLOYMENT.md" target="_blank" rel="noopener">自動取價設定</a></div>
+      <p id="historyStatus" class="iv-status" role="status" aria-live="polite">尚未取得歷史股價。設定 Worker 後，輸入股票代碼即可查詢。</p>
+      <p class="iv-note">模型初始參考價採各股票最近完成收盤，K／KO／KI 依此價位比例設定；上方「價位試算」另依掃描行情換算。歷史價格已調整拆股，未保證調整現金股息，至少需 126 筆日報酬。EWMA 與均值回歸參數為固定研究假設；低／基準／高波動為敏感度情境，不是信賴區間，沒有建立 K／KI／KO 的市場偏斜曲面。</p>
+    </div>
+    <div id="marketControls" hidden><div class="iv-actions">
       <label class="iv-import-label button secondary">匯入 CSV／JSON <input id="ivImport" type="file" accept=".csv,.json,text/csv,application/json" aria-label="匯入選擇權 CSV 或 JSON"></label>
       <button id="ivTemplate" class="button secondary" type="button">下載 CSV 空白範本</button>
-      <button id="ivUseSelection" class="button secondary" type="button">使用勾選個股</button>
       <button id="ivClear" class="button secondary" type="button">清除匯入資料</button>
-      <a href="IV_RESEARCH.md" target="_blank" rel="noopener">資料格式與模型說明</a>
     </div>
     <p id="ivStatus" class="iv-status" role="status" aria-live="polite">尚未匯入選擇權資料。沒有有效資料時不會產生 IV 或票息。</p>
+    </div>
     <div id="ivSurface" class="iv-table-wrap" aria-label="IV 天期與價位比較"></div>
     <div id="ivDataDetails"></div>
     <fieldset class="iv-assumptions">
@@ -2307,18 +2315,18 @@
       <div class="iv-controls">
         <label for="ivKiObservation">KI 觀察<select id="ivKiObservation"><option value="daily-close">每日觀察（日步長近似收盤）</option><option value="maturity">僅到期觀察</option></select></label>
         <label for="ivLockout">首個 KO 觀察月<input id="ivLockout" type="number" min="1" max="6" step="1" value="1"></label>
-        <label for="ivRho">共同相關係數（假設）<input id="ivRho" type="number" min="0" max="0.95" step="0.05" value="0.6"></label>
+        <label id="ivRhoField" for="ivRho">共同相關係數（市場 IV 模式假設）<input id="ivRho" type="number" min="0" max="0.95" step="0.05" value="0.6"></label>
         <label for="ivRate">年化利率假設 (%)<input id="ivRate" type="number" min="-5" max="25" step="0.1" value="0"></label>
         <label for="ivDividend">所有股票的年化股息率假設 (%)<input id="ivDividend" type="number" min="0" max="30" step="0.1" value="0"></label>
         <label for="ivPaths">模擬路徑數<select id="ivPaths"><option value="5000">5,000</option><option value="20000" selected>20,000</option><option value="50000">50,000</option></select></label>
       </div>
-      <p class="iv-note">模型使用各股票該天期 ATM IV 的固定波動率與共同相關係數，未校準整個偏斜曲面、財報跳躍、離散股息或尾端相關性。利率、股息及相關係數都是你的輸入假設，並非即時市場資料。</p>
+      <p id="ivModelNote" class="iv-note">歷史估計使用各天期預測波動率與共同日期的歷史相關性；高波動情境另提高相關性。以風險中立模型計算票息，沒有把歷史資料變成市場 IV。利率及股息是你的輸入假設，未含財報跳躍、離散股息與銀行成本。</p>
       <div class="iv-actions"><button id="ivCompare" class="button" type="button">比較 3–6 個月條件</button><button id="ivCancel" class="button secondary" type="button" hidden>停止計算</button><button id="ivExport" class="button secondary" type="button" disabled>匯出本次研究</button></div>
     </fieldset>
-    <p id="ivSimulationStatus" class="iv-note" role="status" aria-live="polite">需每檔股票在 ATM／K／KI／KO 皆具備有效、時間可確認的 IV。過期資料、時間不明或超出覆蓋範圍時停止該天期的試算。</p>
+    <p id="ivSimulationStatus" class="iv-note" role="status" aria-live="polite">取得各股票有效的歷史股價後，即可比較三種波動情境與 3–6 個月條件。</p>
     <div id="ivComparisons" class="iv-table-wrap"></div>
     <p class="iv-note">票息是簡化模型估值，不是銀行可成交報價。KO／KI／本金損失機率屬風險中立模型（Q），不能視為真實發生機率；模擬誤差也不包含資料及模型誤差。模型未含發行人信用、資金利差、費用與銀行避險成本。</p>
-    <details class="iv-data-detail"><summary>日後啟用自動查詢</summary>
+    <details id="marketApiControls" class="iv-data-detail" hidden><summary>日後啟用自動查詢</summary>
       <p class="iv-note">目前沒有券商帳戶也能使用手動匯入。自動查詢需另行設定 Worker 與資料授權。</p>
       <div class="iv-controls"><label class="iv-field" for="ivEndpoint">選擇權 API 網址<input id="ivEndpoint" type="url" autocomplete="off"></label><label for="ivAccessKey">個人查詢密碼（僅本次頁面使用）<input id="ivAccessKey" type="password" autocomplete="off"></label></div>
       <button id="ivFetch" class="button secondary" type="button">查詢研究股票</button>
@@ -2506,7 +2514,7 @@
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-compact" data-key="Volatility W" onclick="handleSort('Volatility W')"><span>日振幅/趨勢 <span
                                             class="sort-icon">↕</span></span></th>
-                                <th class="col-compact"><span>ATM IV <span id="ivColumnTenor">3M</span></span></th>
+                                <th class="col-compact"><span><span id="ivColumnLabel">估計波動率</span> <span id="ivColumnTenor">3M</span></span></th>
                                 <th class="col-compact" data-key="Market Cap" onclick="handleSort('Market Cap')"><span>市值 <span
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-sector" data-key="Sector" onclick="handleSort('Sector')"><span>板塊/產業 <span
@@ -3987,7 +3995,7 @@ ${JSON.stringify(stockData, null, 2)}
                     <td class="price" data-label="價格">$${escapeHtml(item.Price || '-')}</td>
                     <td data-label="績效"><div class="cell-stack"><div class="cell-line"><span class="cell-label">週</span><span class="perf-number ${item._perfWeek >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Week"] || '-')}</span></div><div class="cell-line"><span class="cell-label">月</span><span class="perf-number ${item._perfMonth >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Month"] || '-')}</span></div></div></td>
                     <td data-label="日振幅/趨勢"><div class="cell-stack"><div class="cell-line"><span class="cell-label">日振幅</span><strong>${escapeHtml(item["Volatility W"] || '-')}</strong></div><span class="trend-text ${isBullish ? 'trend-positive' : 'trend-negative'}">${escapeHtml(item.SMA200 || '-')} (${compactTrendText})</span></div></td>
-                    <td data-label="ATM IV">${escapeHtml(window.fcnIvLabel ? window.fcnIvLabel(item.Ticker) : "未匯入")}</td>
+                    <td data-label="${escapeHtml(window.fcnVolatilityTitle ? window.fcnVolatilityTitle() : '波動率')}">${escapeHtml(window.fcnIvLabel ? window.fcnIvLabel(item.Ticker) : "未匯入")}</td>
                     <td data-label="市值">${escapeHtml(item["Market Cap"] || '-')}</td>
                     <td data-label="板塊/產業"><div class="cell-stack"><strong>${escapeHtml(item.Sector || '-')}</strong><span class="muted-text truncate-2">${escapeHtml(item.Industry || '-')}</span></div></td>
                     <td data-label="財報與評等"><a href="https://finviz.com/quote.ashx?t=${item.Ticker}&p=d&b=1&ty=ea" target="_blank" rel="noopener" style="color: var(--accent-color); text-decoration: none; font-weight: 600; font-size: 0.85rem;">查看</a></td>
@@ -5592,4 +5600,3 @@ ${JSON.stringify(stockData, null, 2)}
 </body>
 
 </html>
-

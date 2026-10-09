@@ -1,4 +1,5 @@
 .iv-panel { margin: 0 0 1.2rem; padding: 1rem; }
+.iv-panel [hidden] { display: none !important; }
 .iv-panel summary { cursor: pointer; font-weight: 650; color: var(--text-primary); }
 .iv-panel summary span { color: var(--text-secondary); font-weight: 400; font-size: .82rem; margin-left: .7rem; }
 .iv-content { padding-top: 1rem; }

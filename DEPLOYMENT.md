@@ -120,3 +120,53 @@ node --test tests/worker-options.test.mjs
 測試以 mock 行情驗證未設定、存取限制、資料正規化、錯誤清理、快取與原有掃描功能；不需真實 token。沒有帳戶時，無法驗證 live 覆蓋率、ORATS 時區或合約實際可用性。
 
 官方資料：[Tradier 行情與更新頻率](https://docs.tradier.com/docs/market-data)、[選擇權鏈](https://docs.tradier.com/reference/brokerage-api-markets-get-options-chains)、[到期日](https://docs.tradier.com/reference/brokerage-api-markets-get-options-expirations)、[報價與 IV 欄位](https://docs.tradier.com/docs/quotes)、[Tradier 方案](https://tradier.com/pricing)。
+
+## 選用：自動取得日收盤價，計算估計波動率
+
+歷史股價情境使用獨立的 `GET /api/history?ticker=AAPL` 接口，不需要券商帳戶，也不需要先取得選擇權 IV。先建立 Twelve Data 資料帳戶、確認所需顯示權利，再取得自己方案允許的 API key。Basic 目前免費額度為每分鐘 8 API credits、每天 800，單一標的 `/time_series` 使用 1 credit；但 Basic 的 non-display 權利不包含本網頁供自然人查看的介面。來源覆蓋、資料深度及權利仍須以帳戶實際許可確認，**不承諾本網頁可以用 Basic 免費啟用，或全部股票免費可取得**。
+
+Basic 價格頁標示 internal non-display usage，Grow 才標示 internal display data access；條款對 non-display 的定義不包含向自然人展示。私人密碼只限制誰能進入，並不能把網頁顯示轉成 non-display。個人方案不能將原始資料或衍生資料當作已獲公開再分發授權。須先取得允許本網頁私人顯示的方案或書面許可，再明確設定 `HISTORY_DISPLAY_LICENSE_CONFIRMED = "true"`；未設定時接口回傳 HTTP 503 `HISTORY_LICENSE_NOT_CONFIRMED`，不查來源、不讀快取、不耗來源額度。這個設定是部署者的許可確認，程式無法自行驗證契約，也不會代替使用者接受資料授權。
+
+本接口固定要求私人密碼，沒有 `ALLOW_PUBLIC_HISTORY`。Twelve Data 條款 2.3(f) 對建立衍生金融商品另要求書面許可；若將工具用於實際商品創建、客戶報價、公開展示或多人商業服務，須先確認對應方案、書面許可及交易所權利，不能只憑私人研究密碼啟用。
+
+在 `worker` 目錄執行，部署前確認所使用的是自己的 Cloudflare 帳戶：
+
+```bash
+npx wrangler secret put TWELVE_DATA_API_KEY
+npx wrangler secret put HISTORY_ACCESS_KEY
+npx wrangler deploy
+```
+
+確認上述顯示授權後，才在 Worker 的 Wrangler `[vars]` 或 Cloudflare 環境變數設定 `HISTORY_DISPLAY_LICENSE_CONFIRMED = "true"`。API key 與私人存取密碼仍須用 secrets，不能放進 `[vars]`。未確認授權時保持接口關閉，仍可查看程式及用 mock 測試。
+
+`TWELVE_DATA_API_KEY` 僅保留在 Worker secret，由固定上游 `https://api.twelvedata.com/time_series` 的 `Authorization: apikey ...` header 使用，不進網址、HTML、瀏覽器或 GitHub。`HISTORY_ACCESS_KEY` 是另外自行產生的私人研究密碼；瀏覽器透過 `X-History-Key` header 傳送。若未設定 `HISTORY_ACCESS_KEY`，接口可沿用已設定的 `OPTIONS_ACCESS_KEY`，但 header 仍是 `X-History-Key`。若兩者都有，僅接受 `HISTORY_ACCESS_KEY`。前端存取密碼不得永久儲存；勿將 provider key 輸入網頁。
+
+網頁的歷史接口可衍生自既有掃描 Worker 主機，也可在主要程式載入前設定：
+
+```html
+<script>
+  window.FCNELI_HISTORY_API_URL = 'https://你的-worker.workers.dev/api/history';
+</script>
+```
+
+`ALLOWED_ORIGIN` 應設定為網頁 origin，例如 `https://anzuanzu.github.io`。CORS 允許 `X-History-Key`，存取驗證發生在快取查詢之前；Origin 規則不是身份驗證。缺少 provider secret 回傳 HTTP 503 `HISTORY_NOT_CONFIGURED`，缺少私人密碼回傳 503 `HISTORY_ACCESS_NOT_CONFIGURED`，密碼錯誤回傳 401 `HISTORY_ACCESS_REQUIRED`。上游或格式錯誤不回傳來源錯誤原文與金鑰；未支援／不足資料回傳 404，超時 504，上游限流或本地用量限制回傳 429。
+
+### 歷史接口資料與限制
+
+回傳 `{ schemaVersion: 1, ticker, source: "Twelve Data", adjustment: "splits", asOf, timezone, currency, bars, warnings }`。每筆 `bars` 是 `{ date: "YYYY-MM-DD", close: 123.45 }`，按日期遞增，不提供市場 IV。`asOf` 是資料取得時間；最新收盤日以最後一筆 `bars.date` 為準，不得將兩者混為同一報價時間。
+
+- 只查詢單一美股代碼，股別符號 `/` 正規化為 `.`；拒絕批次代碼、自訂上游網址與額外查詢參數。
+- 使用 `interval=1day`、`adjust=splits`、美國標的、731 日範圍，最多 600 筆。拆股調整來自供應商，**未要求股息調整**；除息與公司事件更正仍會影響報酬與估計波動率，應查看警示。
+- 日線日期是交易所當地日期。只接受 USD／America/New_York 的每日資料，並排除當地今天的日線，即使今天已收盤也保守等下一天，避免混入盤中尚未完成的 candle。
+- 重複日期、未來日期、格式錯誤、非正數收盤價、錯誤標的或超過 600 筆整組拒絕，不悄悄補值、截斷或混入另一市場。
+- 少於 253 筆收盤價會標示不足完整 252 日報酬窗，最新日線超過 7 個日曆日會警示；最少兩筆才回傳。研究引擎仍須依計算窗口、資料新舊與缺口限制模擬。
+- 每個未快取標的一次來源請求，10 秒含回應讀取超時，最大 1 MiB。內部 Cache API 快取 6 小時，鍵包含 schema、標的、美東日期及 provider key 摘要；原始 key 不進快取網址。瀏覽器回應一律 `private, no-store`。
+- 每個 isolate 最多同時刷新兩檔，每分鐘七次、UTC 日每天 700 次開始；相同標的同時查詢合併，失敗請求也計數。這不是跨 edge 或跨其他應用的帳戶用量閘門。若要全股票排程，必須另外加入全域排程／持久儲存／Durable Object，遵守 800 日額度；本功能不會自動每日刷新掃描清單的全部股票。
+
+```bash
+node --test tests/history-worker.test.mjs tests/worker-options.test.mjs
+```
+
+測試以 mock 驗證隱私、請求、拆股資料格式、日線有效性、快取、並行合併、限流、超時、錯誤清理及既有掃描／選擇權接口。尚無 Twelve Data 帳戶金鑰，因此未驗證 live 股票覆蓋、免費歷史深度及實際調整品質；新增接口本身不表示自動行情已啟用。
+
+官方資料：[方案、顯示權與額度](https://twelvedata.com/pricing)、[資料條款與衍生金融商品限制](https://twelvedata.com/terms)、[歷史資料範圍](https://support.twelvedata.com/en/articles/5214728-getting-historical-data)、[每日拆股調整](https://support.twelvedata.com/en/articles/5179064-are-the-prices-adjusted)、[官方 API SDK 的 time_series 參數與日線時區](https://github.com/twelvedata/twelvedata-java/blob/main/docs/MarketDataApi.md#apigettimeseriesrequest)、[個人／商業使用](https://support.twelvedata.com/en/articles/5332349-commercial-and-personal-usage)。
