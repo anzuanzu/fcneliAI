@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FCN 標的雷達</title>
-    <link rel="stylesheet" href="assets/iv-research.css">
+    <link rel="stylesheet" href="assets/iv-research.css?v=history-table-v1">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -2507,9 +2507,10 @@
                         onclick="clearPreset()">清除一鍵篩選</button>
                 </div>
                 <div class="iv-table-toolbar">
-                    <p>3–6 個月市場 IV · 各欄為 ATM／K／KI，皆為年化值；K／KI 修改後即時重算。</p>
-                    <button id="ivOpenImport" type="button" class="button secondary">匯入 IV／查詢指引</button>
-                    <p class="iv-note">IV 使用匯入的選擇權快照。選擇權連結可開啟 TradingView 查詢；未匯入或缺少覆蓋時顯示缺資料。</p>
+                    <p id="volatilityMainTitle">3–6 個月歷史估計 · 勾選 1–6 檔，再按「自動取得並估算」</p>
+                    <button id="historyQuickFetch" type="button" class="button">自動取得並估算</button>
+                    <button id="ivOpenImport" hidden type="button" class="button secondary">匯入 IV／查詢指引</button>
+                    <p id="volatilityMainNote" class="iv-note">使用歷史股價自動估計，不是真實 IV；K／KI 修改後可重新試算商品條件。</p>
                 </div>
                 <div class="table-container">
                     <table>
@@ -2526,10 +2527,10 @@
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-compact" data-key="Volatility W" onclick="handleSort('Volatility W')"><span>日振幅/趨勢 <span
                                             class="sort-icon">↕</span></span></th>
-                                <th class="col-iv-term"><span>3 個月 IV</span><small>ATM／K／KI</small></th>
-                                <th class="col-iv-term"><span>4 個月 IV</span><small>ATM／K／KI</small></th>
-                                <th class="col-iv-term"><span>5 個月 IV</span><small>ATM／K／KI</small></th>
-                                <th class="col-iv-term"><span>6 個月 IV</span><small>ATM／K／KI</small></th>
+                                <th class="col-iv-term" data-months="3"><span>3 個月歷史估計</span><small>年化波動率／K／KI 價位</small></th>
+                                <th class="col-iv-term" data-months="4"><span>4 個月歷史估計</span><small>年化波動率／K／KI 價位</small></th>
+                                <th class="col-iv-term" data-months="5"><span>5 個月歷史估計</span><small>年化波動率／K／KI 價位</small></th>
+                                <th class="col-iv-term" data-months="6"><span>6 個月歷史估計</span><small>年化波動率／K／KI 價位</small></th>
                                 <th class="col-compact" data-key="Market Cap" onclick="handleSort('Market Cap')"><span>市值 <span
                                             class="sort-icon">↕</span></span></th>
                                 <th class="col-action"><span>連結</span></th>
@@ -4008,7 +4009,7 @@ ${JSON.stringify(stockData, null, 2)}
                     <td class="price" data-label="價格">$${escapeHtml(item.Price || '-')}</td>
                     <td data-label="績效"><div class="cell-stack"><div class="cell-line"><span class="cell-label">週</span><span class="perf-number ${item._perfWeek >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Week"] || '-')}</span></div><div class="cell-line"><span class="cell-label">月</span><span class="perf-number ${item._perfMonth >= 0 ? 'perf-positive' : 'perf-negative'}">${escapeHtml(item["Perf Month"] || '-')}</span></div></div></td>
                     <td data-label="日振幅/趨勢"><div class="cell-stack"><div class="cell-line"><span class="cell-label">日振幅</span><strong>${escapeHtml(item["Volatility W"] || '-')}</strong></div><span class="trend-text ${isBullish ? 'trend-positive' : 'trend-negative'}">${escapeHtml(item.SMA200 || '-')} (${compactTrendText})</span></div></td>
-                    ${[3,4,5,6].map(months => `<td class="iv-stock-cell" data-label="${months} 個月 IV">${window.fcnIvTermCell ? window.fcnIvTermCell(item.Ticker, months) : '載入 IV 模組…'}</td>`).join('')}
+                    ${[3,4,5,6].map(months => `<td class="iv-stock-cell" data-label="${escapeHtml(window.fcnTermLabel ? window.fcnTermLabel(months) : `${months} 個月歷史估計`)}">${window.fcnIvTermCell ? window.fcnIvTermCell(item.Ticker, months) : '載入波動率模組…'}</td>`).join('')}
                     <td data-label="市值">${escapeHtml(item["Market Cap"] || '-')}</td>
                     <td data-label="查詢連結"><div class="cell-stack"><a href="${escapeHtml(window.fcnOptionsChainUrl ? window.fcnOptionsChainUrl(item.Ticker, item.Index) : 'https://www.tradingview.com/options/')}" target="_blank" rel="noopener noreferrer" class="iv-chain-link">選擇權 ↗</a><a href="https://finviz.com/quote.ashx?t=${encodeURIComponent(item.Ticker)}&p=d&b=1&ty=ea" target="_blank" rel="noopener" class="iv-chain-link">財報 ↗</a></div></td>
                 </tr> `;
@@ -5612,7 +5613,17 @@ ${JSON.stringify(stockData, null, 2)}
             updateDisplay();
         }
     </script>
-    <script type="module" src="assets/iv-ui.mjs"></script>
+    <script type="module">
+        import('./assets/iv-ui.mjs?v=history-table-v1').catch(() => {
+            window.fcnIvTermCell = () => '波動率模組載入失敗，請重新整理';
+            document.querySelectorAll('.iv-stock-cell').forEach(cell => {
+                cell.textContent = '波動率模組載入失敗，請重新整理';
+            });
+            document.getElementById('volatilityMainNote').textContent = '波動率模組載入失敗，請重新整理頁面後再試。';
+            document.getElementById('historyQuickFetch').disabled = true;
+            window.refreshFcnTable();
+        });
+    </script>
 </body>
 
 </html>

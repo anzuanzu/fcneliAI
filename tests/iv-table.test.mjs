@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {addCalendarMonths} from '../assets/iv-engine.mjs';
-import {buildTermSummaries, renderTermCell, optionsChainUrl, queryTargets} from '../assets/iv-table.mjs';
+import {buildTermSummaries, renderTermCell, buildHistoricalTerms, renderHistoricalTermCell, optionsChainUrl, queryTargets} from '../assets/iv-table.mjs';
 
 const now = new Date('2026-10-10T00:00:00Z');
 const params = {kPct:70, kiPct:60, koPct:100};
@@ -53,4 +53,34 @@ test('query targets use calendar months, clamp month ends, and preserve exchange
   assert.equal(optionsChainUrl('BRK/B','NYSE'),'https://www.tradingview.com/symbols/NYSE-BRK.B/options-chain/');
   assert.equal(optionsChainUrl('BRK.B','NYSE'),'https://www.tradingview.com/symbols/NYSE-BRK.B/options-chain/');
   assert.equal(optionsChainUrl('AAPL',null),'https://www.tradingview.com/options/');
+});
+
+test('historical cells show independent tenor estimates and closing-price barriers without manufacturing IV', () => {
+  const dates = [], cursor = new Date('2026-10-08T00:00:00Z');
+  while (dates.length < 301) {
+    if (![0,6].includes(cursor.getUTCDay())) dates.unshift(cursor.toISOString().slice(0,10));
+    cursor.setUTCDate(cursor.getUTCDate()-1);
+  }
+  let close = 100;
+  const raw = {schemaVersion:1,ticker:'ABC',source:'synthetic <history>',adjustment:'splits',asOf,currency:'USD',
+    timezone:'America/New_York',bars:dates.map((date,i)=>({date,close:close*=Math.exp((i%2 ? 1 : -1)*(i>270 ? .03 : .01))}))};
+  const terms = buildHistoricalTerms(new Map([['ABC',raw]]),now).get('ABC');
+  const summary = terms.get(3).summary;
+  assert.ok(summary.forecastVolatility>terms.get(6).summary.forecastVolatility);
+  for (const months of [3,4,5,6]) {
+    const cell = renderHistoricalTermCell(terms.get(months),params);
+    assert.match(cell,/歷史估計 · 可用/);
+    assert.match(cell,/低／高/);
+    assert.match(cell,new RegExp(`\\$${(raw.bars.at(-1).close*.7).toFixed(2).replace('.', '\\.')}<`));
+    assert.match(cell,/synthetic &lt;history&gt;/);
+    assert.doesNotMatch(cell,/ATM|合約|插值|IV/);
+    assert.equal(terms.get(months).summary.spot,raw.bars.at(-1).close);
+  }
+  const changed = renderHistoricalTermCell(terms.get(3),{...params,kPct:80});
+  assert.match(changed,/K 80%/);
+  assert.match(changed,new RegExp((summary.forecastVolatility*100).toFixed(2).replace('.','\\.')+'%'));
+  assert.match(renderHistoricalTermCell(null,params),/尚未取得歷史股價/);
+  const old = {...raw,asOf:'2026-09-20T00:00:00Z'};
+  const errors = buildHistoricalTerms(new Map([['ABC',old]]),new Date('2026-11-01')).get('ABC');
+  assert.match(renderHistoricalTermCell(errors.get(3),params),/無法估算/);
 });

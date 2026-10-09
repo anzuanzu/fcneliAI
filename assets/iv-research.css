@@ -39,6 +39,8 @@
 .iv-table-toolbar { padding: .8rem 1rem; border-top: 1px solid var(--border-color); display: flex; align-items: center; flex-wrap: wrap; gap: .6rem 1rem; }
 .iv-table-toolbar p { margin: 0; font-size: .82rem; line-height: 1.6; }
 .iv-table-toolbar .iv-note { flex-basis: 100%; }
+.iv-table-toolbar [hidden] { display: none !important; }
+.iv-history-cell .iv-history-value { color: var(--accent-color); font-size: 1rem; }
 .table-container table { min-width: 1380px; }
 .table-container .col-company { width: 150px; }
 .table-container .col-action { width: 100px; }
@@ -63,6 +65,7 @@
 @media (max-width: 768px) {
   .table-container table { min-width: 0; }
   .table-container td[data-label="公司名稱"]::before { flex-basis: auto; }
+  .table-container td.iv-stock-cell::before { flex-basis: 94px; margin-right: .4rem; font-size: .8rem; }
   .iv-stock-cell .iv-term-cell { max-width: 190px; }
 }
 @media (max-width: 600px) {

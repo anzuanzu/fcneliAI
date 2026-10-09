@@ -2,11 +2,12 @@ import {validateSnapshot} from './iv-engine.mjs';
 import {CSV_TEMPLATE, importSnapshots} from './iv-import.mjs';
 import {validateHistory, summarizeHistoricalVolatility} from './historical-volatility.mjs';
 import {historyFailure, historyRetrySeconds} from './history-errors.mjs';
-import {IV_MONTHS, buildTermSummaries, renderTermCell, optionsChainUrl, queryTargets, validLevels} from './iv-table.mjs';
+import {IV_MONTHS, buildTermSummaries, renderTermCell, buildHistoricalTerms, renderHistoricalTermCell, optionsChainUrl, queryTargets, validLevels} from './iv-table.mjs?v=history-table-v1';
 
 const $ = id => document.getElementById(id);
 const snapshots = new Map(), histories = new Map(), labels = new Map();
 let tableTerms = new Map();
+let historicalTerms = new Map();
 let simulation = null, generation = 0, report = null, fetching = false;
 let fetchEpoch = 0, fetchController = null;
 let historyRetryAt = 0, historyRetryTimer = null;
@@ -16,6 +17,8 @@ function updateHistoryFetch() {
   const seconds = Math.max(0, Math.ceil((historyRetryAt - Date.now()) / 1000));
   $('historyFetch').disabled = fetching || seconds > 0;
   $('historyFetch').textContent = seconds > 0 ? `請等待 ${seconds} 秒再查詢` : historyFetchLabel;
+  $('historyQuickFetch').disabled = fetching || seconds > 0;
+  $('historyQuickFetch').textContent = seconds > 0 ? `請等待 ${seconds} 秒再查詢` : fetching ? '正在取得股價…' : '自動取得並估算';
   if (seconds > 0) historyRetryTimer = setTimeout(updateHistoryFetch, 1000);
 }
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -28,6 +31,17 @@ function updateMode() {
   const estimated = historicalMode();
   $('historyControls').hidden = !estimated; $('marketControls').hidden = estimated;
   $('marketApiControls').hidden = estimated; $('ivRhoField').hidden = estimated;
+  $('historyQuickFetch').hidden = !estimated; $('ivOpenImport').hidden = estimated;
+  $('volatilityMainTitle').textContent = estimated
+    ? '3–6 個月歷史估計 · 勾選 1–6 檔，再按「自動取得並估算」'
+    : '3–6 個月市場 IV · ATM／K／KI，皆為年化值';
+  $('volatilityMainNote').textContent = estimated
+    ? '使用現有 Twelve Data 自動取得歷史股價，無須匯入。各欄為年化估計與低／高敏感度範圍（非信賴區間）。K／KI 依歷史收盤換算，修改後更新價位；商品模擬請按「比較 3–6 個月條件」。歷史估計不是真實 IV，也不提供履約價別的 IV。'
+    : 'IV 使用匯入的選擇權快照。選擇權連結可開啟 TradingView 查詢；未匯入或缺少覆蓋時顯示缺資料。K／KI 修改後即時重新插值。';
+  document.querySelectorAll('.col-iv-term').forEach(th => {
+    th.querySelector('span').textContent = `${th.dataset.months} 個月${estimated ? '歷史估計' : ' IV'}`;
+    th.querySelector('small').textContent = estimated ? '年化波動率／K／KI 價位' : 'ATM／K／KI';
+  });
   $('ivModelNote').textContent = estimated
     ? '歷史估計使用各天期預測波動率與共同日期的歷史相關性；高波動情境另提高相關性。以風險中立模型計算票息，沒有把歷史資料變成市場 IV。利率及股息是你的輸入假設，未含財報跳躍、離散股息與銀行成本。'
     : '模型使用各股票該天期 ATM IV 的固定波動率與共同相關係數，未校準整個偏斜曲面、財報跳躍、離散股息或尾端相關性。利率、股息及相關係數都是你的輸入假設，並非即時市場資料。';
@@ -57,6 +71,7 @@ function estimateCell(estimate) {
 function renderSurface() {
   const params = context(), now = new Date();
   tableTerms = buildTermSummaries(snapshots, params, now);
+  historicalTerms = buildHistoricalTerms(histories, now);
   renderQueryGuide(params, now);
   if (historicalMode()) return renderHistorical();
   labels.clear();
@@ -125,7 +140,10 @@ function renderHistorical() {
 }
 window.fcnIvLabel = ticker => labels.get(ticker) || (historicalMode() ? '未取得歷史股價' : '未匯入');
 window.fcnVolatilityTitle = () => historicalMode() ? '估計波動率' : 'ATM IV';
-window.fcnIvTermCell = (ticker, months) => renderTermCell(tableTerms.get(ticker)?.get(months), context(), snapshots.has(ticker));
+window.fcnTermLabel = months => `${months} 個月${historicalMode() ? '歷史估計' : ' IV'}`;
+window.fcnIvTermCell = (ticker, months) => historicalMode()
+  ? renderHistoricalTermCell(historicalTerms.get(ticker)?.get(months), context())
+  : renderTermCell(tableTerms.get(ticker)?.get(months), context(), snapshots.has(ticker));
 window.fcnOptionsChainUrl = optionsChainUrl;
 
 function renderQueryGuide(params, now) {
@@ -134,16 +152,30 @@ function renderQueryGuide(params, now) {
   // A snapshot reference takes precedence over the scanner's newer stock quote,
   // so changing K/KI never silently changes the imported smile's moneyness.
   $('ivQueryGuide').innerHTML = selected.length ? selected.map(ticker => {
-    const snapshot = snapshots.get(ticker), quote = window.getFcnStockQuote(ticker);
-    const spot = snapshot?.spot ?? quote?.spot;
+    const snapshot = historicalMode() ? null : snapshots.get(ticker), quote = window.getFcnStockQuote(ticker);
+    const history = historicalMode() ? historicalTerms.get(ticker)?.get(3)?.summary : null;
+    const spot = history?.spot ?? snapshot?.spot ?? quote?.spot;
     const targets = queryTargets(spot, params, now);
-    return `<div class="iv-query-card"><a href="${escape(optionsChainUrl(ticker, quote?.exchange))}" target="_blank" rel="noopener noreferrer">${escape(ticker)} ↗ TradingView 選擇權</a>${targets ? `<p>參考股價 $${spot.toFixed(2)} · ${snapshot ? '匯入快照' : '掃描行情，僅供查詢定位'}${snapshot ? ` · ${escape(snapshot.spotAsOf)}` : ''}<br>ATM $${targets.atm.toFixed(2)} ／ K ${escape(params.kPct)}% $${targets.k.toFixed(2)} ／ KI ${escape(params.kiPct)}% $${targets.ki.toFixed(2)}</p><p>${targets.dates.map(d=>`${d.months} 個月 <b>${d.date}</b>`).join(' · ')}</p>` : '<p>請匯入股價快照或載入股票行情，並填入有效 K／KI／KO，才能換算查詢價位。</p>'}${quote?.exchange ? '' : '<small>未確認交易所：在 TradingView 搜尋此代碼。</small>'}</div>`;
+    return `<div class="iv-query-card"><a href="${escape(optionsChainUrl(ticker, quote?.exchange))}" target="_blank" rel="noopener noreferrer">${escape(ticker)} ↗ TradingView 選擇權</a>${targets ? `<p>參考股價 $${spot.toFixed(2)} · ${history ? `歷史收盤 ${escape(history.lastDate)}` : snapshot ? `匯入快照 · ${escape(snapshot.spotAsOf)}` : '掃描行情，僅供查詢定位'}<br>ATM $${targets.atm.toFixed(2)} ／ K ${escape(params.kPct)}% $${targets.k.toFixed(2)} ／ KI ${escape(params.kiPct)}% $${targets.ki.toFixed(2)}</p><p>${targets.dates.map(d=>`${d.months} 個月 <b>${d.date}</b>`).join(' · ')}</p>` : '<p>請先取得歷史股價、匯入快照或載入行情，並填入有效 K／KI／KO，才能換算查詢價位。</p>'}${quote?.exchange ? '' : '<small>未確認交易所：在 TradingView 搜尋此代碼。</small>'}</div>`;
   }).join('') : '<p class="iv-note">勾選股票或輸入研究代碼後，這裡會列出查詢入口、目標到期日與 ATM／K／KI 履約價。</p>';
 }
 $('ivOpenImport').addEventListener('click', () => {
   $('ivResearchPanel').open = true;
   $('ivMode').value = 'market-iv'; updateMode(); invalidate();
   $('marketControls').scrollIntoView({behavior:'smooth', block:'center'});
+});
+$('historyQuickFetch').addEventListener('click', () => {
+  if (fetching || historyRetryAt > Date.now()) return;
+  $('ivResearchPanel').open = true;
+  $('ivMode').value = 'historical-estimate';
+  if (context().tickers.length) $('ivTickers').value = '';
+  updateMode(); invalidate();
+  if (!$('historyAccessKey').value.trim()) {
+    setupStatus('請輸入既有的 Worker 個人查詢密碼，再按「自動取得研究股票的歷史股價」。不需要重新申請 API key。');
+    $('historyAccessKey').focus();
+    return;
+  }
+  $('historyFetch').click();
 });
 
 function cancel(message = '已停止計算。') {
@@ -351,7 +383,7 @@ $('historyFetch').addEventListener('click', async () => {
     if (api.username || api.password) throw new Error('API 網址不可包含密碼');
     invalidate(); requestEpoch = fetchEpoch;
     fetchController = new AbortController(); const signal = fetchController.signal;
-    fetching = true; $('historyFetch').disabled = true; $('historyCheck').disabled = true;
+    fetching = true; updateHistoryFetch(); $('historyCheck').disabled = true;
     for (const ticker of selected) {
       $('historyStatus').textContent = `正在取得 ${ticker} 歷史股價…`;
       api.searchParams.set('ticker',ticker);
