@@ -9,6 +9,7 @@ const TIMEOUT_MS = 10000;
 // Isolate-local limits reserve capacity below Basic's 8/min and 800/day.
 // They cannot enforce one account quota across different Cloudflare edges.
 const inFlight = new Map();
+const providerCooldowns = new Map();
 let requestStarts = [];
 let dailyBudget = { date: '', starts: 0 };
 
@@ -24,12 +25,17 @@ function respond(body, status, headers = {}) {
     headers: { ...headers, 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'private, no-store' }
   });
 }
-function failure(code, status, headers, error = 'Historical prices are unavailable. Check the Worker configuration or retry later.') {
-  return respond({ schemaVersion: 1, code, error, bars: [] }, status, headers);
+function failure(code, status, headers, error = 'Historical prices are unavailable. Check the Worker configuration or retry later.', retryAfterSeconds) {
+  return respond({ schemaVersion: 1, code, error, bars: [],
+    ...(retryAfterSeconds ? { retryAfterSeconds } : {}) }, status,
+    retryAfterSeconds ? { ...headers, 'Retry-After': String(retryAfterSeconds) } : headers);
 }
 class HistoryError extends Error {
-  constructor(code, status = 502) { super(code); this.code = code; this.status = status; }
+  constructor(code, status = 502, retryAfterSeconds) {
+    super(code); this.code = code; this.status = status; this.retryAfterSeconds = retryAfterSeconds;
+  }
 }
+const untilUtcReset = now => Math.max(1, Math.ceil((86400000 - now % 86400000) / 1000));
 function dateOnly(value) {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) &&
     Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
@@ -111,11 +117,21 @@ async function boundedJson(upstream) {
   try { return JSON.parse(new TextDecoder().decode(bytes)); }
   catch { throw new HistoryError('HISTORY_UPSTREAM_FORMAT'); }
 }
-function providerFailure(code) {
+function providerFailure(code, message, retryHeader, now) {
   const n = Number(code);
-  if (n === 429) return new HistoryError('HISTORY_UPSTREAM_RATE_LIMIT', 429);
-  if (n === 401 || n === 403) return new HistoryError('HISTORY_PROVIDER_AUTH');
-  if (n === 400 || n === 404) return new HistoryError('HISTORY_UNAVAILABLE', 404);
+  // Inspect only for classification. Never return the provider's text, URL or credentials.
+  const text = typeof message === 'string' ? message.slice(0, 4096) : '';
+  if (n === 429) {
+    if (/daily|\bday\b|\btoday\b/i.test(text))
+      return new HistoryError('HISTORY_UPSTREAM_DAILY_LIMIT', 429, untilUtcReset(now));
+    const retry = /^\d+$/.test(retryHeader || '') ? Number(retryHeader) : 60;
+    return new HistoryError('HISTORY_UPSTREAM_RATE_LIMIT', 429, Math.min(86400, Math.max(60, retry)));
+  }
+  if (n === 401) return new HistoryError('HISTORY_PROVIDER_AUTH');
+  if (n === 403) return new HistoryError('HISTORY_PROVIDER_PERMISSION');
+  if (n === 404 || (n === 400 && /symbol[^.\n]*(not found|invalid|unavailable)|invalid[^.\n]*symbol/i.test(text)))
+    return new HistoryError('HISTORY_UNAVAILABLE', 404);
+  if (n === 400) return new HistoryError('HISTORY_PROVIDER_REQUEST');
   return new HistoryError('HISTORY_UPSTREAM_FAILED');
 }
 async function loadHistory(ticker, token, now) {
@@ -133,9 +149,14 @@ async function loadHistory(ticker, token, now) {
       signal: controller.signal, redirect: 'error'
     });
     // Do not forward provider error text or URLs; credentials remain server-side.
-    if (!upstream.ok) throw providerFailure(upstream.status);
+    if (!upstream.ok) {
+      let errorData;
+      try { errorData = await boundedJson(upstream); }
+      catch { /* HTTP status remains authoritative for non-JSON error pages. */ }
+      throw providerFailure(upstream.status, errorData?.message, upstream.headers.get('Retry-After'), Date.now());
+    }
     const data = await boundedJson(upstream);
-    if (data?.status === 'error') throw providerFailure(data.code);
+    if (data?.status === 'error') throw providerFailure(data.code, data.message, upstream.headers.get('Retry-After'), Date.now());
     return normalizeHistory(data, ticker, now);
   } catch (error) {
     if (error instanceof HistoryError) throw error;
@@ -195,13 +216,22 @@ export async function handleHistory(request, env, ctx, headers) {
     const taskKey = `${scope}:${date}:${ticker}`;
     let task = inFlight.get(taskKey);
     if (!task) {
+      const cooldown = providerCooldowns.get(scope);
+      if (cooldown?.until > now) return failure(cooldown.code, 429, headers, undefined, Math.ceil((cooldown.until - now) / 1000));
+      providerCooldowns.delete(scope);
       requestStarts = requestStarts.filter(time => now - time < 60000);
       const utcDate = new Date(now).toISOString().slice(0, 10);
       if (dailyBudget.date !== utcDate) dailyBudget = { date: utcDate, starts: 0 };
-      if (inFlight.size >= 2 || requestStarts.length >= 7 || dailyBudget.starts >= 700)
-        return failure('HISTORY_BUSY', 429, { ...headers, 'Retry-After': '60' }, 'History refresh quota is busy. Retry later; cache hits do not use provider credits.');
+      if (inFlight.size >= 2) return failure('HISTORY_BUSY', 429, headers, undefined, 2);
+      if (dailyBudget.starts >= 700) return failure('HISTORY_LOCAL_DAILY_LIMIT', 429, headers, undefined, untilUtcReset(now));
+      if (requestStarts.length >= 7)
+        return failure('HISTORY_LOCAL_RATE_LIMIT', 429, headers, undefined, Math.max(1, Math.ceil((requestStarts[0] + 60000 - now) / 1000)));
       requestStarts.push(now); dailyBudget.starts++;
-      task = loadHistory(ticker, env.TWELVE_DATA_API_KEY, now);
+      task = loadHistory(ticker, env.TWELVE_DATA_API_KEY, now).catch(error => {
+        if (error instanceof HistoryError && error.status === 429)
+          providerCooldowns.set(scope, { code: error.code, until: Date.now() + error.retryAfterSeconds * 1000 });
+        throw error;
+      });
       inFlight.set(taskKey, task);
       task.finally(() => inFlight.delete(taskKey)).catch(() => {});
     }
@@ -214,6 +244,6 @@ export async function handleHistory(request, env, ctx, headers) {
   } catch (error) {
     const code = error instanceof HistoryError ? error.code : 'HISTORY_UPSTREAM_FAILED';
     const status = error instanceof HistoryError ? error.status : 502;
-    return failure(code, status, status === 429 ? { ...headers, 'Retry-After': '60' } : headers);
+    return failure(code, status, headers, undefined, error instanceof HistoryError ? error.retryAfterSeconds : undefined);
   }
 }

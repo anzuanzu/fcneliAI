@@ -90,9 +90,20 @@ npx wrangler@4 deploy --keep-vars
 | 缺少 HISTORY_ACCESS_KEY | 設定自己的個人查詢密碼 |
 | 尚未確認個人研究與展示授權 | 核對帳戶範圍後設定確認變數為文字 `true` |
 | 個人查詢密碼不符 | 輸入私人密碼，勿輸入供應商 API key |
-| 需部署新版 Worker／404 | 核對網址與分支，部署含歷史接口的新版程式 |
+| 設定檢查接口 404 | 核對網址與分支，部署含歷史接口的新版程式 |
 | 網站來源不符 | 設定正確 ALLOWED_ORIGIN 後重新部署 |
 | 設定齊全但取價失敗 | 設定存在不代表 key 有效；查看帳戶權限、額度、股票涵蓋與資料長度 |
-| HTTP 429 | 等待額度恢復；其他程式也可能共用同一帳戶額度 |
+| HISTORY_PROVIDER_AUTH | Twelve Data 拒絕 API key；在 Cloudflare 核對供應商 secret，勿貼到聊天 |
+| HISTORY_PROVIDER_PERMISSION | 供應商拒絕資料權限；核對帳戶的美股日線存取範圍 |
+| HISTORY_UNAVAILABLE／404 | 查不到此股票或歷史資料不足；核對代碼與來源覆蓋，不代表 Worker 尚未部署 |
+| HISTORY_UPSTREAM_FORMAT／502 | 資料格式或股票／幣別／時區不符；保留錯誤代碼供診斷 |
+| HISTORY_UPSTREAM_FAILED／502 | 供應商連線或服務失敗；不能單憑 502 判斷為 key 問題 |
+| HISTORY_LOCAL_RATE_LIMIT／429 | Worker 每分鐘保護限制；等待按鈕倒數結束 |
+| HISTORY_UPSTREAM_RATE_LIMIT／429 | 供應商限流；至少等待倒數，持續失敗時查看帳戶額度，其他程式可能共用 key |
+| HISTORY_LOCAL_DAILY_LIMIT 或 HISTORY_UPSTREAM_DAILY_LIMIT／429 | 每日額度限制；等 UTC 00:00（台北 08:00）重置 |
+
+遇到金鑰、權限、全域來源故障或限流，批次會停止並列出「未查詢」股票，不會自動重試。之前已成功取得的資料仍保留；找不到單一代碼則繼續其他代碼。限流時會顯示等待倒數，清除資料或變更股票不會消除倒數；不耗行情額度的設定檢查仍可使用。倒數結束不保證帳戶額度已恢復，尤其供應商未說明限流期間時。
+
+排查時先查單一 `AAPL` 或 `NVDA`，成功後再加入其他股票。若仍失敗，回報括號中的 `HISTORY_...` 代碼即可，無需提供任何密碼或 API key。
 
 沒有真實金鑰時，測試只能確認程式、合成資料計算及錯誤處理，不能確認真實股票資料。完整資料格式與模型假設見 [DEPLOYMENT.md](DEPLOYMENT.md)、[IV_RESEARCH.md](IV_RESEARCH.md)。

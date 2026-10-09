@@ -168,11 +168,13 @@ npx wrangler deploy --keep-vars
 - 少於 253 筆收盤價會標示不足完整 252 日報酬窗，最新日線超過 7 個日曆日會警示；最少兩筆才回傳。研究引擎仍須依計算窗口、資料新舊與缺口限制模擬。
 - 每個未快取標的一次來源請求，10 秒含回應讀取超時，最大 1 MiB。內部 Cache API 快取 6 小時，鍵包含 schema、標的、美東日期及 provider key 摘要；原始 key 不進快取網址。瀏覽器回應一律 `private, no-store`。
 - 每個 isolate 最多同時刷新兩檔，每分鐘七次、UTC 日每天 700 次開始；相同標的同時查詢合併，失敗請求也計數。這不是跨 edge 或跨其他應用的帳戶用量閘門。若要全股票排程，必須另外加入全域排程／持久儲存／Durable Object，遵守 800 日額度；本功能不會自動每日刷新掃描清單的全部股票。
+- 限流明確區分 `HISTORY_BUSY`（並行）、`HISTORY_LOCAL_RATE_LIMIT`（Worker 分鐘）、`HISTORY_LOCAL_DAILY_LIMIT`（Worker UTC 日）、`HISTORY_UPSTREAM_RATE_LIMIT`（供應商限流）與 `HISTORY_UPSTREAM_DAILY_LIMIT`（供應商錯誤訊息明確提及每日限制）。回傳 `Retry-After` 及 JSON `retryAfterSeconds`，跨來源 UI 不依賴可讀取該 header。未說明期間的供應商 429 預設冷卻 60 秒，不能保證帳戶額度屆時恢復。相同 provider key 在同一 isolate 受到 429 後，暫停其他新標的請求；成功快取仍可讀取。不同 edge／其他程式仍可能消耗同一帳戶額度。
+- 供應商 HTTP 與 JSON 錯誤會安全分類，401 為 `HISTORY_PROVIDER_AUTH`、403 為 `HISTORY_PROVIDER_PERMISSION`，對外均為 502，與私人密碼的 401 `HISTORY_ACCESS_REQUIRED` 區分。供應商 400 區分可辨識的無效股票與查詢參數錯誤；不回傳供應商錯誤原文、URL 或 secret。UI 顯示白名單錯誤代碼，致命錯誤停止批次，429 倒數不會觸發自動重試。
 
 ```bash
 node --test tests/history-worker.test.mjs tests/worker-options.test.mjs
 ```
 
-測試以 mock 驗證隱私、請求、拆股資料格式、日線有效性、快取、並行合併、限流、超時、錯誤清理及既有掃描／選擇權接口。尚無 Twelve Data 帳戶金鑰，因此未驗證 live 股票覆蓋、免費歷史深度及實際調整品質；新增接口本身不表示自動行情已啟用。
+測試以 mock 驗證隱私、請求、拆股資料格式、日線有效性、快取、並行合併、限流、超時、錯誤清理及既有掃描／選擇權接口。設定檢查確認 secret 存在，無法確認 key 有效；實際帳戶取價、股票覆蓋、歷史深度及調整品質須以成功的 live 回應驗證。
 
 官方資料：[方案、顯示權與額度](https://twelvedata.com/pricing)、[資料條款與衍生金融商品限制](https://twelvedata.com/terms)、[歷史資料範圍](https://support.twelvedata.com/en/articles/5214728-getting-historical-data)、[每日拆股調整](https://support.twelvedata.com/en/articles/5179064-are-the-prices-adjusted)、[官方 API SDK 的 time_series 參數與日線時區](https://github.com/twelvedata/twelvedata-java/blob/main/docs/MarketDataApi.md#apigettimeseriesrequest)、[個人／商業使用](https://support.twelvedata.com/en/articles/5332349-commercial-and-personal-usage)、[美股歷史／日收盤資料](https://support.twelvedata.com/en/articles/9935903-us-equities-market-data)。
